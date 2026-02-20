@@ -6,6 +6,20 @@
     <meta name="description" content="PVRPOSE AI delivers AI automation for service businesses in 6-8 weeks using Agile sprints and vibe coding. Fast, affordable, and human-centered AI implementation.">
     <title>PVRPOSE AI | Own Your Voice. Vision. Vibe.</title>
 
+    <!-- Performance optimizations -->
+    <link rel="preload" href="logo.png" as="image">
+
+    <!-- Open Graph meta tags -->
+    <meta property="og:title" content="PVRPOSE AI | AI Automation for Service Businesses">
+    <meta property="og:description" content="Get your first AI system live in 6-8 weeks, not 6-12 months. Save 10-20 hours per week without losing your authenticity.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pvrpose.ai">
+
+    <!-- Twitter Card meta tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="PVRPOSE AI | AI Automation for Service Businesses">
+    <meta name="twitter:description" content="Get your first AI system live in 6-8 weeks, not 6-12 months. Save 10-20 hours per week without losing your authenticity.">
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -37,122 +51,280 @@
         body {
             font-family: 'Inter', 'Helvetica', system-ui, sans-serif;
         }
+
+        /* Glassmorphism effects */
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .glass-dark {
+            background: rgba(30, 58, 138, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(30, 58, 138, 0.18);
+        }
+
+        /* Gradient backgrounds */
+        .gradient-hero {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f1f5f9 100%);
+        }
+
+        .gradient-accent {
+            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+        }
+
+        /* Micro-interactions */
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .hover-glow {
+            transition: box-shadow 0.3s ease, transform 0.2s ease;
+        }
+
+        .hover-glow:hover {
+            box-shadow: 0 0 30px rgba(236, 72, 153, 0.4);
+            transform: scale(1.02);
+        }
+
+        /* Smooth fade-in animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        /* Logo pulse animation */
+        @keyframes pulse-glow {
+            0%, 100% {
+                filter: drop-shadow(0 0 8px rgba(236, 72, 153, 0.3));
+            }
+            50% {
+                filter: drop-shadow(0 0 16px rgba(236, 72, 153, 0.5));
+            }
+        }
+
+        .logo-glow {
+            animation: pulse-glow 3s ease-in-out infinite;
+        }
+
+        /* Enhanced button styles */
+        .btn-primary {
+            background: linear-gradient(135deg, #1E3A8A 0%, #3b82f6 100%);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px rgba(30, 58, 138, 0.4);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 6px 20px rgba(30, 58, 138, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #1E3A8A 0%, #3b82f6 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        /* Stat counter animation */
+        .stat-number {
+            font-weight: 800;
+            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Card enhancements */
+        .feature-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .feature-card:hover {
+            border-left-color: #ec4899;
+            background: rgba(236, 72, 153, 0.02);
+        }
+
+        /* Improved spacing and typography */
+        .hero-headline {
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        .section-spacing {
+            padding-top: 5rem;
+            padding-bottom: 5rem;
+        }
+
+        @media (min-width: 768px) {
+            .section-spacing {
+                padding-top: 7rem;
+                padding-bottom: 7rem;
+            }
+        }
     </style>
 </head>
 <body class="bg-white text-black antialiased">
 
     <!-- HERO SECTION -->
-    <section class="min-h-screen flex items-center justify-center px-6 py-20 bg-white">
-        <div class="max-w-4xl mx-auto text-center">
+    <section class="min-h-screen flex items-center justify-center px-6 py-20 gradient-hero">
+        <div class="max-w-5xl mx-auto text-center animate-fade-in">
             <!-- Logo/Brand -->
-            <h1 class="text-5xl md:text-7xl font-bold mb-4 tracking-tight">
-                PVRPOSE AI
-            </h1>
+            <div class="mb-8 flex justify-center">
+                <img src="logo.png" alt="PVRPOSE AI - AI Automation Consulting" class="h-16 md:h-20 logo-glow" width="500" height="53" />
+            </div>
 
             <!-- Tagline -->
-            <p class="text-xl md:text-2xl text-gray-600 mb-8">
+            <p class="text-xl md:text-2xl text-gray-600 mb-12 font-medium">
                 Own Your Voice. Vision. Vibe.
             </p>
 
             <!-- Headline -->
-            <h2 class="text-3xl md:text-5xl font-bold mb-6 leading-tight">
-                AI Automation for Service Businesses.<br />Fast. Affordable. No Burnout.
-            </h2>
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight hero-headline">
+                AI Automation for Service Businesses.<br />
+                <span class="gradient-accent bg-clip-text text-transparent">Fast. Affordable. No Burnout.</span>
+            </h1>
 
             <!-- Subheadline -->
-            <p class="text-lg md:text-xl text-gray-700 mb-8 max-w-2xl mx-auto">
-                Get your first AI system live in 6-8 weeks, not 6-12 months. Save 10-20 hours per week without losing your authenticity.
+            <p class="text-xl md:text-2xl text-gray-700 mb-10 max-w-3xl mx-auto font-light leading-relaxed">
+                Get your first AI system live in <strong class="font-semibold">6-8 weeks, not 6-12 months</strong>. Save 10-20 hours per week without losing your authenticity.
             </p>
 
             <!-- Qualifier -->
-            <p class="text-base md:text-lg text-gray-600 mb-10">
+            <p class="text-base md:text-lg text-gray-600 mb-12 max-w-2xl mx-auto">
                 For established service business owners doing $150K-$1M annually who know they need AI but feel overwhelmed by options.
             </p>
 
             <!-- Primary CTA -->
-            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <div class="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16">
                 <a href="#contact"
-                   class="bg-deep-blue text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-900 transition-colors shadow-lg w-full sm:w-auto"
+                   class="btn-primary text-white px-10 py-5 rounded-xl text-lg font-semibold w-full sm:w-auto"
                    aria-label="Schedule a free discovery call">
-                    Schedule a Free Discovery Call
+                    Schedule a Free Discovery Call →
                 </a>
                 <a href="#checklist"
-                   class="bg-white text-deep-blue border-2 border-deep-blue px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-50 transition-colors w-full sm:w-auto"
+                   class="btn-secondary bg-white text-deep-blue border-2 border-deep-blue px-10 py-5 rounded-xl text-lg font-semibold w-full sm:w-auto"
                    aria-label="Download free AI readiness checklist">
                     Download Free Checklist
                 </a>
+            </div>
+
+            <!-- Trust Indicators -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto pt-8 border-t border-gray-200">
+                <div class="text-center">
+                    <p class="stat-number text-3xl md:text-4xl mb-2">91%</p>
+                    <p class="text-sm text-gray-600">Client Referral Rate</p>
+                </div>
+                <div class="text-center">
+                    <p class="stat-number text-3xl md:text-4xl mb-2">6-8 weeks</p>
+                    <p class="text-sm text-gray-600">To Working AI System</p>
+                </div>
+                <div class="text-center">
+                    <p class="stat-number text-3xl md:text-4xl mb-2">10-20×</p>
+                    <p class="text-sm text-gray-600">ROI First Year</p>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- PROBLEM WE SOLVE SECTION -->
-    <section class="py-20 px-6 bg-gray-50" id="problem">
-        <div class="max-w-4xl mx-auto">
-            <h2 class="text-4xl md:text-5xl font-bold mb-12 text-center">
+    <section class="section-spacing px-6 bg-white" id="problem">
+        <div class="max-w-5xl mx-auto">
+            <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-center hero-headline">
                 The Problem We Solve
             </h2>
+            <p class="text-xl text-gray-600 text-center mb-16 max-w-3xl mx-auto">
+                Most AI implementations fail because they're too slow, too expensive, or too generic.
+            </p>
 
-            <div class="space-y-8">
+            <div class="space-y-6 mb-20">
                 <!-- Pain Point 1 -->
-                <div class="bg-white p-8 rounded-lg shadow-sm">
-                    <h3 class="text-2xl font-bold mb-4">Most AI consultants take 6-12 months and charge $100K+</h3>
-                    <p class="text-lg text-gray-700">
+                <div class="feature-card bg-white p-8 md:p-10 rounded-2xl shadow-sm hover-lift">
+                    <h3 class="text-2xl md:text-3xl font-bold mb-4">Most AI consultants take 6-12 months and charge $100K+</h3>
+                    <p class="text-lg md:text-xl text-gray-700 leading-relaxed">
                         Enterprise consultancies are too slow and expensive for mid-market service businesses. You can't afford to wait a year or spend six figures.
                     </p>
                 </div>
 
                 <!-- Pain Point 2 -->
-                <div class="bg-white p-8 rounded-lg shadow-sm">
-                    <h3 class="text-2xl font-bold mb-4">DIY AI tools require you to become a full-time tech person</h3>
-                    <p class="text-lg text-gray-700">
+                <div class="feature-card bg-white p-8 md:p-10 rounded-2xl shadow-sm hover-lift">
+                    <h3 class="text-2xl md:text-3xl font-bold mb-4">DIY AI tools require you to become a full-time tech person</h3>
+                    <p class="text-lg md:text-xl text-gray-700 leading-relaxed">
                         Generic AI solutions don't match how your business actually operates. You don't want to become a prompt engineer—you want to focus on your clients.
                     </p>
                 </div>
 
                 <!-- Pain Point 3 -->
-                <div class="bg-white p-8 rounded-lg shadow-sm">
-                    <h3 class="text-2xl font-bold mb-4">AI implementation often triggers burnout and overwhelm</h3>
-                    <p class="text-lg text-gray-700">
+                <div class="feature-card bg-white p-8 md:p-10 rounded-2xl shadow-sm hover-lift">
+                    <h3 class="text-2xl md:text-3xl font-bold mb-4">AI implementation often triggers burnout and overwhelm</h3>
+                    <p class="text-lg md:text-xl text-gray-700 leading-relaxed">
                         Adding AI on top of your existing workload creates decision fatigue, imposter syndrome, and analysis paralysis. Most implementations ignore the human cost.
                     </p>
                 </div>
             </div>
 
             <!-- Stats -->
-            <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                <div>
-                    <p class="text-4xl font-bold text-deep-blue mb-2">80%</p>
-                    <p class="text-gray-600">of businesses aren't ready for AI adoption</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+                <div class="text-center p-6 rounded-2xl glass-dark">
+                    <p class="stat-number text-5xl md:text-6xl mb-3">80%</p>
+                    <p class="text-gray-700 font-medium">of businesses aren't ready for AI adoption</p>
                 </div>
-                <div>
-                    <p class="text-4xl font-bold text-deep-blue mb-2">93%</p>
-                    <p class="text-gray-600">cite culture and change management as top AI challenges</p>
+                <div class="text-center p-6 rounded-2xl glass-dark">
+                    <p class="stat-number text-5xl md:text-6xl mb-3">93%</p>
+                    <p class="text-gray-700 font-medium">cite culture and change management as top AI challenges</p>
                 </div>
-                <div>
-                    <p class="text-4xl font-bold text-deep-blue mb-2">10-15 hrs</p>
-                    <p class="text-gray-600">lost per week to admin tasks that don't generate revenue</p>
+                <div class="text-center p-6 rounded-2xl glass-dark">
+                    <p class="stat-number text-5xl md:text-6xl mb-3">10-15 hrs</p>
+                    <p class="text-gray-700 font-medium">lost per week to admin tasks that don't generate revenue</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- OUR SOLUTION SECTION -->
-    <section class="py-20 px-6 bg-white" id="solution">
-        <div class="max-w-4xl mx-auto">
-            <h2 class="text-4xl md:text-5xl font-bold mb-6 text-center">
+    <section class="section-spacing px-6 bg-gray-50" id="solution">
+        <div class="max-w-5xl mx-auto">
+            <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-center hero-headline">
                 How PVRPOSE AI Works
             </h2>
 
-            <p class="text-xl text-center text-gray-700 mb-16 max-w-2xl mx-auto">
-                We deliver working AI automation in 6-8 weeks using Agile sprints and vibe coding. No fluff, just results.
+            <p class="text-xl md:text-2xl text-center text-gray-700 mb-20 max-w-3xl mx-auto font-light leading-relaxed">
+                We deliver working AI automation in <strong class="font-semibold">6-8 weeks</strong> using Agile sprints and vibe coding. No fluff, just results.
             </p>
 
             <!-- Service Cards -->
-            <div class="space-y-12">
+            <div class="space-y-8">
                 <!-- Service 1: AI Readiness Audit -->
-                <div class="border-l-4 border-deep-blue pl-8 py-4">
-                    <h3 class="text-3xl font-bold mb-4">AI Readiness Audit</h3>
-                    <p class="text-2xl font-semibold text-deep-blue mb-4">$5,000-$7,500 CAD • 2 weeks</p>
+                <div class="bg-white p-8 md:p-12 rounded-2xl shadow-lg hover-lift border-l-4 border-pink-500">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                        <h3 class="text-3xl md:text-4xl font-bold mb-2 md:mb-0">AI Readiness Audit</h3>
+                        <div class="text-right">
+                            <p class="text-2xl md:text-3xl font-bold gradient-accent bg-clip-text text-transparent">$5,000-$7,500 CAD</p>
+                            <p class="text-gray-600">2 weeks</p>
+                        </div>
+                    </div>
 
                     <p class="text-lg text-gray-700 mb-6">
                         We map your workflows, identify your top 3 automation opportunities, and show you exactly where AI will have the highest impact.
@@ -188,9 +360,14 @@
                 </div>
 
                 <!-- Service 2: AI Implementation Sprint -->
-                <div class="border-l-4 border-deep-blue pl-8 py-4">
-                    <h3 class="text-3xl font-bold mb-4">AI Implementation Sprint</h3>
-                    <p class="text-2xl font-semibold text-deep-blue mb-4">$15,000-$25,000 CAD • 6-8 weeks</p>
+                <div class="bg-white p-8 md:p-12 rounded-2xl shadow-lg hover-lift border-l-4 border-purple-500">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                        <h3 class="text-3xl md:text-4xl font-bold mb-2 md:mb-0">AI Implementation Sprint</h3>
+                        <div class="text-right">
+                            <p class="text-2xl md:text-3xl font-bold gradient-accent bg-clip-text text-transparent">$15,000-$25,000 CAD</p>
+                            <p class="text-gray-600">6-8 weeks</p>
+                        </div>
+                    </div>
 
                     <p class="text-lg text-gray-700 mb-6">
                         We build 1-3 production-ready AI automations using weekly Agile sprints. You see progress every week, not just at the end.
@@ -230,9 +407,14 @@
                 </div>
 
                 <!-- Service 3: AI Optimization Retainer -->
-                <div class="border-l-4 border-deep-blue pl-8 py-4">
-                    <h3 class="text-3xl font-bold mb-4">AI Optimization Retainer</h3>
-                    <p class="text-2xl font-semibold text-deep-blue mb-4">From $3,000 CAD/month • Ongoing</p>
+                <div class="bg-white p-8 md:p-12 rounded-2xl shadow-lg hover-lift border-l-4 border-blue-600">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                        <h3 class="text-3xl md:text-4xl font-bold mb-2 md:mb-0">AI Optimization Retainer</h3>
+                        <div class="text-right">
+                            <p class="text-2xl md:text-3xl font-bold gradient-accent bg-clip-text text-transparent">From $3,000 CAD/month</p>
+                            <p class="text-gray-600">Ongoing</p>
+                        </div>
+                    </div>
 
                     <p class="text-lg text-gray-700 mb-6">
                         Your AI systems stay current and improve over time. Monthly sprint cycles, new automation builds, and continuous optimization.
@@ -271,83 +453,93 @@
             <!-- CTA -->
             <div class="mt-16 text-center">
                 <a href="#contact"
-                   class="inline-block bg-deep-blue text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-900 transition-colors shadow-lg"
+                   class="inline-block btn-primary text-white px-10 py-5 rounded-xl text-xl font-semibold"
                    aria-label="Schedule your free discovery call">
-                    Schedule Your Free Discovery Call
+                    Schedule Your Free Discovery Call →
                 </a>
             </div>
         </div>
     </section>
 
     <!-- UNIQUE METHODOLOGY SECTION -->
-    <section class="py-20 px-6 bg-gray-50" id="methodology">
-        <div class="max-w-4xl mx-auto">
-            <h2 class="text-4xl md:text-5xl font-bold mb-12 text-center">
+    <section class="section-spacing px-6 bg-white" id="methodology">
+        <div class="max-w-5xl mx-auto">
+            <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-center hero-headline">
                 Our Methodology
             </h2>
+            <p class="text-xl text-gray-600 text-center mb-20 max-w-3xl mx-auto">
+                Combining Agile excellence with AI innovation for sustainable transformation.
+            </p>
 
             <!-- Vibe Coding -->
-            <div class="mb-16">
-                <h3 class="text-3xl font-bold mb-6">Vibe Coding: AI That Matches How You Think</h3>
+            <div class="mb-20">
+                <div class="glass p-8 md:p-12 rounded-3xl shadow-xl">
+                    <h3 class="text-3xl md:text-4xl font-bold mb-6 gradient-accent bg-clip-text text-transparent">Vibe Coding: AI That Matches How You Think</h3>
 
-                <p class="text-lg text-gray-700 mb-6">
-                    Vibe coding is rapid AI prototyping that builds systems matching how your business actually operates—not generic templates or cookie-cutter solutions.
-                </p>
+                    <p class="text-lg md:text-xl text-gray-700 mb-6 leading-relaxed">
+                        Vibe coding is rapid AI prototyping that builds systems matching how your business actually operates—not generic templates or cookie-cutter solutions.
+                    </p>
 
-                <p class="text-lg text-gray-700 mb-6">
-                    We build working prototypes in 60-90 minute sessions, test with real data immediately, and iterate based on actual usage. You see progress weekly, not just at the end.
-                </p>
+                    <p class="text-lg md:text-xl text-gray-700 mb-8 leading-relaxed">
+                        We build working prototypes in 60-90 minute sessions, test with real data immediately, and iterate based on actual usage. You see progress weekly, not just at the end.
+                    </p>
 
-                <div class="bg-white p-8 rounded-lg shadow-sm">
-                    <p class="font-semibold mb-4">Core principles:</p>
-                    <ul class="space-y-3 text-gray-700">
-                        <li class="flex items-start">
-                            <span class="mr-3 mt-1 font-bold">•</span>
-                            <span><strong>Human-centered design:</strong> AI captures your voice, thinking patterns, and decision-making process</span>
-                        </li>
-                        <li class="flex items-start">
-                            <span class="mr-3 mt-1 font-bold">•</span>
-                            <span><strong>Rapid prototyping:</strong> Working features in days, not months</span>
-                        </li>
-                        <li class="flex items-start">
-                            <span class="mr-3 mt-1 font-bold">•</span>
-                            <span><strong>Agile delivery:</strong> 1-week sprint cycles with continuous feedback</span>
-                        </li>
-                        <li class="flex items-start">
-                            <span class="mr-3 mt-1 font-bold">•</span>
-                            <span><strong>Sustainable implementation:</strong> Realistic timelines that respect team capacity and prevent burnout</span>
-                        </li>
-                    </ul>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-xl hover-lift">
+                            <div class="text-3xl mb-3">🎯</div>
+                            <h4 class="font-bold text-xl mb-2">Human-Centered Design</h4>
+                            <p class="text-gray-700">AI captures your voice, thinking patterns, and decision-making process</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl hover-lift">
+                            <div class="text-3xl mb-3">⚡</div>
+                            <h4 class="font-bold text-xl mb-2">Rapid Prototyping</h4>
+                            <p class="text-gray-700">Working features in days, not months</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl hover-lift">
+                            <div class="text-3xl mb-3">🔄</div>
+                            <h4 class="font-bold text-xl mb-2">Agile Delivery</h4>
+                            <p class="text-gray-700">1-week sprint cycles with continuous feedback</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl hover-lift">
+                            <div class="text-3xl mb-3">🌱</div>
+                            <h4 class="font-bold text-xl mb-2">Sustainable Implementation</h4>
+                            <p class="text-gray-700">Realistic timelines that respect team capacity and prevent burnout</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- Agile AI Framework -->
-            <div class="mb-16">
-                <h3 class="text-3xl font-bold mb-6">Agile AI Framework: Short Cycles, Early Wins</h3>
+            <div class="mb-20">
+                <h3 class="text-3xl md:text-4xl font-bold mb-6">Agile AI Framework: Short Cycles, Early Wins</h3>
 
-                <p class="text-lg text-gray-700 mb-8">
-                    Traditional AI projects fail because they take too long, cost too much, and deliver everything at once. Our Agile approach gives you working automation in Week 2.
+                <p class="text-lg md:text-xl text-gray-700 mb-12 leading-relaxed">
+                    Traditional AI projects fail because they take too long, cost too much, and deliver everything at once. Our Agile approach gives you working automation in <strong class="font-semibold">Week 2</strong>.
                 </p>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white p-6 rounded-lg shadow-sm">
-                        <h4 class="font-bold text-xl mb-3">Monday: Sprint Planning</h4>
-                        <p class="text-gray-700">Select sprint goal, define "done" criteria, assign tasks</p>
+                    <div class="glass-dark p-8 rounded-2xl hover-lift">
+                        <div class="text-4xl mb-4">📋</div>
+                        <h4 class="font-bold text-2xl mb-3">Monday: Sprint Planning</h4>
+                        <p class="text-gray-700 text-lg">Select sprint goal, define "done" criteria, assign tasks</p>
                     </div>
 
-                    <div class="bg-white p-6 rounded-lg shadow-sm">
-                        <h4 class="font-bold text-xl mb-3">Daily: Async Updates</h4>
-                        <p class="text-gray-700">Quick check-ins, blocker identification, progress tracking</p>
+                    <div class="glass-dark p-8 rounded-2xl hover-lift">
+                        <div class="text-4xl mb-4">💬</div>
+                        <h4 class="font-bold text-2xl mb-3">Daily: Async Updates</h4>
+                        <p class="text-gray-700 text-lg">Quick check-ins, blocker identification, progress tracking</p>
                     </div>
 
-                    <div class="bg-white p-6 rounded-lg shadow-sm">
-                        <h4 class="font-bold text-xl mb-3">Wednesday: Live Build Session</h4>
-                        <p class="text-gray-700">Vibe coding in real-time, you watch and give feedback</p>
+                    <div class="glass-dark p-8 rounded-2xl hover-lift">
+                        <div class="text-4xl mb-4">⚙️</div>
+                        <h4 class="font-bold text-2xl mb-3">Wednesday: Live Build Session</h4>
+                        <p class="text-gray-700 text-lg">Vibe coding in real-time, you watch and give feedback</p>
                     </div>
 
-                    <div class="bg-white p-6 rounded-lg shadow-sm">
-                        <h4 class="font-bold text-xl mb-3">Friday: Sprint Review</h4>
-                        <p class="text-gray-700">Demo working features, gather feedback, adjust priorities</p>
+                    <div class="glass-dark p-8 rounded-2xl hover-lift">
+                        <div class="text-4xl mb-4">🎉</div>
+                        <h4 class="font-bold text-2xl mb-3">Friday: Sprint Review</h4>
+                        <p class="text-gray-700 text-lg">Demo working features, gather feedback, adjust priorities</p>
                     </div>
                 </div>
             </div>
@@ -385,11 +577,14 @@
     </section>
 
     <!-- WHY CHOOSE US / DIFFERENTIATORS SECTION -->
-    <section class="py-20 px-6 bg-white" id="differentiators">
-        <div class="max-w-4xl mx-auto">
-            <h2 class="text-4xl md:text-5xl font-bold mb-12 text-center">
+    <section class="section-spacing px-6 bg-gray-50" id="differentiators">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-center hero-headline">
                 Why Choose PVRPOSE AI
             </h2>
+            <p class="text-xl text-gray-600 text-center mb-20 max-w-3xl mx-auto">
+                The perfect balance of speed, quality, and sustainability.
+            </p>
 
             <!-- Comparison Table -->
             <div class="overflow-x-auto mb-16">
@@ -444,112 +639,122 @@
             </div>
 
             <!-- Key Differentiators -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="bg-gray-50 p-8 rounded-lg">
-                    <h3 class="text-2xl font-bold mb-4">15+ Years Agile Expertise</h3>
-                    <p class="text-gray-700">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+                <div class="bg-white p-10 rounded-2xl shadow-lg hover-lift">
+                    <div class="text-4xl mb-4">🎯</div>
+                    <h3 class="text-2xl md:text-3xl font-bold mb-4">15+ Years Agile Expertise</h3>
+                    <p class="text-gray-700 text-lg leading-relaxed">
                         Most AI consultants don't use Agile methodology. Most Agile consultants don't understand AI. We combine both.
                     </p>
                 </div>
 
-                <div class="bg-gray-50 p-8 rounded-lg">
-                    <h3 class="text-2xl font-bold mb-4">Service Business Specialization</h3>
-                    <p class="text-gray-700">
+                <div class="bg-white p-10 rounded-2xl shadow-lg hover-lift">
+                    <div class="text-4xl mb-4">💼</div>
+                    <h3 class="text-2xl md:text-3xl font-bold mb-4">Service Business Specialization</h3>
+                    <p class="text-gray-700 text-lg leading-relaxed">
                         We understand coach, consultant, and agency operations. Automation patterns specific to service delivery, not generic solutions.
                     </p>
                 </div>
 
-                <div class="bg-gray-50 p-8 rounded-lg">
-                    <h3 class="text-2xl font-bold mb-4">10× Cheaper, 5× Faster</h3>
-                    <p class="text-gray-700">
+                <div class="bg-white p-10 rounded-2xl shadow-lg hover-lift">
+                    <div class="text-4xl mb-4">⚡</div>
+                    <h3 class="text-2xl md:text-3xl font-bold mb-4">10× Cheaper, 5× Faster</h3>
+                    <p class="text-gray-700 text-lg leading-relaxed">
                         Enterprise consultancies charge $100K-$500K and take 6-12 months. We deliver in 6-8 weeks for $15K-$25K.
                     </p>
                 </div>
 
-                <div class="bg-gray-50 p-8 rounded-lg">
-                    <h3 class="text-2xl font-bold mb-4">Sustainable Implementation</h3>
-                    <p class="text-gray-700">
+                <div class="bg-white p-10 rounded-2xl shadow-lg hover-lift">
+                    <div class="text-4xl mb-4">🌱</div>
+                    <h3 class="text-2xl md:text-3xl font-bold mb-4">Sustainable Implementation</h3>
+                    <p class="text-gray-700 text-lg leading-relaxed">
                         We prevent founder burnout during AI transformation. Realistic timelines, manageable scope, and psychological safety built in.
                     </p>
                 </div>
             </div>
 
             <!-- CTA -->
-            <div class="mt-16 text-center">
+            <div class="text-center">
                 <a href="#contact"
-                   class="inline-block bg-deep-blue text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-900 transition-colors shadow-lg"
+                   class="inline-block btn-primary text-white px-10 py-5 rounded-xl text-xl font-semibold"
                    aria-label="Book your free discovery call">
-                    Book Your Free Discovery Call
+                    Book Your Free Discovery Call →
                 </a>
             </div>
         </div>
     </section>
 
     <!-- CASE STUDIES / TESTIMONIALS SECTION -->
-    <section class="py-20 px-6 bg-gray-50" id="results">
-        <div class="max-w-4xl mx-auto">
-            <h2 class="text-4xl md:text-5xl font-bold mb-12 text-center">
+    <section class="section-spacing px-6 bg-white" id="results">
+        <div class="max-w-5xl mx-auto">
+            <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-center hero-headline">
                 Results You Can Expect
             </h2>
 
-            <p class="text-xl text-center text-gray-700 mb-16 max-w-2xl mx-auto">
+            <p class="text-xl md:text-2xl text-center text-gray-700 mb-20 max-w-3xl mx-auto font-light leading-relaxed">
                 Based on our implementations and industry benchmarks, here's what our clients typically achieve.
             </p>
 
             <!-- Case Study Placeholders -->
-            <div class="space-y-8">
-                <div class="bg-white p-8 rounded-lg shadow-sm border-l-4 border-deep-blue">
-                    <p class="text-xl font-semibold mb-4">
+            <div class="space-y-6 mb-20">
+                <div class="glass p-8 md:p-10 rounded-2xl shadow-lg hover-lift border-l-4 border-pink-500">
+                    <p class="text-2xl md:text-3xl font-semibold mb-6 leading-tight">
                         "Service business owner saved 15 hours/week in scheduling and admin tasks"
                     </p>
-                    <p class="text-gray-700 mb-4">
+                    <p class="text-gray-700 text-lg mb-6 leading-relaxed">
                         AI-powered scheduling automation eliminated back-and-forth emails, reduced no-shows by 60%, and freed up time for revenue-generating activities.
                     </p>
-                    <p class="text-sm text-gray-600">
-                        Industry: Professional Services | Implementation: 6 weeks | ROI: 12× in first year
-                    </p>
+                    <div class="flex flex-wrap gap-4 text-sm">
+                        <span class="bg-white px-4 py-2 rounded-full font-semibold">Professional Services</span>
+                        <span class="bg-white px-4 py-2 rounded-full">6 weeks implementation</span>
+                        <span class="bg-white px-4 py-2 rounded-full gradient-accent bg-clip-text text-transparent font-bold">12× ROI</span>
+                    </div>
                 </div>
 
-                <div class="bg-white p-8 rounded-lg shadow-sm border-l-4 border-deep-blue">
-                    <p class="text-xl font-semibold mb-4">
+                <div class="glass p-8 md:p-10 rounded-2xl shadow-lg hover-lift border-l-4 border-purple-500">
+                    <p class="text-2xl md:text-3xl font-semibold mb-6 leading-tight">
                         "Agency increased lead response rate by 300% with 24/7 AI voice receptionist"
                     </p>
-                    <p class="text-gray-700 mb-4">
+                    <p class="text-gray-700 text-lg mb-6 leading-relaxed">
                         Custom AI voice system answers calls, qualifies leads, answers FAQs, and books discovery calls automatically—even after hours and on weekends.
                     </p>
-                    <p class="text-sm text-gray-600">
-                        Industry: Marketing Agency | Implementation: 8 weeks | New revenue: $45K annually
-                    </p>
+                    <div class="flex flex-wrap gap-4 text-sm">
+                        <span class="bg-white px-4 py-2 rounded-full font-semibold">Marketing Agency</span>
+                        <span class="bg-white px-4 py-2 rounded-full">8 weeks implementation</span>
+                        <span class="bg-white px-4 py-2 rounded-full gradient-accent bg-clip-text text-transparent font-bold">$45K annual revenue</span>
+                    </div>
                 </div>
 
-                <div class="bg-white p-8 rounded-lg shadow-sm border-l-4 border-deep-blue">
-                    <p class="text-xl font-semibold mb-4">
+                <div class="glass p-8 md:p-10 rounded-2xl shadow-lg hover-lift border-l-4 border-blue-600">
+                    <p class="text-2xl md:text-3xl font-semibold mb-6 leading-tight">
                         "Consultant generated $50K additional revenue from reclaimed time"
                     </p>
-                    <p class="text-gray-700 mb-4">
+                    <p class="text-gray-700 text-lg mb-6 leading-relaxed">
                         Automated proposal generation and client intake freed up 12 hours/week, allowing consultant to take on 2 additional retainer clients.
                     </p>
-                    <p class="text-sm text-gray-600">
-                        Industry: Business Consulting | Implementation: 7 weeks | ROI: 20× in first year
-                    </p>
+                    <div class="flex flex-wrap gap-4 text-sm">
+                        <span class="bg-white px-4 py-2 rounded-full font-semibold">Business Consulting</span>
+                        <span class="bg-white px-4 py-2 rounded-full">7 weeks implementation</span>
+                        <span class="bg-white px-4 py-2 rounded-full gradient-accent bg-clip-text text-transparent font-bold">20× ROI</span>
+                    </div>
                 </div>
             </div>
 
             <!-- Expected Outcomes -->
-            <div class="mt-16 bg-white p-8 rounded-lg shadow-sm">
-                <h3 class="text-2xl font-bold mb-6">What You Can Expect:</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            <div class="bg-gradient-to-br from-pink-500 to-purple-600 p-12 rounded-3xl shadow-2xl text-white">
+                <h3 class="text-3xl md:text-4xl font-bold mb-12 text-center">What You Can Expect:</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
                     <div>
-                        <p class="text-4xl font-bold text-deep-blue mb-2">10-20 hrs</p>
-                        <p class="text-gray-700">Time saved per week</p>
+                        <p class="text-5xl md:text-6xl font-bold mb-4">10-20 hrs</p>
+                        <p class="text-xl opacity-90">Time saved per week</p>
                     </div>
                     <div>
-                        <p class="text-4xl font-bold text-deep-blue mb-2">$10K-$50K</p>
-                        <p class="text-gray-700">Additional annual revenue</p>
+                        <p class="text-5xl md:text-6xl font-bold mb-4">$10K-$50K</p>
+                        <p class="text-xl opacity-90">Additional annual revenue</p>
                     </div>
                     <div>
-                        <p class="text-4xl font-bold text-deep-blue mb-2">10-20×</p>
-                        <p class="text-gray-700">ROI in first year</p>
+                        <p class="text-5xl md:text-6xl font-bold mb-4">10-20×</p>
+                        <p class="text-xl opacity-90">ROI in first year</p>
                     </div>
                 </div>
             </div>
@@ -557,14 +762,17 @@
     </section>
 
     <!-- ABOUT THE FOUNDER SECTION -->
-    <section class="py-20 px-6 bg-white" id="about">
-        <div class="max-w-4xl mx-auto">
-            <h2 class="text-4xl md:text-5xl font-bold mb-12 text-center">
+    <section class="section-spacing px-6 bg-gray-50" id="about">
+        <div class="max-w-5xl mx-auto">
+            <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-center hero-headline">
                 About the Founder
             </h2>
+            <p class="text-xl text-gray-600 text-center mb-20 max-w-3xl mx-auto">
+                15+ years of Agile excellence meets AI innovation.
+            </p>
 
-            <div class="bg-gray-50 p-8 md:p-12 rounded-lg">
-                <h3 class="text-3xl font-bold mb-6">Juan Gonzalez</h3>
+            <div class="glass p-10 md:p-16 rounded-3xl shadow-2xl">
+                <h3 class="text-4xl md:text-5xl font-bold mb-8 gradient-accent bg-clip-text text-transparent">Juan Gonzalez</h3>
 
                 <p class="text-lg text-gray-700 mb-6">
                     I've spent 15+ years as an Agile coach and project manager, leading Agile transformations at companies like Ubisoft IT and Ericsson. I've coached 19+ teams through scaled Agile implementations and founded Agile Communities of Practice.
@@ -608,41 +816,41 @@
     </section>
 
     <!-- HOW CLIENTS FIND US SECTION -->
-    <section class="py-16 px-6 bg-white">
-        <div class="max-w-4xl mx-auto text-center">
-            <h2 class="text-3xl md:text-4xl font-bold mb-6">
+    <section class="section-spacing px-6 bg-white">
+        <div class="max-w-5xl mx-auto text-center">
+            <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 hero-headline">
                 How Our Clients Find Us
             </h2>
 
-            <p class="text-xl text-gray-700 mb-12 max-w-2xl mx-auto">
+            <p class="text-xl md:text-2xl text-gray-700 mb-16 max-w-3xl mx-auto font-light leading-relaxed">
                 91% of our clients come from referrals and warm introductions—from colleagues, business partners, and professional networks who know the quality of our work.
             </p>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                <div class="bg-gray-50 p-6 rounded-lg">
-                    <p class="text-4xl font-bold text-deep-blue mb-3">91%</p>
-                    <p class="text-gray-700 font-semibold mb-2">Referrals & Warm Introductions</p>
-                    <p class="text-sm text-gray-600">Trusted recommendations from professional networks</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+                <div class="glass-dark p-8 rounded-2xl hover-lift">
+                    <p class="stat-number text-5xl md:text-6xl mb-4">91%</p>
+                    <p class="text-gray-900 font-bold text-xl mb-3">Referrals & Warm Introductions</p>
+                    <p class="text-gray-600">Trusted recommendations from professional networks</p>
                 </div>
 
-                <div class="bg-gray-50 p-6 rounded-lg">
-                    <p class="text-4xl font-bold text-deep-blue mb-3">6-8 weeks</p>
-                    <p class="text-gray-700 font-semibold mb-2">Average Time to Results</p>
-                    <p class="text-sm text-gray-600">From discovery call to working AI system</p>
+                <div class="glass-dark p-8 rounded-2xl hover-lift">
+                    <p class="stat-number text-5xl md:text-6xl mb-4">6-8 weeks</p>
+                    <p class="text-gray-900 font-bold text-xl mb-3">Average Time to Results</p>
+                    <p class="text-gray-600">From discovery call to working AI system</p>
                 </div>
 
-                <div class="bg-gray-50 p-6 rounded-lg">
-                    <p class="text-4xl font-bold text-deep-blue mb-3">10-20×</p>
-                    <p class="text-gray-700 font-semibold mb-2">Typical ROI</p>
-                    <p class="text-sm text-gray-600">Return on investment in first year</p>
+                <div class="glass-dark p-8 rounded-2xl hover-lift">
+                    <p class="stat-number text-5xl md:text-6xl mb-4">10-20×</p>
+                    <p class="text-gray-900 font-bold text-xl mb-3">Typical ROI</p>
+                    <p class="text-gray-600">Return on investment in first year</p>
                 </div>
             </div>
 
-            <div class="mt-12 bg-deep-blue text-white p-8 rounded-lg">
-                <p class="text-lg mb-4">
-                    <strong>Know someone who needs AI help?</strong>
+            <div class="bg-gradient-to-br from-blue-900 to-blue-700 text-white p-10 md:p-12 rounded-3xl shadow-2xl hover-glow">
+                <p class="text-2xl md:text-3xl font-bold mb-6">
+                    Know someone who needs AI help?
                 </p>
-                <p class="text-base">
+                <p class="text-lg md:text-xl opacity-90 max-w-2xl mx-auto">
                     We offer referral incentives for introductions to qualified businesses. Reach out to discuss partnership opportunities.
                 </p>
             </div>
@@ -650,18 +858,18 @@
     </section>
 
     <!-- LEAD MAGNET SECTION -->
-    <section class="py-20 px-6 bg-gray-50" id="checklist">
-        <div class="max-w-2xl mx-auto text-center">
-            <h2 class="text-4xl md:text-5xl font-bold mb-6">
+    <section class="section-spacing px-6 bg-gray-50" id="checklist">
+        <div class="max-w-3xl mx-auto text-center">
+            <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 hero-headline">
                 Download Your Free AI Readiness Checklist
             </h2>
 
-            <p class="text-lg text-gray-700 mb-12">
+            <p class="text-xl md:text-2xl text-gray-700 mb-16 font-light leading-relaxed">
                 Get our practical checklist to assess if your business is ready for AI automation. Takes 10 minutes to complete.
             </p>
 
             <!-- Email Capture Form -->
-            <form class="bg-white p-8 rounded-lg shadow-lg" action="/submit-checklist" method="POST">
+            <form class="glass p-10 md:p-12 rounded-3xl shadow-2xl" action="/submit-checklist" method="POST">
                 <div class="mb-4">
                     <label for="name" class="block text-left font-semibold mb-2">Name</label>
                     <input
@@ -688,10 +896,10 @@
 
                 <button
                     type="submit"
-                    class="w-full bg-deep-blue text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-900 transition-colors"
+                    class="w-full btn-primary text-white px-10 py-5 rounded-xl text-xl font-semibold"
                     aria-label="Download free AI readiness checklist"
                 >
-                    Download Free Checklist
+                    Download Free Checklist →
                 </button>
 
                 <p class="text-sm text-gray-600 mt-4">
@@ -702,22 +910,22 @@
     </section>
 
     <!-- CONTACT / CTA SECTION -->
-    <section class="py-20 px-6 bg-white" id="contact">
-        <div class="max-w-4xl mx-auto text-center">
-            <h2 class="text-4xl md:text-5xl font-bold mb-6">
+    <section class="section-spacing px-6 gradient-hero" id="contact">
+        <div class="max-w-5xl mx-auto text-center">
+            <h2 class="text-4xl md:text-5xl lg:text-7xl font-bold mb-8 hero-headline">
                 Ready to Get Started?
             </h2>
 
-            <p class="text-xl text-gray-700 mb-12 max-w-2xl mx-auto">
+            <p class="text-xl md:text-2xl text-gray-700 mb-16 max-w-3xl mx-auto font-light leading-relaxed">
                 Book a free 30-minute discovery call. We'll discuss your business, identify automation opportunities, and see if PVRPOSE AI is a good fit.
             </p>
 
             <!-- Primary CTA -->
-            <div class="mb-12">
+            <div class="mb-16">
                 <a href="/book"
-                   class="inline-block bg-deep-blue text-white px-10 py-5 rounded-lg text-xl font-semibold hover:bg-blue-900 transition-colors shadow-lg"
+                   class="inline-block btn-primary text-white px-12 py-6 rounded-xl text-2xl font-semibold hover-glow"
                    aria-label="Schedule your free 30-minute discovery call">
-                    Schedule Your Free Discovery Call
+                    Schedule Your Free Discovery Call →
                 </a>
             </div>
 
@@ -740,11 +948,13 @@
     </section>
 
     <!-- FOOTER -->
-    <footer class="bg-black text-white py-12 px-6">
-        <div class="max-w-4xl mx-auto">
-            <div class="text-center mb-8">
-                <h3 class="text-2xl font-bold mb-2">PVRPOSE AI</h3>
-                <p class="text-gray-400">Own Your Voice. Vision. Vibe.</p>
+    <footer class="bg-black text-white py-16 px-6">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center mb-12">
+                <div class="mb-4 flex justify-center">
+                    <img src="logo.png" alt="PVRPOSE AI Logo" class="h-12 opacity-90" width="500" height="53" loading="lazy" />
+                </div>
+                <p class="text-gray-400 text-lg">Own Your Voice. Vision. Vibe.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left mb-8">
