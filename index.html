@@ -220,7 +220,7 @@
             height: 100%;
         }
 
-        /* Logo fix - using data URI fallback */
+        /* Logo fix */
         .brand-logo {
             height: 64px;
             max-width: 100%;
@@ -232,18 +232,93 @@
                 height: 48px;
             }
         }
+
+        /* Navigation */
+        .main-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .nav-logo {
+            height: 48px;
+            width: auto;
+        }
+
+        .nav-link {
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #ec4899;
+        }
+
+        /* Add padding to body to account for fixed nav */
+        body {
+            padding-top: 80px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-top: 70px;
+            }
+            .nav-logo {
+                height: 40px;
+            }
+        }
     </style>
 </head>
 <body class="bg-white text-black antialiased">
 
+    <!-- NAVIGATION -->
+    <nav class="main-nav">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <a href="/" class="flex items-center">
+                    <img src="logo.png" alt="PVRPOSE AI" class="nav-logo" />
+                </a>
+
+                <!-- Desktop Navigation Links -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#services" class="nav-link text-gray-700 font-medium">Services</a>
+                    <a href="#calculator" class="nav-link text-gray-700 font-medium">ROI Calculator</a>
+                    <a href="#about" class="nav-link text-gray-700 font-medium">About</a>
+                    <a href="#contact" class="btn-primary text-white px-6 py-3 rounded-xl font-semibold text-sm">
+                        Get Started →
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuBtn" class="md:hidden text-gray-700 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobileMenu" class="hidden md:hidden mt-4 pb-4 space-y-4">
+                <a href="#services" class="block nav-link text-gray-700 font-medium py-2">Services</a>
+                <a href="#calculator" class="block nav-link text-gray-700 font-medium py-2">ROI Calculator</a>
+                <a href="#about" class="block nav-link text-gray-700 font-medium py-2">About</a>
+                <a href="#contact" class="block btn-primary text-white px-6 py-3 rounded-xl font-semibold text-center">
+                    Get Started →
+                </a>
+            </div>
+        </div>
+    </nav>
+
     <!-- HERO SECTION -->
     <section class="min-h-screen flex items-center justify-center px-6 py-20 gradient-hero">
         <div class="max-w-5xl mx-auto text-center animate-fade-in">
-            <!-- Logo -->
-            <div class="mb-8 flex justify-center">
-                <img src="logo.png" alt="PVRPOSE AI - Voice, Vision, Vibe" class="brand-logo logo-glow" style="max-width: 500px; height: auto;" />
-            </div>
-
             <!-- Tagline -->
             <p class="text-xl md:text-2xl text-gray-600 mb-12 font-medium">
                 Own Your Voice. Vision. Vibe.
@@ -1062,6 +1137,19 @@
             if (e.target === this) {
                 this.classList.remove('active');
             }
+        });
+
+        // Mobile menu toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('#mobileMenu a').forEach(link => {
+            link.addEventListener('click', function() {
+                document.getElementById('mobileMenu').classList.add('hidden');
+            });
         });
     </script>
 </body>
