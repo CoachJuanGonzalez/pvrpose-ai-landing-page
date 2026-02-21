@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 213" width="2000" height="213">
+  <defs>
+    <linearGradient id="pinkToPurple" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ec4899;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#a855f7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- P (Black) -->
+  <path d="M 10,30 L 10,180 L 50,180 L 50,120 L 110,120 C 140,120 160,100 160,70 C 160,40 140,30 110,30 Z M 50,70 L 50,90 L 110,90 C 120,90 120,70 110,70 Z" fill="#000000"/>
+
+  <!-- V (Gradient Pink to Purple) -->
+  <path d="M 180,30 L 230,180 L 270,180 L 320,30 L 280,30 L 250,140 L 220,30 Z" fill="url(#pinkToPurple)"/>
+
+  <!-- R (Black) -->
+  <path d="M 340,30 L 340,180 L 380,180 L 380,120 L 420,120 L 460,180 L 510,180 L 465,115 C 490,110 510,90 510,65 C 510,40 490,30 450,30 Z M 380,70 L 380,90 L 440,90 C 450,90 450,70 440,70 Z" fill="#000000"/>
+
+  <!-- P (Black) -->
+  <path d="M 530,30 L 530,180 L 570,180 L 570,120 L 630,120 C 660,120 680,100 680,70 C 680,40 660,30 630,30 Z M 570,70 L 570,90 L 630,90 C 640,90 640,70 630,70 Z" fill="#000000"/>
+
+  <!-- O (Black) -->
+  <circle cx="770" cy="105" r="60" fill="none" stroke="#000000" stroke-width="40"/>
+
+  <!-- S (Black) -->
+  <path d="M 900,70 C 900,45 880,30 850,30 C 820,30 800,45 800,70 L 840,70 C 840,65 845,60 850,60 C 855,60 860,65 860,70 C 860,85 820,90 820,120 C 820,145 840,180 870,180 C 900,180 920,165 920,140 L 880,140 C 880,145 875,150 870,150 C 865,150 860,145 860,140 C 860,125 900,120 900,90 Z" fill="#000000"/>
+
+  <!-- E (Black) -->
+  <path d="M 940,30 L 940,180 L 1070,180 L 1070,150 L 980,150 L 980,120 L 1050,120 L 1050,90 L 980,90 L 980,60 L 1070,60 L 1070,30 Z" fill="#000000"/>
+
+  <!-- AI (Black) -->
+  <g transform="translate(1120,0)">
+    <!-- A -->
+    <path d="M 10,180 L 50,30 L 90,30 L 130,180 L 90,180 L 85,150 L 55,150 L 50,180 Z M 60,120 L 80,120 L 70,70 Z" fill="#000000"/>
+    <!-- I -->
+    <rect x="150" y="30" width="40" height="150" fill="#000000"/>
+  </g>
+
+  <!-- Geometric Icon (Right side - Gradient) -->
+  <g transform="translate(1400,30)">
+    <!-- Layered triangular shapes -->
+    <path d="M 0,0 L 200,0 L 200,30 L 40,30 Z" fill="url(#pinkToPurple)" opacity="0.9"/>
+    <path d="M 0,40 L 200,40 L 200,70 L 60,70 Z" fill="url(#pinkToPurple)" opacity="0.8"/>
+    <path d="M 0,80 L 200,80 L 200,110 L 80,110 Z" fill="url(#pinkToPurple)" opacity="0.7"/>
+    <path d="M 0,120 L 200,120 L 200,150 L 100,150 Z" fill="url(#pinkToPurple)" opacity="0.6"/>
+
+    <!-- Angled triangle -->
+    <path d="M 180,0 L 250,75 L 180,150 Z" fill="url(#pinkToPurple)" opacity="0.9"/>
+    <path d="M 200,20 L 260,75 L 200,130 Z" fill="url(#pinkToPurple)" opacity="0.95"/>
+  </g>
+</svg>
