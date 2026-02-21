@@ -1,0 +1,22 @@
+{
+    "name": "PVRPOSE AI - Custom AI Automation for Professional Services",
+    "short_name": "PVRPOSE AI",
+    "description": "Stop spending 20+ hours on admin. Custom AI automation for coaches, consultants, and agencies. Save 10-20 hours/week.",
+    "icons": [
+        {
+            "src": "/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#ec4899",
+    "background_color": "#ffffff",
+    "display": "standalone",
+    "start_url": "/",
+    "orientation": "portrait-primary"
+}
