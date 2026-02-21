@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Discover if AI automation is right for your business. Take our 2-minute AI Readiness Assessment to get personalized recommendations.">
+    <title>AI Readiness Assessment | PVRPOSE AI</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'deep-blue': '#1E3A8A',
+                        'brand-pink': '#ec4899',
+                        'brand-purple': '#8b5cf6',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'Helvetica', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', 'Helvetica', system-ui, sans-serif;
+        }
+
+        .gradient-hero {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f1f5f9 100%);
+        }
+
+        .gradient-accent {
+            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(236, 72, 153, 0.3);
+        }
+
+        .progress-bar {
+            transition: width 0.5s ease;
+        }
+
+        .question-card {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .option-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .option-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .option-card.selected {
+            border: 2px solid #ec4899;
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="gradient-hero min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="py-4 px-6 bg-white shadow-sm">
+        <div class="max-w-5xl mx-auto flex items-center justify-between">
+            <a href="/index.html" class="flex items-center">
+                <img src="/logotypes-ai-rez-01.jpg" alt="PVRPOSE AI" style="max-height: 50px; width: auto;" />
+            </a>
+            <a href="/index.html" class="text-gray-600 hover:text-gray-900 font-medium">← Back to Home</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-4xl mx-auto px-6 py-12">
+
+        <!-- Intro Section -->
+        <div id="introSection" class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+                Is AI Automation Right for Your Business?
+            </h1>
+            <p class="text-xl text-gray-700 mb-8 max-w-2xl mx-auto">
+                Take this 2-minute assessment to discover your AI readiness score and get personalized recommendations.
+            </p>
+            <button onclick="startAssessment()" class="btn-primary text-white px-10 py-4 rounded-xl text-lg font-semibold">
+                Start Assessment →
+            </button>
+        </div>
+
+        <!-- Progress Bar -->
+        <div id="progressSection" class="hidden mb-8">
+            <div class="flex justify-between text-sm text-gray-600 mb-2">
+                <span>Question <span id="currentQuestion">1</span> of 8</span>
+                <span><span id="progressPercent">0</span>% Complete</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-3">
+                <div id="progressBar" class="progress-bar bg-gradient-to-r from-pink-500 to-purple-600 h-3 rounded-full" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Questions Container -->
+        <div id="questionsContainer" class="hidden">
+            <!-- Questions will be dynamically inserted here -->
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultsSection" class="hidden">
+            <div class="glass p-10 rounded-3xl shadow-2xl">
+                <div class="text-center mb-10">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-4">Your AI Readiness Score</h2>
+                    <div class="text-7xl font-bold gradient-accent bg-clip-text text-transparent mb-2">
+                        <span id="finalScore">0</span>%
+                    </div>
+                    <p class="text-xl text-gray-600" id="scoreCategory"></p>
+                </div>
+
+                <div id="recommendationsContent" class="mb-10">
+                    <!-- Personalized recommendations will be inserted here -->
+                </div>
+
+                <!-- Email Capture -->
+                <div class="bg-gradient-to-br from-pink-500 to-purple-600 p-8 rounded-2xl text-white">
+                    <h3 class="text-2xl font-bold mb-4 text-center">Get Your Personalized AI Implementation Roadmap</h3>
+                    <p class="text-center mb-6 text-white/90">Enter your email to receive a detailed PDF report with custom recommendations for your business.</p>
+
+                    <form id="resultsForm" class="max-w-md mx-auto" onsubmit="submitResults(event)">
+                        <div class="space-y-4">
+                            <input type="text" id="userName" required placeholder="Your Name"
+                                   class="w-full px-4 py-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-white">
+                            <input type="email" id="userEmail" required placeholder="Your Email"
+                                   class="w-full px-4 py-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-white">
+                            <input type="tel" id="userPhone" placeholder="Phone (Optional)"
+                                   class="w-full px-4 py-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-white">
+                            <button type="submit" class="w-full bg-white text-pink-600 px-6 py-4 rounded-xl font-semibold text-lg hover:bg-gray-100 transition">
+                                Send Me My Custom Roadmap →
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="text-center mt-8">
+                    <button onclick="restartAssessment()" class="text-gray-600 hover:text-gray-900 underline">
+                        Retake Assessment
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Assessment Questions
+        const questions = [
+            {
+                id: 1,
+                question: "What's your current annual revenue?",
+                options: [
+                    { text: "Under $100K", value: 0, weight: 0 },
+                    { text: "$100K - $250K", value: 25, weight: 1 },
+                    { text: "$250K - $500K", value: 50, weight: 2 },
+                    { text: "$500K - $1M", value: 75, weight: 3 },
+                    { text: "Over $1M", value: 100, weight: 4 }
+                ]
+            },
+            {
+                id: 2,
+                question: "How many hours per week do you spend on repetitive admin tasks?",
+                options: [
+                    { text: "Less than 5 hours", value: 20, weight: 1 },
+                    { text: "5-10 hours", value: 50, weight: 2 },
+                    { text: "10-20 hours", value: 80, weight: 3 },
+                    { text: "More than 20 hours", value: 100, weight: 4 }
+                ]
+            },
+            {
+                id: 3,
+                question: "Which tasks take up most of your time? (Select what resonates most)",
+                options: [
+                    { text: "Client follow-ups & communication", value: 80, weight: 3, category: "communication" },
+                    { text: "Scheduling & calendar management", value: 70, weight: 3, category: "scheduling" },
+                    { text: "Proposal creation & sending", value: 85, weight: 4, category: "sales" },
+                    { text: "Data entry & CRM updates", value: 90, weight: 4, category: "data" },
+                    { text: "Email management & responses", value: 75, weight: 3, category: "communication" }
+                ]
+            },
+            {
+                id: 4,
+                question: "What's your biggest frustration right now?",
+                options: [
+                    { text: "I'm stuck in the weeds, can't focus on growth", value: 100, weight: 4 },
+                    { text: "Too many tools, nothing talks to each other", value: 85, weight: 3 },
+                    { text: "Inconsistent client experience", value: 75, weight: 3 },
+                    { text: "Can't scale without hiring more people", value: 90, weight: 4 },
+                    { text: "Drowning in manual work", value: 95, weight: 4 }
+                ]
+            },
+            {
+                id: 5,
+                question: "Have you tried AI tools before?",
+                options: [
+                    { text: "No, I'm completely new to AI", value: 50, weight: 2 },
+                    { text: "I've used ChatGPT or similar", value: 70, weight: 3 },
+                    { text: "I use a few AI tools, but they're disconnected", value: 85, weight: 3 },
+                    { text: "I've tried to implement AI but it didn't stick", value: 95, weight: 4 }
+                ]
+            },
+            {
+                id: 6,
+                question: "What type of business do you run?",
+                options: [
+                    { text: "Coaching or Consulting", value: 100, weight: 4, niche: "coaching" },
+                    { text: "Professional Services (legal, accounting, etc.)", value: 90, weight: 4, niche: "professional" },
+                    { text: "Agency (marketing, creative, etc.)", value: 85, weight: 3, niche: "agency" },
+                    { text: "SaaS or Tech Company", value: 70, weight: 2, niche: "tech" },
+                    { text: "Other service business", value: 75, weight: 3, niche: "other" }
+                ]
+            },
+            {
+                id: 7,
+                question: "How would you describe your technical comfort level?",
+                options: [
+                    { text: "I avoid tech whenever possible", value: 60, weight: 2 },
+                    { text: "I can figure out most tools with some help", value: 80, weight: 3 },
+                    { text: "I'm comfortable with technology", value: 90, weight: 3 },
+                    { text: "I'm very tech-savvy", value: 75, weight: 2 }
+                ]
+            },
+            {
+                id: 8,
+                question: "What's your timeline for implementing AI automation?",
+                options: [
+                    { text: "Just exploring options", value: 40, weight: 1 },
+                    { text: "Ready to start in the next 3 months", value: 70, weight: 3 },
+                    { text: "Ready to start in the next 30 days", value: 90, weight: 4 },
+                    { text: "I need this yesterday", value: 100, weight: 4 }
+                ]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let answers = [];
+
+        function startAssessment() {
+            document.getElementById('introSection').classList.add('hidden');
+            document.getElementById('progressSection').classList.remove('hidden');
+            document.getElementById('questionsContainer').classList.remove('hidden');
+            showQuestion(0);
+        }
+
+        function showQuestion(index) {
+            currentQuestionIndex = index;
+            const question = questions[index];
+            const progress = ((index) / questions.length) * 100;
+
+            document.getElementById('currentQuestion').textContent = index + 1;
+            document.getElementById('progressPercent').textContent = Math.round(progress);
+            document.getElementById('progressBar').style.width = progress + '%';
+
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = `
+                <div class="question-card glass p-8 md:p-12 rounded-3xl shadow-2xl">
+                    <h3 class="text-2xl md:text-3xl font-bold mb-8">${question.question}</h3>
+                    <div class="space-y-4" id="optionsContainer">
+                        ${question.options.map((option, i) => `
+                            <div class="option-card bg-white p-6 rounded-xl border-2 border-gray-200"
+                                 onclick="selectOption(${index}, ${i})"
+                                 data-option="${i}">
+                                <p class="text-lg font-medium">${option.text}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function selectOption(questionIndex, optionIndex) {
+            const question = questions[questionIndex];
+            const option = question.options[optionIndex];
+
+            // Store answer
+            answers[questionIndex] = {
+                questionId: question.id,
+                question: question.question,
+                selectedOption: option,
+                value: option.value,
+                weight: option.weight,
+                category: option.category || null,
+                niche: option.niche || null
+            };
+
+            // Visual feedback
+            document.querySelectorAll('.option-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.querySelector(`[data-option="${optionIndex}"]`).classList.add('selected');
+
+            // Move to next question after a brief delay
+            setTimeout(() => {
+                if (currentQuestionIndex < questions.length - 1) {
+                    showQuestion(currentQuestionIndex + 1);
+                } else {
+                    showResults();
+                }
+            }, 500);
+        }
+
+        function showResults() {
+            document.getElementById('progressSection').classList.add('hidden');
+            document.getElementById('questionsContainer').classList.add('hidden');
+            document.getElementById('resultsSection').classList.remove('hidden');
+
+            // Calculate score (weighted average)
+            let totalScore = 0;
+            let totalWeight = 0;
+
+            answers.forEach(answer => {
+                totalScore += answer.value * answer.weight;
+                totalWeight += answer.weight * 100;
+            });
+
+            const finalScore = Math.round((totalScore / totalWeight) * 100);
+
+            // Animate score
+            animateScore(finalScore);
+
+            // Generate recommendations
+            generateRecommendations(finalScore, answers);
+        }
+
+        function animateScore(target) {
+            let current = 0;
+            const increment = target / 50;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                document.getElementById('finalScore').textContent = Math.round(current);
+            }, 20);
+        }
+
+        function generateRecommendations(score, answers) {
+            let category, description, recommendations;
+
+            if (score >= 80) {
+                category = "Excellent Fit - Ready for AI Transformation";
+                description = "You're an ideal candidate for AI automation. Your business is at the perfect stage to implement custom AI systems that will deliver significant ROI.";
+                recommendations = [
+                    "✓ You could save 10-20 hours per week with the right AI systems",
+                    "✓ Expected ROI: 10-20× in the first year",
+                    "✓ Recommended timeline: Start implementation within 30 days",
+                    "✓ Priority focus: " + identifyTopPriority(answers),
+                    "✓ Next step: Schedule a free strategy call to map your custom AI roadmap"
+                ];
+            } else if (score >= 60) {
+                category = "Strong Potential - Good Timing for AI";
+                description = "Your business shows strong indicators for AI automation success. With the right approach, you can see significant productivity gains.";
+                recommendations = [
+                    "✓ You could save 5-15 hours per week with targeted AI automation",
+                    "✓ Expected ROI: 5-10× in the first year",
+                    "✓ Recommended timeline: Start within 3 months",
+                    "✓ Priority focus: " + identifyTopPriority(answers),
+                    "✓ Next step: Download our AI Implementation Guide and schedule a discovery call"
+                ];
+            } else if (score >= 40) {
+                category = "Moderate Fit - Consider AI for Growth";
+                description = "AI automation could help your business, but timing and approach matter. Focus on quick wins first.";
+                recommendations = [
+                    "✓ Start with 1-2 key automation workflows",
+                    "✓ Expected time savings: 3-8 hours per week initially",
+                    "✓ Recommended timeline: Explore options over next 6 months",
+                    "✓ Priority focus: " + identifyTopPriority(answers),
+                    "✓ Next step: Join our email list for AI automation tips and case studies"
+                ];
+            } else {
+                category = "Early Stage - Build Foundation First";
+                description = "Your business may benefit more from establishing core processes before implementing AI automation.";
+                recommendations = [
+                    "✓ Focus on documenting your current processes first",
+                    "✓ Build your revenue to $100K+ for better ROI on AI investment",
+                    "✓ Start learning about AI tools (ChatGPT, etc.)",
+                    "✓ Recommended timeline: Revisit AI automation in 6-12 months",
+                    "✓ Next step: Subscribe to our newsletter for free AI tips and resources"
+                ];
+            }
+
+            document.getElementById('scoreCategory').textContent = category;
+            document.getElementById('recommendationsContent').innerHTML = `
+                <div class="mb-8">
+                    <p class="text-lg text-gray-700 mb-6">${description}</p>
+                    <h4 class="font-bold text-xl mb-4">Your Personalized Recommendations:</h4>
+                    <ul class="space-y-3">
+                        ${recommendations.map(rec => `
+                            <li class="flex items-start text-gray-700">
+                                <span class="text-green-500 mr-3 text-xl">✓</span>
+                                <span class="text-lg">${rec}</span>
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+
+        function identifyTopPriority(answers) {
+            // Analyze answers to identify top priority area
+            const categories = {};
+
+            answers.forEach(answer => {
+                if (answer.category) {
+                    categories[answer.category] = (categories[answer.category] || 0) + answer.weight;
+                }
+            });
+
+            const topCategory = Object.keys(categories).sort((a, b) => categories[b] - categories[a])[0];
+
+            const categoryMap = {
+                'communication': 'Client communication & follow-up automation',
+                'scheduling': 'Calendar management & scheduling automation',
+                'sales': 'Proposal generation & sales process automation',
+                'data': 'Data entry & CRM automation'
+            };
+
+            return categoryMap[topCategory] || 'Workflow automation & process optimization';
+        }
+
+        function submitResults(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('userName').value;
+            const email = document.getElementById('userEmail').value;
+            const phone = document.getElementById('userPhone').value;
+            const score = document.getElementById('finalScore').textContent;
+
+            // Here you would send this data to your email service (ConvertKit, Mailchimp, etc.)
+            // For now, we'll show a success message
+
+            console.log('Assessment Results:', {
+                name,
+                email,
+                phone,
+                score,
+                answers
+            });
+
+            alert(`Thank you, ${name}! Your personalized AI Implementation Roadmap will be sent to ${email} within 24 hours. Check your inbox!`);
+
+            // Optional: redirect to thank you page or booking calendar
+            // window.location.href = 'https://calendly.com/your-link';
+        }
+
+        function restartAssessment() {
+            currentQuestionIndex = 0;
+            answers = [];
+            document.getElementById('resultsSection').classList.add('hidden');
+            document.getElementById('introSection').classList.remove('hidden');
+        }
+    </script>
+
+</body>
+</html>

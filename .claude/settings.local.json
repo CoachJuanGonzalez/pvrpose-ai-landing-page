@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "WebSearch",
+      "Bash(git init:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(gh --version:*)",
+      "Bash(git config:*)",
+      "Bash(git remote add:*)",
+      "Bash(git branch:*)",
+      "Bash(git push:*)",
+      "Bash(npm:*)",
+      "Bash(vercel --version:*)",
+      "WebFetch(domain:www.jasper.ai)",
+      "WebFetch(domain:zapier.com)",
+      "WebFetch(domain:www.anthropic.com)",
+      "WebFetch(domain:pvrpose.ai)",
+      "WebFetch(domain:coaching.pvrpose.ai)",
+      "Bash(curl:*)",
+      "Bash(git ls-tree:*)"
+    ]
+  }
+}
