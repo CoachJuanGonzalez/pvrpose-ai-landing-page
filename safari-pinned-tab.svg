@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200">
+  <defs>
+    <style>
+      .cls-1 { fill: #000000; }
+    </style>
+  </defs>
+  <!-- Simplified monochrome version of PVRPOSE AI logo for Safari pinned tab -->
+  <!-- Left parallelograms -->
+  <polygon class="cls-1" points="135,555 440,555 325,705 20,705"/>
+  <polygon class="cls-1" points="200,395 505,395 390,545 85,545"/>
+  <polygon class="cls-1" points="275,205 580,205 465,355 160,355"/>
+  <polygon class="cls-1" points="350,90 655,90 540,240 235,240"/>
+
+  <!-- Main diagonal stripe -->
+  <polygon class="cls-1" points="350,125 650,125 1050,875 750,875"/>
+
+  <!-- Right parallelograms -->
+  <polygon class="cls-1" points="740,90 1045,90 930,240 625,240"/>
+  <polygon class="cls-1" points="815,280 1120,280 1005,430 700,430"/>
+
+  <!-- Bottom accent -->
+  <polygon class="cls-1" points="20,850 200,850 145,925 0,925"/>
+  <polygon class="cls-1" points="20,1000 200,1000 145,1075 0,1075"/>
+</svg>
