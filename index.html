@@ -613,38 +613,94 @@
 
     <!-- VIDEO TESTIMONIAL (Social proof immediately after ROI Calculator) -->
     <section class="py-16 px-6 bg-gray-50">
-        <div class="max-w-4xl mx-auto">
-            <div class="glass p-8 md:p-12 rounded-3xl shadow-2xl">
-                <h2 class="text-2xl md:text-3xl font-bold mb-6 text-center">See Real Results</h2>
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 hero-headline">See How It Works</h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                    Watch Coach Juan explain our AI automation approach and what makes it different
+                </p>
+            </div>
 
-                <!-- PLACEHOLDER: Replace with your actual video embed -->
-                <div class="video-container mb-6 rounded-2xl overflow-hidden bg-gray-100">
-                    <!-- Replace the src with your actual YouTube/Vimeo embed URL -->
+            <div class="glass p-6 md:p-10 rounded-3xl shadow-2xl">
+                <!-- Optimized YouTube Embed with Lazy Loading -->
+                <div class="relative" style="padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; border-radius: 16px;">
+                    <!-- Thumbnail Preview (loads instantly, no iframe until clicked) -->
+                    <div id="videoThumb" class="absolute inset-0 cursor-pointer group" onclick="loadVideo()">
+                        <img
+                            src="https://img.youtube.com/vi/jFOygpP7kes/maxresdefault.jpg"
+                            alt="PVRPOSE AI - How We Automate Your Business"
+                            class="absolute inset-0 w-full h-full object-cover rounded-2xl"
+                            loading="lazy"
+                        />
+                        <!-- Play Button Overlay -->
+                        <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 group-hover:bg-opacity-40 transition-all duration-300 rounded-2xl">
+                            <div class="bg-pink-600 group-hover:bg-pink-700 rounded-full p-6 shadow-2xl transform group-hover:scale-110 transition-all duration-300">
+                                <svg class="w-12 h-12 md:w-16 md:h-16 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <!-- Duration Badge (optional) -->
+                        <div class="absolute bottom-4 right-4 bg-black bg-opacity-80 text-white px-3 py-1 rounded-lg text-sm font-semibold">
+                            Watch Video
+                        </div>
+                    </div>
+
+                    <!-- Actual iframe (loaded on click for performance) -->
                     <iframe
-                        src="about:blank"
-                        title="Client Success Story"
+                        id="youtubeIframe"
+                        style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 16px;"
+                        src=""
+                        title="PVRPOSE AI - AI Automation Explained by Coach Juan"
                         frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         allowfullscreen>
                     </iframe>
-                    <!-- Placeholder text until you add video -->
-                    <div class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-pink-500 to-purple-600 text-white p-8 text-center">
-                        <div>
-                            <svg class="w-20 h-20 mx-auto mb-4" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/>
+                </div>
+
+                <div class="mt-6 text-center">
+                    <p class="text-gray-700 text-lg mb-4">
+                        <strong>In this video, you'll learn:</strong>
+                    </p>
+                    <div class="grid md:grid-cols-3 gap-4 text-left max-w-3xl mx-auto">
+                        <div class="flex items-start">
+                            <svg class="w-6 h-6 text-pink-600 mr-2 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                             </svg>
-                            <p class="text-xl font-semibold">Video Testimonial</p>
-                            <p class="text-sm opacity-90 mt-2">Replace iframe src with your YouTube/Vimeo URL</p>
+                            <span class="text-gray-700">How AI automation actually works in your business</span>
+                        </div>
+                        <div class="flex items-start">
+                            <svg class="w-6 h-6 text-pink-600 mr-2 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-gray-700">What makes our approach different from DIY</span>
+                        </div>
+                        <div class="flex items-start">
+                            <svg class="w-6 h-6 text-pink-600 mr-2 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-gray-700">Real examples of time savings and ROI</span>
                         </div>
                     </div>
                 </div>
-
-                <p class="text-center text-gray-600 italic">
-                    "Add your video testimonial quote here for visitors who prefer reading"
-                </p>
             </div>
         </div>
     </section>
+
+    <script>
+        // Lazy load YouTube iframe on click (performance optimization)
+        function loadVideo() {
+            const thumb = document.getElementById('videoThumb');
+            const iframe = document.getElementById('youtubeIframe');
+
+            // Set iframe src with autoplay
+            iframe.src = 'https://www.youtube.com/embed/jFOygpP7kes?autoplay=1&rel=0&modestbranding=1';
+
+            // Hide thumbnail, show iframe
+            thumb.style.display = 'none';
+            iframe.style.display = 'block';
+        }
+    </script>
 
     <!-- TRANSITION: Social Proof to Problem Agitation -->
     <section class="py-8 px-6 bg-white">
@@ -1329,6 +1385,281 @@
             </div>
         </div>
     </section>
+
+    <!-- FAQ SECTION -->
+    <section class="py-20 px-6 bg-white">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 hero-headline">
+                    Frequently Asked Questions
+                </h2>
+                <p class="text-xl text-gray-600">
+                    Everything you need to know about working with PVRPOSE AI
+                </p>
+            </div>
+
+            <div class="space-y-6">
+                <!-- FAQ 1 -->
+                <div class="glass-dark p-8 rounded-2xl hover-lift">
+                    <button class="faq-question w-full text-left flex justify-between items-start" onclick="toggleFAQ(1)">
+                        <h3 class="text-xl md:text-2xl font-bold text-gray-900 pr-8">
+                            Should I try DIY automation first before hiring you?
+                        </h3>
+                        <svg id="faq-icon-1" class="w-6 h-6 text-pink-600 flex-shrink-0 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="faq-answer-1" class="faq-answer mt-4 text-gray-700 leading-relaxed hidden">
+                        <p class="mb-4">
+                            <strong>Short answer:</strong> Only if your time is worth less than $50/hour and you have 40-80 hours to spare.
+                        </p>
+                        <p class="mb-4">
+                            <strong>Long answer:</strong> Many of our clients come to us after 20-40 hours of DIY frustration. They've watched YouTube tutorials, joined communities, started setting things up... then hit walls with technical errors, integration issues, or systems that break in production.
+                        </p>
+                        <p class="mb-4">
+                            If you value your time at $100-$500/hour (which most $100K+ business owners do), the hidden cost of DIY is <strong>$32,000-$80,000</strong> in time spent plus ongoing troubleshooting. Our professional implementation costs $15,000-$25,000 and includes:
+                        </p>
+                        <ul class="list-disc pl-6 space-y-2 mb-4">
+                            <li>Expert setup in 6-8 weeks (not 3-6 months DIY)</li>
+                            <li>Compliance built-in (CASL, PIPEDA, GDPR)</li>
+                            <li>30-day support + optional retainer</li>
+                            <li>You own all code—no vendor lock-in</li>
+                        </ul>
+                        <p class="font-semibold text-gray-900">
+                            Bottom line: DIY to learn is fine. DIY for your actual business operations is expensive trial-and-error.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="glass-dark p-8 rounded-2xl hover-lift">
+                    <button class="faq-question w-full text-left flex justify-between items-start" onclick="toggleFAQ(2)">
+                        <h3 class="text-xl md:text-2xl font-bold text-gray-900 pr-8">
+                            How is this different from hiring a VA or admin assistant?
+                        </h3>
+                        <svg id="faq-icon-2" class="w-6 h-6 text-pink-600 flex-shrink-0 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="faq-answer-2" class="faq-answer mt-4 text-gray-700 leading-relaxed hidden">
+                        <p class="mb-4">AI automation and VAs solve different problems. Here's an honest comparison:</p>
+                        <div class="overflow-x-auto">
+                            <table class="w-full border-collapse mb-4">
+                                <thead>
+                                    <tr class="bg-gray-100">
+                                        <th class="border border-gray-300 px-4 py-3 text-left">Factor</th>
+                                        <th class="border border-gray-300 px-4 py-3 text-left">Virtual Assistant</th>
+                                        <th class="border border-gray-300 px-4 py-3 text-left">AI Automation</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="border border-gray-300 px-4 py-3 font-semibold">Cost</td>
+                                        <td class="border border-gray-300 px-4 py-3">$30K-$60K/year</td>
+                                        <td class="border border-gray-300 px-4 py-3 bg-green-50">$15K-$25K one-time + $3K/mo optional</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-300 px-4 py-3 font-semibold">Availability</td>
+                                        <td class="border border-gray-300 px-4 py-3">40 hours/week</td>
+                                        <td class="border border-gray-300 px-4 py-3 bg-green-50">24/7/365</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-300 px-4 py-3 font-semibold">Scaling</td>
+                                        <td class="border border-gray-300 px-4 py-3">Hire more people</td>
+                                        <td class="border border-gray-300 px-4 py-3 bg-green-50">Instant (no additional cost)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-300 px-4 py-3 font-semibold">Consistency</td>
+                                        <td class="border border-gray-300 px-4 py-3">Varies by person</td>
+                                        <td class="border border-gray-300 px-4 py-3 bg-green-50">100% identical every time</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-300 px-4 py-3 font-semibold">Handoff Risk</td>
+                                        <td class="border border-gray-300 px-4 py-3">High (if they leave)</td>
+                                        <td class="border border-gray-300 px-4 py-3 bg-green-50">None (you own the code)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="font-semibold text-gray-900">
+                            Best approach: Use AI for repetitive, rule-based tasks. Use VAs for judgment calls, relationship building, and creative work.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="glass-dark p-8 rounded-2xl hover-lift">
+                    <button class="faq-question w-full text-left flex justify-between items-start" onclick="toggleFAQ(3)">
+                        <h3 class="text-xl md:text-2xl font-bold text-gray-900 pr-8">
+                            What if my business changes after implementation?
+                        </h3>
+                        <svg id="faq-icon-3" class="w-6 h-6 text-pink-600 flex-shrink-0 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="faq-answer-3" class="faq-answer mt-4 text-gray-700 leading-relaxed hidden">
+                        <p class="mb-4">
+                            Great question. Business evolves—your AI systems should too. Here's how we handle it:
+                        </p>
+                        <p class="mb-4">
+                            <strong>Option 1: AI Optimization Retainer ($3,000+ CAD/month)</strong>
+                        </p>
+                        <ul class="list-disc pl-6 space-y-2 mb-4">
+                            <li>1 new automation per month included</li>
+                            <li>Optimization of existing automations</li>
+                            <li>Monthly 60-minute strategy calls</li>
+                            <li>Unlimited async support (email/Slack)</li>
+                        </ul>
+                        <p class="mb-4">
+                            <strong>Option 2: Modify It Yourself</strong>
+                        </p>
+                        <p class="mb-4">
+                            You own all the code and prompts. If you have someone technical on your team (or hire a developer), they can modify the systems. We provide complete documentation and training.
+                        </p>
+                        <p class="mb-4">
+                            <strong>Option 3: Come Back When You Need Us</strong>
+                        </p>
+                        <p class="font-semibold text-gray-900">
+                            No lock-in contracts. If you need updates in 6 months or 2 years, we're here. Many clients start with implementation, pause for 6-12 months, then add retainer when they're ready to scale further.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ 4 -->
+                <div class="glass-dark p-8 rounded-2xl hover-lift">
+                    <button class="faq-question w-full text-left flex justify-between items-start" onclick="toggleFAQ(4)">
+                        <h3 class="text-xl md:text-2xl font-bold text-gray-900 pr-8">
+                            How do I know this will actually work for MY business?
+                        </h3>
+                        <svg id="faq-icon-4" class="w-6 h-6 text-pink-600 flex-shrink-0 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="faq-answer-4" class="faq-answer mt-4 text-gray-700 leading-relaxed hidden">
+                        <p class="mb-4">
+                            Fair skepticism. Here's how we de-risk this for you:
+                        </p>
+                        <p class="mb-4">
+                            <strong>1. Take the Free Assessment (2 minutes)</strong><br>
+                            You'll get a personalized AI Readiness Score and see exactly which automations will work for your business. No sales pitch—just honest analysis.
+                        </p>
+                        <p class="mb-4">
+                            <strong>2. Start with AI Readiness Audit ($5,000-$7,500 CAD, 2 weeks)</strong><br>
+                            We map your actual workflows, identify top 3 automation opportunities, and show you exact ROI projections. If we don't find 10× ROI potential, we'll tell you honestly.
+                        </p>
+                        <p class="mb-4">
+                            <strong>3. See Working Prototypes Weekly</strong><br>
+                            During the 6-8 week implementation, you see live demos every week. You're not waiting until Week 8 to find out if it works—you see progress immediately.
+                        </p>
+                        <p class="mb-4">
+                            <strong>4. On-Time Delivery Guarantee</strong><br>
+                            If we don't deliver working systems in 8 weeks, we work for free until complete.
+                        </p>
+                        <p class="font-semibold text-gray-900">
+                            Plus, 91% of our clients come from referrals. People don't refer mediocre work—they refer results.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ 5 -->
+                <div class="glass-dark p-8 rounded-2xl hover-lift">
+                    <button class="faq-question w-full text-left flex justify-between items-start" onclick="toggleFAQ(5)">
+                        <h3 class="text-xl md:text-2xl font-bold text-gray-900 pr-8">
+                            Why does this cost $15K-$25K when I can use ChatGPT for $20/month?
+                        </h3>
+                        <svg id="faq-icon-5" class="w-6 h-6 text-pink-600 flex-shrink-0 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="faq-answer-5" class="faq-answer mt-4 text-gray-700 leading-relaxed hidden">
+                        <p class="mb-4">
+                            Because ChatGPT is a chat interface. We build custom AI systems that <strong>run your business operations automatically.</strong>
+                        </p>
+                        <p class="mb-4">
+                            Here's what $15K-$25K gets you that ChatGPT doesn't:
+                        </p>
+                        <ul class="list-disc pl-6 space-y-2 mb-4">
+                            <li><strong>Workflow Integration:</strong> AI connected to your CRM, email, calendar, databases—not just chat</li>
+                            <li><strong>24/7 Automation:</strong> Systems run while you sleep (follow-ups, proposals, scheduling)</li>
+                            <li><strong>Custom Logic:</strong> Rules specific to YOUR business processes, not generic AI</li>
+                            <li><strong>Compliance:</strong> CASL, PIPEDA, GDPR review (ChatGPT doesn't know Canadian privacy law)</li>
+                            <li><strong>Error Handling:</strong> Production-ready systems that don't break when edge cases happen</li>
+                            <li><strong>Team Training:</strong> Your staff knows how to use and maintain it</li>
+                            <li><strong>Ongoing Support:</strong> 30 days of troubleshooting included</li>
+                        </ul>
+                        <p class="mb-4">
+                            <strong>The ROI math:</strong> If you're at $500K revenue and we save you 15 hours/week at $200/hour effective rate, that's $156,000/year in time saved. Even at $25K investment, you're at 6× ROI in Year 1.
+                        </p>
+                        <p class="font-semibold text-gray-900">
+                            ChatGPT is a tool. We build business systems. Big difference.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ 6 -->
+                <div class="glass-dark p-8 rounded-2xl hover-lift">
+                    <button class="faq-question w-full text-left flex justify-between items-start" onclick="toggleFAQ(6)">
+                        <h3 class="text-xl md:text-2xl font-bold text-gray-900 pr-8">
+                            What's your refund policy or satisfaction guarantee?
+                        </h3>
+                        <svg id="faq-icon-6" class="w-6 h-6 text-pink-600 flex-shrink-0 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="faq-answer-6" class="faq-answer mt-4 text-gray-700 leading-relaxed hidden">
+                        <p class="mb-4">
+                            <strong>On-Time Delivery Guarantee:</strong> If we don't deliver working automations in 8 weeks, we work for free until complete. No excuses.
+                        </p>
+                        <p class="mb-4">
+                            <strong>No Traditional "Money-Back" Policy—Here's Why:</strong>
+                        </p>
+                        <p class="mb-4">
+                            We don't offer refunds because we invest 100-150 hours of expert time into your implementation. However, we mitigate risk through:
+                        </p>
+                        <ul class="list-disc pl-6 space-y-2 mb-4">
+                            <li><strong>Free Assessment:</strong> Know what you're getting before you commit</li>
+                            <li><strong>Audit First (Optional):</strong> $5K-$7.5K audit shows exact ROI—if we don't find 10× potential, we'll tell you</li>
+                            <li><strong>Weekly Demos:</strong> See progress every week—no surprises at Week 8</li>
+                            <li><strong>Collaborative Process:</strong> You approve each automation before we move forward</li>
+                        </ul>
+                        <p class="mb-4">
+                            <strong>Our Real Guarantee:</strong> You'll own working AI automations that save 10-20 hours/week or generate $10K-$50K additional revenue. If we can't deliver that in 8 weeks, we keep working for free.
+                        </p>
+                        <p class="font-semibold text-gray-900">
+                            We stand behind our work. 91% referral rate proves it.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ CTA -->
+            <div class="mt-12 text-center p-8 bg-gradient-to-br from-pink-50 to-purple-50 rounded-3xl border-2 border-pink-200">
+                <h3 class="text-2xl font-bold mb-4 text-gray-900">Still Have Questions?</h3>
+                <p class="text-lg text-gray-700 mb-6 max-w-2xl mx-auto">
+                    Book a free 30-minute discovery call. We'll answer your specific questions and see if PVRPOSE AI is a good fit for your business.
+                </p>
+                <a href="https://calendly.com/coachjuan-pvrposeai/discovery-call" class="inline-block btn-primary text-white px-10 py-4 rounded-xl text-lg font-semibold hover-glow">
+                    Schedule Discovery Call →
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function toggleFAQ(num) {
+            const answer = document.getElementById(`faq-answer-${num}`);
+            const icon = document.getElementById(`faq-icon-${num}`);
+
+            // Toggle visibility
+            if (answer.classList.contains('hidden')) {
+                answer.classList.remove('hidden');
+                icon.classList.add('rotate-180');
+            } else {
+                answer.classList.add('hidden');
+                icon.classList.remove('rotate-180');
+            }
+        }
+    </script>
 
     <!-- FINAL CTA / CONTACT SECTION -->
     <section id="contact" class="py-20 px-6 gradient-hero">
