@@ -195,10 +195,12 @@
                 id: 1,
                 question: "What's your current annual revenue?",
                 options: [
-                    { text: "Under $100K", value: 0, weight: 0 },
-                    { text: "$100K - $250K", value: 25, weight: 1 },
-                    { text: "$250K - $500K", value: 50, weight: 2 },
-                    { text: "$500K - $1M", value: 75, weight: 3 },
+                    { text: "Under $50K", value: 10, weight: 1 },
+                    { text: "$50K - $100K", value: 30, weight: 2 },
+                    { text: "$100K - $150K", value: 50, weight: 3 },
+                    { text: "$150K - $250K", value: 65, weight: 3 },
+                    { text: "$250K - $500K", value: 80, weight: 4 },
+                    { text: "$500K - $1M", value: 90, weight: 4 },
                     { text: "Over $1M", value: 100, weight: 4 }
                 ]
             },
@@ -349,16 +351,19 @@
             document.getElementById('questionsContainer').classList.add('hidden');
             document.getElementById('resultsSection').classList.remove('hidden');
 
-            // Calculate score (weighted average)
+            // Calculate score (proper weighted average)
+            // Each question has a value (0-100) and weight (1-4 importance)
+            // Formula: Sum of (value × weight) ÷ Sum of (max_possible_value × weight)
             let totalScore = 0;
-            let totalWeight = 0;
+            let maxPossibleScore = 0;
 
             answers.forEach(answer => {
                 totalScore += answer.value * answer.weight;
-                totalWeight += answer.weight * 100;
+                maxPossibleScore += 100 * answer.weight; // Max value is always 100
             });
 
-            const finalScore = Math.round((totalScore / totalWeight) * 100);
+            // Final score as percentage of maximum possible
+            const finalScore = Math.round((totalScore / maxPossibleScore) * 100);
 
             // Animate score
             animateScore(finalScore);

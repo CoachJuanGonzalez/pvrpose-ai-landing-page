@@ -540,8 +540,9 @@
                     <div>
                         <label for="revenue" class="block text-lg font-semibold mb-2">Current Annual Revenue</label>
                         <select id="revenue" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-pink-500 text-lg">
-                            <option value="150000">$150,000 - $250,000</option>
-                            <option value="300000">$250,000 - $500,000</option>
+                            <option value="125000">$100,000 - $150,000</option>
+                            <option value="200000">$150,000 - $250,000</option>
+                            <option value="375000">$250,000 - $500,000</option>
                             <option value="750000" selected>$500,000 - $1,000,000</option>
                             <option value="1500000">$1,000,000+</option>
                         </select>
@@ -1210,14 +1211,14 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
                 <div class="bg-gray-50 p-6 rounded-2xl shadow-lg text-center hover-lift border-2 border-gray-100">
                     <div class="text-4xl mb-4">⚖️</div>
-                    <h3 class="font-bold text-lg mb-2">Legal & Compliance Expert</h3>
-                    <p class="text-gray-600 text-sm">Business lawyer (Canada/USA) • CASL, PIPEDA, GDPR, CCPA compliance</p>
+                    <h3 class="font-bold text-lg mb-2">Compliance-Aware Implementation</h3>
+                    <p class="text-gray-600 text-sm">Network of legal advisors for CASL, PIPEDA, GDPR, CCPA compliance review</p>
                 </div>
 
                 <div class="bg-gray-50 p-6 rounded-2xl shadow-lg text-center hover-lift border-2 border-gray-100">
-                    <div class="text-4xl mb-4">♿</div>
-                    <h3 class="font-bold text-lg mb-2">Accessibility Certified</h3>
-                    <p class="text-gray-600 text-sm">AODA/WCAG AA compliance specialist</p>
+                    <div class="text-4xl mb-4">🎯</div>
+                    <h3 class="font-bold text-lg mb-2">Business Operations Expert</h3>
+                    <p class="text-gray-600 text-sm">15+ years optimizing workflows for professional service firms</p>
                 </div>
 
                 <div class="bg-gray-50 p-6 rounded-2xl shadow-lg text-center hover-lift border-2 border-gray-100">
@@ -1783,7 +1784,7 @@
 
     <!-- JavaScript -->
     <script>
-        // ROI Calculator
+        // ROI Calculator (Accurate & Conservative)
         document.getElementById('roiCalculator').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -1791,24 +1792,54 @@
             const adminHours = parseInt(document.getElementById('adminHours').value);
             const hourlyRate = parseInt(document.getElementById('hourlyRate').value);
 
-            // Conservative calculation: assume 50% reduction in admin time
-            const hoursReclaimed = Math.round(adminHours * 0.5);
-            const monthlySavings = hoursReclaimed * hourlyRate * 4; // 4 weeks
-            const annualSavings = monthlySavings * 12;
+            // Realistic automation potential based on admin hours
+            // Conservative: 40-60% time savings depending on task complexity
+            // We use 50% as middle ground, but cap at reasonable maximums
+            let automationPercentage = 0.50; // Default 50%
 
-            // Average implementation cost
-            const implementationCost = 20000;
-            const roi = Math.round(annualSavings / implementationCost);
+            // If very high admin hours (20+), likely some can't be automated (complex tasks)
+            if (adminHours >= 20) {
+                automationPercentage = 0.45; // 45% for complex workflows
+            } else if (adminHours >= 15) {
+                automationPercentage = 0.50; // 50% for typical workflows
+            } else if (adminHours >= 10) {
+                automationPercentage = 0.55; // 55% for simpler workflows
+            } else {
+                automationPercentage = 0.60; // 60% for very simple repetitive tasks
+            }
 
-            // Display results
+            // Calculate time savings
+            const hoursReclaimed = Math.round(adminHours * automationPercentage);
+
+            // Calculate monetary value (use 50 weeks/year to account for vacation/holidays)
+            const weeklySavings = hoursReclaimed * hourlyRate;
+            const monthlySavings = Math.round(weeklySavings * 4.33); // Average weeks per month
+            const annualSavings = Math.round(weeklySavings * 50); // 50 working weeks
+
+            // Dynamic implementation cost based on complexity
+            // More admin hours = more complex setup = higher cost
+            let estimatedCost = 15000; // Minimum
+            if (adminHours >= 20) {
+                estimatedCost = 25000; // Maximum for complex
+            } else if (adminHours >= 15) {
+                estimatedCost = 20000; // Middle range
+            } else if (adminHours >= 10) {
+                estimatedCost = 17500; // Lower-middle
+            }
+
+            // Calculate ROI (annual savings divided by implementation cost)
+            const roi = Math.round(annualSavings / estimatedCost);
+
+            // Display results with proper formatting
             document.getElementById('monthlySavings').textContent = '$' + monthlySavings.toLocaleString();
             document.getElementById('annualSavings').textContent = '$' + annualSavings.toLocaleString();
-            document.getElementById('hoursReclaimed').textContent = hoursReclaimed;
+            document.getElementById('hoursReclaimed').textContent = hoursReclaimed + ' hrs';
             document.getElementById('roi').textContent = roi + '×';
 
+            // Show results section
             document.getElementById('calculatorResults').classList.add('active');
 
-            // Scroll to results
+            // Scroll to results smoothly
             document.getElementById('calculatorResults').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         });
 
