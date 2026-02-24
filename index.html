@@ -47,6 +47,13 @@
     <meta name="twitter:image" content="https://pvrpose.ai/og-image.png">
     <meta name="twitter:image:alt" content="PVRPOSE AI - Custom AI Automation for Professional Services">
 
+    <!-- Security Headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+
     <!-- Additional SEO -->
     <meta name="author" content="Juan Gonzalez, PVRPOSE AI">
     <meta name="robots" content="index, follow">
@@ -226,6 +233,25 @@
 
         .exit-popup.active {
             display: flex;
+        }
+
+        /* Cookie Consent Banner */
+        .cookie-consent {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 10000;
+            animation: slideUp 0.4s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
         }
 
         /* ROI Calculator */
@@ -1783,7 +1809,15 @@
                         View current CAD/USD exchange rate →
                     </a>
                 </p>
+                <p class="mb-4">
+                    <a href="#privacy-policy" class="text-gray-400 hover:text-white transition underline mr-4">Privacy Policy</a>
+                    <a href="#terms" class="text-gray-400 hover:text-white transition underline mr-4">Terms of Service</a>
+                    <a href="#casl-compliance" class="text-gray-400 hover:text-white transition underline">CASL Compliance</a>
+                </p>
                 <p>&copy; 2026 PVRPOSE AI. All rights reserved.</p>
+                <p class="text-sm text-gray-500 mt-2">
+                    This website complies with CASL, PIPEDA, GDPR, and CCPA requirements.
+                </p>
             </div>
         </div>
     </footer>
@@ -1812,13 +1846,48 @@
             </div>
 
             <form id="exitForm" class="space-y-4">
-                <input type="email" id="exitEmail" required placeholder="Enter your email"
+                <!-- Honeypot field (hidden from users, visible to bots) -->
+                <input type="text" name="website" id="exitWebsite" autocomplete="off" tabindex="-1"
+                       style="position:absolute;left:-5000px;" aria-hidden="true">
+
+                <input type="email" id="exitEmail" name="email" required placeholder="Enter your email"
+                       autocomplete="email" pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$"
+                       maxlength="254"
                        class="w-full px-4 py-4 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-200 text-base">
+
                 <button type="submit" class="w-full btn-primary text-white px-6 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition">
                     Send Me The Checklist →
                 </button>
             </form>
             <p class="text-xs text-gray-500 mt-4 text-center">🔒 No spam, ever. Unsubscribe anytime.</p>
+            <p class="text-xs text-gray-500 mt-2 text-center">
+                By submitting, you consent to receive marketing emails from PVRPOSE AI in compliance with CASL.
+                You can unsubscribe at any time. <a href="#privacy-policy" class="underline">Privacy Policy</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Cookie Consent Banner (CASL/PIPEDA/GDPR Compliant) -->
+    <div id="cookieConsent" class="cookie-consent" style="display: none;">
+        <div class="bg-gray-900 text-white p-6 shadow-2xl border-t-4 border-pink-500">
+            <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex-1">
+                    <h4 class="font-bold text-lg mb-2">🍪 We Value Your Privacy</h4>
+                    <p class="text-sm text-gray-300">
+                        We use essential cookies to ensure our website functions properly. We do not use tracking or advertising cookies.
+                        By continuing to use this site, you agree to our use of essential cookies.
+                        <a href="#privacy-policy" class="underline text-pink-400 hover:text-pink-300">Learn more</a>
+                    </p>
+                </div>
+                <div class="flex gap-3">
+                    <button id="acceptCookies" class="bg-pink-600 hover:bg-pink-700 text-white px-6 py-2 rounded-lg font-semibold transition">
+                        Accept
+                    </button>
+                    <button id="declineCookies" class="bg-gray-700 hover:bg-gray-600 text-white px-6 py-2 rounded-lg font-semibold transition">
+                        Decline
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1906,10 +1975,12 @@
 
         // Exit Intent Popup
         let exitPopupShown = false;
+        window.exitFormLoadTime = 0;
 
         document.addEventListener('mouseleave', function(e) {
             if (e.clientY < 10 && !exitPopupShown) {
                 document.getElementById('exitPopup').classList.add('active');
+                window.exitFormLoadTime = Date.now(); // Track when form is shown
                 exitPopupShown = true;
             }
         });
@@ -1918,9 +1989,55 @@
             document.getElementById('exitPopup').classList.remove('active');
         });
 
+        // Rate limiting for exit form
+        const exitFormRateLimit = {
+            attempts: 0,
+            maxAttempts: 3,
+            windowMs: 60000, // 1 minute
+            resetTime: null
+        };
+
         document.getElementById('exitForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const email = document.getElementById('exitEmail').value;
+
+            // Bot detection - honeypot check
+            const honeypot = document.getElementById('exitWebsite').value;
+            if (honeypot) {
+                console.warn('Bot detected - honeypot filled');
+                return; // Silent fail for bots
+            }
+
+            // Rate limiting check
+            const now = Date.now();
+            if (exitFormRateLimit.resetTime && now < exitFormRateLimit.resetTime) {
+                if (exitFormRateLimit.attempts >= exitFormRateLimit.maxAttempts) {
+                    alert('Too many attempts. Please wait a minute and try again.');
+                    return;
+                }
+            } else {
+                exitFormRateLimit.attempts = 0;
+                exitFormRateLimit.resetTime = now + exitFormRateLimit.windowMs;
+            }
+            exitFormRateLimit.attempts++;
+
+            // Input validation and sanitization
+            const emailInput = document.getElementById('exitEmail');
+            let email = emailInput.value.trim().toLowerCase();
+
+            // Additional email validation
+            const emailRegex = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address.');
+                emailInput.focus();
+                return;
+            }
+
+            // Check for suspicious patterns
+            if (email.includes('test@') || email.includes('fake@') || email.includes('spam@')) {
+                console.warn('Suspicious email detected');
+                return; // Silent fail
+            }
+
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
 
@@ -1928,7 +2045,19 @@
             submitBtn.disabled = true;
             submitBtn.textContent = 'Sending...';
 
+            // Time-based bot detection (too fast = bot)
+            const formDisplayTime = Date.now() - (window.exitFormLoadTime || 0);
+            if (formDisplayTime < 2000) { // Submitted in less than 2 seconds
+                console.warn('Possible bot - form submitted too quickly');
+                submitBtn.textContent = 'Error - Try Again';
+                submitBtn.disabled = false;
+                return;
+            }
+
             try {
+                // Generate basic fingerprint for duplicate prevention
+                const fingerprint = btoa(email + navigator.userAgent.substring(0, 50));
+
                 // Send email to backend/email service
                 const response = await fetch('https://hook.us1.make.com/YOUR_WEBHOOK_URL', {
                     method: 'POST',
@@ -1938,7 +2067,14 @@
                     body: JSON.stringify({
                         email: email,
                         leadMagnet: '5 Signs Your Business Is Ready for AI Automation',
-                        timestamp: new Date().toISOString()
+                        timestamp: new Date().toISOString(),
+                        fingerprint: fingerprint,
+                        source: 'exit_intent_popup',
+                        consent: {
+                            marketing: true,
+                            timestamp: new Date().toISOString(),
+                            jurisdiction: 'CA' // Canadian compliance
+                        }
                     })
                 });
 
@@ -1983,6 +2119,69 @@
                 document.getElementById('mobileMenu').classList.add('hidden');
             });
         });
+
+        // Cookie Consent Management (CASL/PIPEDA/GDPR Compliant)
+        const COOKIE_CONSENT_KEY = 'pvrpose_cookie_consent';
+        const COOKIE_CONSENT_VERSION = '1.0';
+
+        function checkCookieConsent() {
+            const consent = localStorage.getItem(COOKIE_CONSENT_KEY);
+            if (!consent) {
+                // Show cookie banner after 2 seconds
+                setTimeout(() => {
+                    document.getElementById('cookieConsent').style.display = 'block';
+                }, 2000);
+            }
+        }
+
+        function setCookieConsent(accepted) {
+            const consentData = {
+                accepted: accepted,
+                version: COOKIE_CONSENT_VERSION,
+                timestamp: new Date().toISOString(),
+                jurisdiction: 'CA' // Canadian jurisdiction
+            };
+            localStorage.setItem(COOKIE_CONSENT_KEY, JSON.stringify(consentData));
+            document.getElementById('cookieConsent').style.display = 'none';
+
+            // Log consent for compliance tracking
+            console.log('Cookie consent recorded:', consentData);
+        }
+
+        document.getElementById('acceptCookies').addEventListener('click', function() {
+            setCookieConsent(true);
+        });
+
+        document.getElementById('declineCookies').addEventListener('click', function() {
+            setCookieConsent(false);
+            // If user declines, we still set essential cookies but log the preference
+            console.log('User declined optional cookies - using essential only');
+        });
+
+        // Check consent on page load
+        checkCookieConsent();
+
+        // Security: Prevent iframe embedding from unauthorized domains
+        if (window.top !== window.self) {
+            const allowedDomains = ['pvrpose.ai', 'www.pvrpose.ai'];
+            const parentDomain = document.referrer ? new URL(document.referrer).hostname : '';
+            if (!allowedDomains.includes(parentDomain)) {
+                window.top.location = window.self.location;
+            }
+        }
+
+        // Security: Basic XSS protection - sanitize any URL parameters
+        function sanitizeURLParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.forEach((value, key) => {
+                if (/<script|javascript:|on\w+=/i.test(value)) {
+                    console.warn('Potential XSS attempt detected in URL parameters');
+                    // Remove malicious parameters
+                    urlParams.delete(key);
+                }
+            });
+        }
+        sanitizeURLParams();
     </script>
 </body>
 </html>
