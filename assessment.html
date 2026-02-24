@@ -316,34 +316,37 @@
         }
 
         function selectOption(questionIndex, optionIndex) {
-            const question = questions[questionIndex];
-            const option = question.options[optionIndex];
+            // Use requestAnimationFrame for smoother UI updates
+            requestAnimationFrame(() => {
+                const question = questions[questionIndex];
+                const option = question.options[optionIndex];
 
-            // Store answer
-            answers[questionIndex] = {
-                questionId: question.id,
-                question: question.question,
-                selectedOption: option,
-                value: option.value,
-                weight: option.weight,
-                category: option.category || null,
-                niche: option.niche || null
-            };
+                // Store answer
+                answers[questionIndex] = {
+                    questionId: question.id,
+                    question: question.question,
+                    selectedOption: option,
+                    value: option.value,
+                    weight: option.weight,
+                    category: option.category || null,
+                    niche: option.niche || null
+                };
 
-            // Visual feedback
-            document.querySelectorAll('.option-card').forEach(card => {
-                card.classList.remove('selected');
+                // Visual feedback
+                document.querySelectorAll('.option-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                document.querySelector(`[data-option="${optionIndex}"]`).classList.add('selected');
+
+                // Move to next question after a brief delay
+                setTimeout(() => {
+                    if (currentQuestionIndex < questions.length - 1) {
+                        showQuestion(currentQuestionIndex + 1);
+                    } else {
+                        showResults();
+                    }
+                }, 500);
             });
-            document.querySelector(`[data-option="${optionIndex}"]`).classList.add('selected');
-
-            // Move to next question after a brief delay
-            setTimeout(() => {
-                if (currentQuestionIndex < questions.length - 1) {
-                    showQuestion(currentQuestionIndex + 1);
-                } else {
-                    showResults();
-                }
-            }, 500);
         }
 
         function showResults() {
@@ -469,29 +472,61 @@
             return categoryMap[topCategory] || 'Workflow automation & process optimization';
         }
 
-        function submitResults(event) {
+        async function submitResults(event) {
             event.preventDefault();
 
             const name = document.getElementById('userName').value;
             const email = document.getElementById('userEmail').value;
             const phone = document.getElementById('userPhone').value;
             const score = document.getElementById('finalScore').textContent;
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
 
-            // Here you would send this data to your email service (ConvertKit, Mailchimp, etc.)
-            // For now, we'll show a success message
+            // Prevent double submission and provide immediate feedback
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending Your Roadmap...';
 
-            console.log('Assessment Results:', {
-                name,
-                email,
-                phone,
-                score,
-                answers
-            });
+            try {
+                // Send assessment data to backend/email service
+                const response = await fetch('https://hook.us1.make.com/YOUR_ASSESSMENT_WEBHOOK_URL', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        email: email,
+                        phone: phone,
+                        score: score,
+                        answers: answers,
+                        timestamp: new Date().toISOString(),
+                        document: 'Personalized AI Implementation Roadmap'
+                    })
+                });
 
-            alert(`Thank you, ${name}! Your personalized AI Implementation Roadmap will be sent to ${email} within 24 hours. Check your inbox!`);
+                if (response.ok) {
+                    submitBtn.textContent = '✓ Roadmap Sent!';
 
-            // Optional: redirect to thank you page or booking calendar
-            // window.location.href = 'https://calendly.com/your-link';
+                    // Show success message
+                    setTimeout(() => {
+                        alert(`Thank you, ${name}! Your personalized AI Implementation Roadmap has been sent to ${email}. Check your inbox!`);
+
+                        // Optional: redirect to thank you page or booking calendar
+                        // window.location.href = 'https://calendly.com/coachjuan-pvrposeai/discovery-call';
+                    }, 500);
+                } else {
+                    throw new Error('Failed to send roadmap');
+                }
+            } catch (error) {
+                console.error('Error submitting assessment:', error);
+                submitBtn.textContent = 'Error - Please Try Again';
+                submitBtn.disabled = false;
+
+                // Show error and restore button after delay
+                setTimeout(() => {
+                    submitBtn.textContent = originalText;
+                }, 3000);
+            }
         }
 
         function restartAssessment() {

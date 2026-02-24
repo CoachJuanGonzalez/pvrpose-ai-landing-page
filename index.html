@@ -726,15 +726,17 @@
     <script>
         // Lazy load YouTube iframe on click (performance optimization)
         function loadVideo() {
-            const thumb = document.getElementById('videoThumb');
-            const iframe = document.getElementById('youtubeIframe');
+            requestAnimationFrame(function() {
+                const thumb = document.getElementById('videoThumb');
+                const iframe = document.getElementById('youtubeIframe');
 
-            // Set iframe src with autoplay
-            iframe.src = 'https://www.youtube.com/embed/jFOygpP7kes?autoplay=1&rel=0&modestbranding=1';
+                // Set iframe src with autoplay
+                iframe.src = 'https://www.youtube.com/embed/jFOygpP7kes?autoplay=1&rel=0&modestbranding=1';
 
-            // Hide thumbnail, show iframe
-            thumb.style.display = 'none';
-            iframe.style.display = 'block';
+                // Hide thumbnail, show iframe
+                thumb.style.display = 'none';
+                iframe.style.display = 'block';
+            });
         }
     </script>
 
@@ -1674,7 +1676,7 @@
                 <p class="text-lg text-gray-700 mb-6 max-w-2xl mx-auto">
                     Book a free 30-minute discovery call. We'll answer your specific questions and see if PVRPOSE AI is a good fit for your business.
                 </p>
-                <a href="https://calendly.com/coachjuan-pvrposeai/discovery-call" class="inline-block btn-primary text-white px-10 py-4 rounded-xl text-lg font-semibold hover-glow">
+                <a href="https://calendly.com/coachjuan-pvrposeai/discovery-call" target="_blank" rel="noopener noreferrer" class="inline-block btn-primary text-white px-10 py-4 rounded-xl text-lg font-semibold hover-glow">
                     Schedule Discovery Call →
                 </a>
             </div>
@@ -1683,16 +1685,17 @@
 
     <script>
         function toggleFAQ(num) {
-            const answer = document.getElementById(`faq-answer-${num}`);
-            const icon = document.getElementById(`faq-icon-${num}`);
+            requestAnimationFrame(function() {
+                const answer = document.getElementById(`faq-answer-${num}`);
+                const icon = document.getElementById(`faq-icon-${num}`);
 
-            // Toggle visibility
-            if (answer.classList.contains('hidden')) {
-                answer.classList.remove('hidden');
-                icon.classList.add('rotate-180');
-            } else {
-                answer.classList.add('hidden');
-                icon.classList.remove('rotate-180');
+                // Toggle visibility
+                if (answer.classList.contains('hidden')) {
+                    answer.classList.remove('hidden');
+                    icon.classList.add('rotate-180');
+                } else {
+                    answer.classList.add('hidden');
+                    icon.classList.remove('rotate-180');
             }
         }
     </script>
@@ -1710,6 +1713,8 @@
 
             <div class="mb-16">
                 <a href="https://calendly.com/coachjuan-pvrposeai/discovery-call"
+                   target="_blank"
+                   rel="noopener noreferrer"
                    class="inline-block btn-primary text-white px-12 py-6 rounded-xl text-2xl font-semibold hover-glow"
                    aria-label="Schedule your free 30-minute discovery call">
                     Schedule Your Free Discovery Call →
@@ -1785,7 +1790,7 @@
 
     <!-- Sticky CTA (appears after scroll) -->
     <div id="stickyCTA" class="sticky-cta">
-        <a href="#contact" class="btn-primary text-white px-6 py-3 rounded-xl font-semibold shadow-2xl block">
+        <a href="https://pvrpose.ai/assessment.html" class="btn-primary text-white px-6 py-3 rounded-xl font-semibold shadow-2xl block">
             Get Free Assessment →
         </a>
     </div>
@@ -1878,16 +1883,25 @@
             document.getElementById('calculatorResults').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         });
 
-        // Sticky CTA (show after 50% scroll)
+        // Sticky CTA (show after 50% scroll) - Optimized with throttling
+        let scrollTimeout;
         window.addEventListener('scroll', function() {
-            const stickyCTA = document.getElementById('stickyCTA');
-            const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
-
-            if (scrollPercent > 50) {
-                stickyCTA.classList.add('visible');
-            } else {
-                stickyCTA.classList.remove('visible');
+            if (scrollTimeout) {
+                return;
             }
+            scrollTimeout = setTimeout(function() {
+                scrollTimeout = null;
+                requestAnimationFrame(function() {
+                    const stickyCTA = document.getElementById('stickyCTA');
+                    const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+
+                    if (scrollPercent > 50) {
+                        stickyCTA.classList.add('visible');
+                    } else {
+                        stickyCTA.classList.remove('visible');
+                    }
+                });
+            }, 100); // Throttle to once every 100ms
         });
 
         // Exit Intent Popup
@@ -1904,14 +1918,50 @@
             document.getElementById('exitPopup').classList.remove('active');
         });
 
-        document.getElementById('exitForm').addEventListener('submit', function(e) {
+        document.getElementById('exitForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const email = document.getElementById('exitEmail').value;
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
 
-            // Here you would send the email to your backend/email service
-            alert('Thank you! Check your email for your free AI Readiness Checklist.');
+            // Prevent double submission and provide immediate feedback
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending...';
 
-            document.getElementById('exitPopup').classList.remove('active');
+            try {
+                // Send email to backend/email service
+                const response = await fetch('https://hook.us1.make.com/YOUR_WEBHOOK_URL', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        leadMagnet: '5 Signs Your Business Is Ready for AI Automation',
+                        timestamp: new Date().toISOString()
+                    })
+                });
+
+                if (response.ok) {
+                    submitBtn.textContent = '✓ Sent!';
+                    setTimeout(() => {
+                        document.getElementById('exitPopup').classList.remove('active');
+                        this.reset();
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = originalText;
+                    }, 1500);
+                } else {
+                    throw new Error('Failed to send');
+                }
+            } catch (error) {
+                console.error('Error submitting form:', error);
+                submitBtn.textContent = 'Error - Try Again';
+                submitBtn.disabled = false;
+                // Fallback: still close popup after showing error briefly
+                setTimeout(() => {
+                    submitBtn.textContent = originalText;
+                }, 2000);
+            }
         });
 
         // Close popup when clicking outside
