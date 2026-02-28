@@ -707,7 +707,7 @@
                             </div>
 
                             <p class="text-xl md:text-2xl font-semibold text-gray-900 mb-6 italic leading-relaxed">
-                                "We're creating revenue for almost free. Juan understood the vision and built the system in a way that's ready to scale. He was a great strategic partner—I would definitely recommend a conversation with Juan."
+                                "We're creating revenue for almost free. Juan understood the vision and built the system in a way that's ready to scale. He was a great strategic partner. I would definitely recommend a conversation with Juan."
                             </p>
 
                             <div class="border-t border-gray-200 pt-4">
@@ -749,6 +749,112 @@
         </div>
     </section>
 
+    <!-- NEW VIDEO TESTIMONIAL SECTION -->
+    <section id="testimonial-2" class="py-16 md:py-24 bg-gradient-to-br from-gray-50 via-purple-50 to-pink-50">
+        <div class="container mx-auto px-4">
+            <div class="max-w-5xl mx-auto">
+
+            <div class="glass p-6 md:p-10 rounded-3xl shadow-2xl">
+                <!-- Optimized YouTube Embed with Lazy Loading -->
+                <div class="relative" style="padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; border-radius: 16px;">
+                    <!-- Thumbnail Preview (loads instantly, no iframe until clicked) -->
+                    <div id="videoThumb2" class="absolute inset-0 cursor-pointer group" onclick="loadVideo2()">
+                        <img
+                            src="https://img.youtube.com/vi/YOUR_VIDEO_ID_HERE/maxresdefault.jpg"
+                            alt="Client Testimonial - [Client Name], [Company Name]"
+                            class="absolute inset-0 w-full h-full object-cover rounded-2xl"
+                            loading="lazy"
+                        />
+                        <!-- Play Button Overlay -->
+                        <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 group-hover:bg-opacity-40 transition-all duration-300 rounded-2xl">
+                            <div class="bg-pink-600 group-hover:bg-pink-700 rounded-full p-6 shadow-2xl transform group-hover:scale-110 transition-all duration-300">
+                                <svg class="w-12 h-12 md:w-16 md:h-16 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <!-- Duration Badge (optional) -->
+                        <div class="absolute bottom-4 right-4 bg-black bg-opacity-80 text-white px-3 py-1 rounded-lg text-sm font-semibold">
+                            Watch Video
+                        </div>
+                    </div>
+
+                    <!-- Actual iframe (loaded on click for performance) -->
+                    <iframe
+                        id="youtubeIframe2"
+                        style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 16px;"
+                        src=""
+                        title="Client Testimonial - [Client Name] from [Company Name]"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+
+                <!-- Client Testimonial Card -->
+                <div class="mt-8 bg-white border-2 border-gray-200 rounded-2xl p-8 shadow-lg">
+                    <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
+                        <!-- Client Logo -->
+                        <div class="flex-shrink-0">
+                            <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                                <img src="/client-logo-placeholder.png"
+                                     alt="Client Company Name"
+                                     class="h-16 w-auto object-contain"
+                                     loading="lazy">
+                            </div>
+                        </div>
+
+                        <!-- Client Info & Quote -->
+                        <div class="flex-1 text-center md:text-left">
+                            <div class="mb-4">
+                                <svg class="w-8 h-8 text-pink-500 mx-auto md:mx-0 opacity-50" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                                </svg>
+                            </div>
+
+                            <p class="text-xl md:text-2xl font-semibold text-gray-900 mb-6 italic leading-relaxed">
+                                "[Insert your client testimonial quote here. Make it impactful and highlight the key transformation or results achieved.]"
+                            </p>
+
+                            <div class="border-t border-gray-200 pt-4">
+                                <p class="text-lg font-bold text-gray-900">[Client Name]</p>
+                                <p class="text-gray-600 font-medium">[Job Title]</p>
+                                <p class="text-gray-500 text-sm mt-1">[Company Name]</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Case Study Highlights -->
+                <div class="mt-8 text-center">
+                    <p class="text-gray-700 text-lg mb-4">
+                        <strong>In this testimonial, [Client Name] shares:</strong>
+                    </p>
+                    <div class="grid md:grid-cols-3 gap-4 text-left max-w-3xl mx-auto">
+                        <div class="flex items-start">
+                            <svg class="w-6 h-6 text-pink-600 mr-2 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-gray-700">[First key insight or achievement from the testimonial]</span>
+                        </div>
+                        <div class="flex items-start">
+                            <svg class="w-6 h-6 text-pink-600 mr-2 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-gray-700">[Second key insight or achievement from the testimonial]</span>
+                        </div>
+                        <div class="flex items-start">
+                            <svg class="w-6 h-6 text-pink-600 mr-2 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-gray-700">[Third key insight or achievement from the testimonial]</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <script>
         // Lazy load YouTube iframe on click (performance optimization)
         function loadVideo() {
@@ -758,6 +864,21 @@
 
                 // Set iframe src with autoplay
                 iframe.src = 'https://www.youtube.com/embed/jFOygpP7kes?autoplay=1&rel=0&modestbranding=1';
+
+                // Hide thumbnail, show iframe
+                thumb.style.display = 'none';
+                iframe.style.display = 'block';
+            });
+        }
+
+        // Lazy load second YouTube iframe on click (performance optimization)
+        function loadVideo2() {
+            requestAnimationFrame(function() {
+                const thumb = document.getElementById('videoThumb2');
+                const iframe = document.getElementById('youtubeIframe2');
+
+                // Set iframe src with autoplay - REPLACE 'YOUR_VIDEO_ID_HERE' with actual YouTube video ID
+                iframe.src = 'https://www.youtube.com/embed/YOUR_VIDEO_ID_HERE?autoplay=1&rel=0&modestbranding=1';
 
                 // Hide thumbnail, show iframe
                 thumb.style.display = 'none';
@@ -1370,7 +1491,7 @@
                         <h3 class="text-4xl md:text-5xl font-bold mb-8 gradient-accent bg-clip-text text-transparent">Coach Juan Gonzalez</h3>
 
                         <p class="text-lg md:text-xl text-gray-700 mb-6 leading-relaxed">
-                            Coach Juan spent 15+ years leading tech transformations at companies like Ericsson and Ubisoft, then walked away to build something with more soul.
+                            Coach Juan spent 15+ years leading tech transformations at companies like Ericsson and Ubisoft, then walked away as a solo-entrepreneur to build something with more soul at PVRPOSE AI.
                         </p>
 
                         <p class="text-lg md:text-xl text-gray-700 mb-8 leading-relaxed">
