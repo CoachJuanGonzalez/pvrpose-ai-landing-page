@@ -26,7 +26,7 @@ AIRTABLE_BASE_ID
 -----------------------------------
 AIRTABLE_TABLE_NAME
 -----------------------------------
-✓ Value should be EXACTLY: tblKqUTKNYbmmsy6K
+✓ Value should be EXACTLY: tblthGtSItndh228A
 ✓ This is the TABLE ID from your URL, NOT the table name
 ✓ Applied to: Production, Preview, Development
 
@@ -60,5 +60,5 @@ After redeploying, go to:
 5. Look for error messages in the logs
 
 The logs will show:
-- "Airtable config: baseId: SET, tableName: tblKqUTKNYbmmsy6K, apiKey: SET"
+- "Airtable config: baseId: SET, tableName: tblthGtSItndh228A, apiKey: SET"
 - If any show "MISSING", that variable is not set correctly
