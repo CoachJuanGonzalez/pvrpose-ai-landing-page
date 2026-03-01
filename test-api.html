@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test - Assessment Submission</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        button {
+            background: #ec4899;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #db2777;
+        }
+        #output {
+            background: #f3f4f6;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .success { color: #059669; }
+        .error { color: #dc2626; }
+    </style>
+</head>
+<body>
+    <h1>Assessment API Test Page</h1>
+    <p>This page tests if the /api/submit-assessment endpoint is working correctly.</p>
+
+    <button onclick="testAPI()">Test API Endpoint</button>
+    <button onclick="clearOutput()">Clear Output</button>
+
+    <div id="output"></div>
+
+    <script>
+        function log(message, type = 'info') {
+            const output = document.getElementById('output');
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type === 'error' ? 'error' : (type === 'success' ? 'success' : '');
+            output.innerHTML += `<div class="${className}">[${timestamp}] ${message}</div>`;
+        }
+
+        function clearOutput() {
+            document.getElementById('output').innerHTML = '';
+        }
+
+        async function testAPI() {
+            clearOutput();
+            log('Starting API test...', 'info');
+
+            const testPayload = {
+                first_name: 'Test',
+                email: 'test@example.com',
+                score: '75',
+                answers: [
+                    {
+                        questionId: 1,
+                        question: 'Test question?',
+                        selectedOption: { text: 'Test answer', value: 75 },
+                        value: 75,
+                        weight: 3
+                    }
+                ],
+                timestamp: new Date().toISOString(),
+                fingerprint: 'test123',
+                source: 'pvrposeailandingpage',
+                consent: {
+                    marketing: true,
+                    timestamp: new Date().toISOString(),
+                    jurisdiction: 'CA'
+                }
+            };
+
+            log('Test payload:', 'info');
+            log(JSON.stringify(testPayload, null, 2), 'info');
+
+            try {
+                log('\nSending POST request to /api/submit-assessment...', 'info');
+
+                const response = await fetch('/api/submit-assessment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(testPayload)
+                });
+
+                log(`\nResponse status: ${response.status} ${response.statusText}`, 'info');
+                log(`Response headers: ${JSON.stringify([...response.headers], null, 2)}`, 'info');
+
+                const responseText = await response.text();
+                log(`\nResponse body (raw):`, 'info');
+                log(responseText, 'info');
+
+                let responseData;
+                try {
+                    responseData = JSON.parse(responseText);
+                    log(`\nResponse body (parsed):`, 'info');
+                    log(JSON.stringify(responseData, null, 2), response.ok ? 'success' : 'error');
+                } catch (e) {
+                    log(`\nFailed to parse response as JSON: ${e.message}`, 'error');
+                }
+
+                if (response.ok) {
+                    log('\n✓ SUCCESS! API endpoint is working correctly.', 'success');
+                    if (responseData?.airtableId) {
+                        log(`✓ Record created in Airtable with ID: ${responseData.airtableId}`, 'success');
+                    }
+                } else {
+                    log('\n✗ ERROR! API endpoint returned an error.', 'error');
+                    if (responseData?.error) {
+                        log(`Error message: ${responseData.error}`, 'error');
+                    }
+                    if (responseData?.details) {
+                        log(`Error details: ${responseData.details}`, 'error');
+                    }
+                }
+
+            } catch (error) {
+                log(`\n✗ FETCH ERROR: ${error.message}`, 'error');
+                log(`Error stack: ${error.stack}`, 'error');
+            }
+        }
+
+        // Auto-run test on page load
+        window.addEventListener('load', () => {
+            log('Test page loaded. Click "Test API Endpoint" button to run test.', 'info');
+        });
+    </script>
+</body>
+</html>
