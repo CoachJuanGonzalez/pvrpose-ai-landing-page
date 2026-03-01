@@ -176,15 +176,12 @@
                             <input type="text" name="company" id="userCompany" autocomplete="off" tabindex="-1"
                                    style="position:absolute;left:-5000px;" aria-hidden="true">
 
-                            <input type="text" id="userName" name="name" required placeholder="Your Name"
-                                   autocomplete="name" maxlength="100"
+                            <input type="text" id="userFirstName" name="first_name" required placeholder="First Name"
+                                   autocomplete="given-name" maxlength="100"
                                    class="w-full px-4 py-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-white">
                             <input type="email" id="userEmail" name="email" required placeholder="Your Email"
                                    autocomplete="email" pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$"
                                    maxlength="254"
-                                   class="w-full px-4 py-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-white">
-                            <input type="tel" id="userPhone" name="phone" placeholder="Phone (Optional)"
-                                   autocomplete="tel" maxlength="20"
                                    class="w-full px-4 py-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-white">
                             <button type="submit" class="w-full bg-white text-pink-600 px-6 py-4 rounded-xl font-semibold text-lg hover:bg-gray-100 transition">
                                 Send Me My Custom Roadmap →
@@ -515,14 +512,13 @@
             }
 
             // Input validation and sanitization
-            let name = document.getElementById('userName').value.trim();
+            let firstName = document.getElementById('userFirstName').value.trim();
             let email = document.getElementById('userEmail').value.trim().toLowerCase();
-            let phone = document.getElementById('userPhone').value.trim();
 
-            // Sanitize name (remove special characters that could be XSS)
-            name = name.replace(/[<>\"']/g, '');
-            if (name.length < 2 || name.length > 100) {
-                alert('Please enter a valid name (2-100 characters).');
+            // Sanitize first name (remove special characters that could be XSS)
+            firstName = firstName.replace(/[<>\"']/g, '');
+            if (firstName.length < 2 || firstName.length > 100) {
+                alert('Please enter a valid first name (2-100 characters).');
                 return;
             }
 
@@ -538,15 +534,6 @@
             if (email.includes('test@') || email.includes('fake@') || email.includes('spam@')) {
                 console.warn('Suspicious email detected');
                 return; // Silent fail
-            }
-
-            // Phone validation (if provided)
-            if (phone) {
-                phone = phone.replace(/[^\d+\-() ]/g, ''); // Allow only numbers and basic formatting
-                if (phone.length > 20) {
-                    alert('Phone number is too long.');
-                    return;
-                }
             }
 
             const score = document.getElementById('finalScore').textContent;
@@ -569,15 +556,14 @@
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        name: name,
+                        first_name: firstName,
                         email: email,
-                        phone: phone,
                         score: score,
                         answers: answers,
                         timestamp: new Date().toISOString(),
                         document: 'Personalized AI Implementation Roadmap',
                         fingerprint: fingerprint,
-                        source: 'assessment_completion',
+                        source: 'pvrposeailandingpage',
                         consent: {
                             marketing: true,
                             timestamp: new Date().toISOString(),
@@ -591,7 +577,7 @@
 
                     // Show success message
                     setTimeout(() => {
-                        alert(`Thank you, ${name}! Your personalized AI Implementation Roadmap has been sent to ${email}. Check your inbox!`);
+                        alert(`Thank you, ${firstName}! Your personalized AI Implementation Roadmap has been sent to ${email}. Check your inbox!`);
 
                         // Optional: redirect to thank you page or booking calendar
                         // window.location.href = 'https://calendly.com/coachjuan-pvrposeai/discovery-call';

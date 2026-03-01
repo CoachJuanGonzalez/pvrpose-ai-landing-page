@@ -36,10 +36,10 @@ export default async function handler(req, res) {
     }
 
     try {
-        const { name, email, phone, score, answers, timestamp, fingerprint, source, consent } = req.body;
+        const { first_name, email, score, answers, timestamp, fingerprint, source, consent } = req.body;
 
         // Validation
-        if (!name || !email || !score || !answers) {
+        if (!first_name || !email || !score || !answers) {
             return res.status(400).json({ error: 'Missing required fields' });
         }
 
@@ -51,14 +51,13 @@ export default async function handler(req, res) {
 
         // Prepare payload
         const payload = {
-            name: name.trim(),
+            first_name: first_name.trim(),
             email: email.trim().toLowerCase(),
-            phone: phone?.trim() || '',
             score: parseInt(score),
             answers: answers,
             timestamp: timestamp || new Date().toISOString(),
             fingerprint: fingerprint || '',
-            source: source || 'assessment_completion',
+            source: source || 'pvrposeailandingpage',
             consent: consent || {
                 marketing: true,
                 timestamp: new Date().toISOString(),
@@ -132,13 +131,12 @@ async function submitToAirtable(payload) {
         records: [
             {
                 fields: {
-                    'Name': payload.name,
-                    'Email': payload.email,
-                    'Phone': payload.phone,
+                    'first_name': payload.first_name,
+                    'email': payload.email,
                     'AI Readiness Score': payload.score,
                     'Assessment Answers': answersText,
                     'Timestamp': payload.timestamp,
-                    'Source': payload.source,
+                    'source': payload.source,
                     'Consent Marketing': payload.consent.marketing,
                     'Consent Timestamp': payload.consent.timestamp,
                     'Jurisdiction': payload.consent.jurisdiction,
