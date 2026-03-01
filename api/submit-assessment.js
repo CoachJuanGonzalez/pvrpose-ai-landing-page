@@ -1,27 +1,15 @@
 /**
  * Vercel Serverless Function - AI Assessment Submission Handler
- * Securely forwards assessment data to Make.com webhook and Airtable
+ * Sends assessment data directly to Airtable
  * Environment Variables Required:
- * - MAKE_WEBHOOK_URL: Make.com webhook endpoint
  * - AIRTABLE_API_KEY: Airtable Personal Access Token
  * - AIRTABLE_BASE_ID: Airtable Base ID
- * - AIRTABLE_TABLE_NAME: Airtable Table Name (default: "AI Assessments")
+ * - AIRTABLE_TABLE_NAME: Airtable Table Name (default: "tblAssessmentSubmissions")
  */
 
 export default async function handler(req, res) {
-    // CORS headers for your domain
-    const allowedOrigins = [
-        'https://pvrpose.ai',
-        'https://www.pvrpose.ai',
-        'http://localhost:3000', // For local testing
-        'http://localhost:8080'
-    ];
-
-    const origin = req.headers.origin;
-    if (allowedOrigins.includes(origin)) {
-        res.setHeader('Access-Control-Allow-Origin', origin);
-    }
-
+    // CORS headers - allow all origins for now to debug
+    res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
@@ -35,17 +23,34 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
+    // Log request for debugging
+    console.log('Assessment submission received:', {
+        method: req.method,
+        body: req.body,
+        headers: req.headers
+    });
+
     try {
         const { first_name, email, score, answers, timestamp, fingerprint, source, consent } = req.body;
 
         // Validation
         if (!first_name || !email || !score || !answers) {
-            return res.status(400).json({ error: 'Missing required fields' });
+            console.error('Validation failed - missing fields:', { first_name, email, score, answers: !!answers });
+            return res.status(400).json({
+                error: 'Missing required fields',
+                details: {
+                    first_name: !!first_name,
+                    email: !!email,
+                    score: !!score,
+                    answers: !!answers
+                }
+            });
         }
 
         // Email validation
         const emailRegex = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
         if (!emailRegex.test(email)) {
+            console.error('Email validation failed:', email);
             return res.status(400).json({ error: 'Invalid email address' });
         }
 
@@ -62,63 +67,51 @@ export default async function handler(req, res) {
                 marketing: true,
                 timestamp: new Date().toISOString(),
                 jurisdiction: 'CA'
-            },
-            documentType: 'Personalized AI Implementation Roadmap'
+            }
         };
 
-        // Send to Make.com webhook (handles PDF generation + email)
-        const makeWebhookUrl = process.env.MAKE_WEBHOOK_URL;
+        console.log('Payload prepared:', payload);
 
-        if (!makeWebhookUrl) {
-            console.error('MAKE_WEBHOOK_URL environment variable not configured');
-            return res.status(500).json({ error: 'Server configuration error' });
-        }
+        // Submit to Airtable
+        const airtableResult = await submitToAirtable(payload);
 
-        const makeResponse = await fetch(makeWebhookUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload)
-        });
-
-        if (!makeResponse.ok) {
-            throw new Error(`Make.com webhook failed: ${makeResponse.status}`);
-        }
-
-        // Optional: Direct Airtable integration as backup/redundancy
-        if (process.env.AIRTABLE_API_KEY && process.env.AIRTABLE_BASE_ID) {
-            try {
-                await submitToAirtable(payload);
-            } catch (airtableError) {
-                // Log but don't fail - Make.com should handle Airtable
-                console.error('Airtable direct submission failed:', airtableError);
-            }
-        }
+        console.log('Airtable submission successful:', airtableResult);
 
         // Success response
         return res.status(200).json({
             success: true,
             message: 'Assessment submitted successfully',
-            email: payload.email
+            email: payload.email,
+            airtableId: airtableResult.id
         });
 
     } catch (error) {
         console.error('Assessment submission error:', error);
         return res.status(500).json({
             error: 'Failed to submit assessment',
-            message: error.message
+            message: error.message,
+            details: error.toString()
         });
     }
 }
 
 /**
- * Helper function: Submit to Airtable directly (optional redundancy)
+ * Submit directly to Airtable
  */
 async function submitToAirtable(payload) {
     const baseId = process.env.AIRTABLE_BASE_ID;
-    const tableName = process.env.AIRTABLE_TABLE_NAME || 'AI Assessments';
+    const tableName = process.env.AIRTABLE_TABLE_NAME || 'tblAssessmentSubmissions';
     const apiKey = process.env.AIRTABLE_API_KEY;
+
+    console.log('Airtable config:', {
+        baseId: baseId ? 'SET' : 'MISSING',
+        tableName,
+        apiKey: apiKey ? 'SET' : 'MISSING'
+    });
+
+    if (!apiKey || !baseId) {
+        throw new Error('Airtable credentials not configured in Vercel environment variables');
+    }
 
     const airtableUrl = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}`;
 
@@ -127,25 +120,31 @@ async function submitToAirtable(payload) {
         `Q${a.questionId}: ${a.question}\nA: ${a.selectedOption.text} (Score: ${a.value})`
     ).join('\n\n');
 
+    // Extract top priority from answers
+    const topPriority = extractTopPriority(payload.answers);
+
     const airtablePayload = {
         records: [
             {
                 fields: {
                     'first_name': payload.first_name,
                     'email': payload.email,
-                    'AI Readiness Score': payload.score,
-                    'Assessment Answers': answersText,
-                    'Timestamp': payload.timestamp,
+                    'score': payload.score,
+                    'assessment_answers': answersText,
+                    'timestamp': payload.timestamp,
                     'source': payload.source,
-                    'Consent Marketing': payload.consent.marketing,
-                    'Consent Timestamp': payload.consent.timestamp,
-                    'Jurisdiction': payload.consent.jurisdiction,
-                    'Fingerprint': payload.fingerprint,
-                    'Status': 'New'
+                    'consent_marketing': payload.consent.marketing,
+                    'consent_timestamp': payload.consent.timestamp,
+                    'jurisdiction': payload.consent.jurisdiction,
+                    'fingerprint': payload.fingerprint,
+                    'status': 'New',
+                    'top_priority': topPriority
                 }
             }
         ]
     };
+
+    console.log('Sending to Airtable:', airtableUrl);
 
     const response = await fetch(airtableUrl, {
         method: 'POST',
@@ -156,10 +155,37 @@ async function submitToAirtable(payload) {
         body: JSON.stringify(airtablePayload)
     });
 
+    const responseText = await response.text();
+    console.log('Airtable response:', { status: response.status, body: responseText });
+
     if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Airtable API error: ${response.status} - ${errorText}`);
+        throw new Error(`Airtable API error: ${response.status} - ${responseText}`);
     }
 
-    return await response.json();
+    const result = JSON.parse(responseText);
+    return result.records[0];
+}
+
+/**
+ * Extract top priority from assessment answers
+ */
+function extractTopPriority(answers) {
+    const categories = {};
+
+    answers.forEach(answer => {
+        if (answer.category) {
+            categories[answer.category] = (categories[answer.category] || 0) + answer.weight;
+        }
+    });
+
+    const topCategory = Object.keys(categories).sort((a, b) => categories[b] - categories[a])[0];
+
+    const categoryMap = {
+        'communication': 'Client communication & follow-up automation',
+        'scheduling': 'Calendar management & scheduling automation',
+        'sales': 'Proposal generation & sales process automation',
+        'data': 'Data entry & CRM automation'
+    };
+
+    return categoryMap[topCategory] || 'Workflow automation & process optimization';
 }
