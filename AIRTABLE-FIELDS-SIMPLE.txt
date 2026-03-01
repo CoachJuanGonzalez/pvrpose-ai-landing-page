@@ -1,0 +1,61 @@
+=====================================
+AIRTABLE TABLE FIELDS - SIMPLIFIED
+=====================================
+
+CORE REQUIRED FIELDS (Must have these):
+----------------------------------------
+
+1. first_name
+   Type: Single line text
+
+2. email
+   Type: Email
+
+3. score
+   Type: Number
+   Format: Integer (0-100)
+
+4. assessment_answers
+   Type: Long text
+
+5. source
+   Type: Single line text
+
+6. fingerprint
+   Type: Single line text
+
+7. status
+   Type: Single select
+   Options: New, Contacted, Converted
+
+8. top_priority
+   Type: Long text
+
+
+OPTIONAL FIELDS (Nice to have):
+---------------------------------
+
+9. submission_date
+   Type: Date
+   Include time: YES
+   GMT: YES
+   (DO NOT use "Created time" - use regular Date field!)
+
+10. consent_marketing
+    Type: Checkbox
+
+11. consent_date
+    Type: Date
+    Include time: YES
+    GMT: YES
+
+12. jurisdiction
+    Type: Single line text
+
+
+IMPORTANT NOTES:
+---------------------------------
+- Use exact field names (case-sensitive!)
+- For date fields: Use "Date" type, NOT "Created time" or "Formula"
+- The API will skip fields that don't exist or are computed
+- Minimum required: Fields 1-8 above

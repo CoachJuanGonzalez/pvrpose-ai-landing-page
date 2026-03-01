@@ -123,23 +123,39 @@ async function submitToAirtable(payload) {
     // Extract top priority from answers
     const topPriority = extractTopPriority(payload.answers);
 
+    // Build fields object - only include fields that exist in Airtable
+    const fields = {
+        'first_name': payload.first_name,
+        'email': payload.email,
+        'score': payload.score,
+        'assessment_answers': answersText,
+        'source': payload.source,
+        'fingerprint': payload.fingerprint,
+        'status': 'New',
+        'top_priority': topPriority
+    };
+
+    // Add optional fields if they're not computed in Airtable
+    if (payload.timestamp) {
+        fields['submission_date'] = payload.timestamp;
+    }
+
+    if (payload.consent.marketing !== undefined) {
+        fields['consent_marketing'] = payload.consent.marketing;
+    }
+
+    if (payload.consent.timestamp) {
+        fields['consent_date'] = payload.consent.timestamp;
+    }
+
+    if (payload.consent.jurisdiction) {
+        fields['jurisdiction'] = payload.consent.jurisdiction;
+    }
+
     const airtablePayload = {
         records: [
             {
-                fields: {
-                    'first_name': payload.first_name,
-                    'email': payload.email,
-                    'score': payload.score,
-                    'assessment_answers': answersText,
-                    'timestamp': payload.timestamp,
-                    'source': payload.source,
-                    'consent_marketing': payload.consent.marketing,
-                    'consent_timestamp': payload.consent.timestamp,
-                    'jurisdiction': payload.consent.jurisdiction,
-                    'fingerprint': payload.fingerprint,
-                    'status': 'New',
-                    'top_priority': topPriority
-                }
+                fields: fields
             }
         ]
     };
