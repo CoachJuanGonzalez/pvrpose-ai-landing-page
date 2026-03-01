@@ -496,6 +496,7 @@
 
         async function submitResults(event) {
             event.preventDefault();
+            console.log('Form submission started');
 
             // Bot detection - honeypot check
             const honeypot = document.getElementById('userCompany').value;
@@ -514,6 +515,8 @@
             // Input validation and sanitization
             let firstName = document.getElementById('userFirstName').value.trim();
             let email = document.getElementById('userEmail').value.trim().toLowerCase();
+
+            console.log('Form data:', { firstName, email });
 
             // Sanitize first name (remove special characters that could be XSS)
             firstName = firstName.replace(/[<>\"']/g, '');
@@ -549,48 +552,59 @@
                 // Generate basic fingerprint for duplicate prevention
                 const fingerprint = btoa(email + navigator.userAgent.substring(0, 50));
 
+                const payload = {
+                    first_name: firstName,
+                    email: email,
+                    score: score,
+                    answers: answers,
+                    timestamp: new Date().toISOString(),
+                    document: 'Personalized AI Implementation Roadmap',
+                    fingerprint: fingerprint,
+                    source: 'pvrposeailandingpage',
+                    consent: {
+                        marketing: true,
+                        timestamp: new Date().toISOString(),
+                        jurisdiction: 'CA' // Canadian compliance
+                    }
+                };
+
+                console.log('Sending payload:', payload);
+
                 // Send assessment data via secure API endpoint
                 const response = await fetch('/api/submit-assessment', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({
-                        first_name: firstName,
-                        email: email,
-                        score: score,
-                        answers: answers,
-                        timestamp: new Date().toISOString(),
-                        document: 'Personalized AI Implementation Roadmap',
-                        fingerprint: fingerprint,
-                        source: 'pvrposeailandingpage',
-                        consent: {
-                            marketing: true,
-                            timestamp: new Date().toISOString(),
-                            jurisdiction: 'CA' // Canadian compliance
-                        }
-                    })
+                    body: JSON.stringify(payload)
                 });
 
-                if (response.ok) {
+                console.log('Response status:', response.status);
+
+                const responseData = await response.json();
+                console.log('Response data:', responseData);
+
+                if (response.ok && responseData.success) {
                     submitBtn.textContent = '✓ Roadmap Sent!';
 
                     // Show success message
                     setTimeout(() => {
-                        alert(`Thank you, ${firstName}! Your personalized AI Implementation Roadmap has been sent to ${email}. Check your inbox!`);
+                        alert(`Thank you, ${firstName}! Your assessment has been submitted successfully. We'll be in touch soon!`);
 
                         // Optional: redirect to thank you page or booking calendar
                         // window.location.href = 'https://calendly.com/coachjuan-pvrposeai/discovery-call';
                     }, 500);
                 } else {
-                    throw new Error('Failed to send roadmap');
+                    throw new Error(responseData.message || 'Failed to send roadmap');
                 }
             } catch (error) {
                 console.error('Error submitting assessment:', error);
+                alert(`Error: ${error.message}\n\nPlease try again or contact support at juan@pvrpose.ai`);
+
                 submitBtn.textContent = 'Error - Please Try Again';
                 submitBtn.disabled = false;
 
-                // Show error and restore button after delay
+                // Restore button after delay
                 setTimeout(() => {
                     submitBtn.textContent = originalText;
                 }, 3000);
