@@ -26,6 +26,7 @@ Thumbs.db
 # Documentation and guides (not needed for deployment)
 *.md
 !README.md
+!DEPLOYMENT-GUIDE.md
 
 # Other folders not needed for deployment
 Content Management/

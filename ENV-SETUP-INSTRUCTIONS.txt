@@ -1,0 +1,67 @@
+================================
+VERCEL ENVIRONMENT VARIABLES SETUP
+================================
+
+URGENT: Set these environment variables in Vercel Dashboard BEFORE deployment!
+
+1. Go to: https://vercel.com/dashboard
+2. Select project: pvrpose-ai-landing-page
+3. Go to: Settings > Environment Variables
+4. Add these variables:
+
+-----------------------------------
+VARIABLE 1: MAKE_WEBHOOK_URL
+-----------------------------------
+Name: MAKE_WEBHOOK_URL
+Value: [Get from Make.com webhook module]
+Environments: ✓ Production ✓ Preview ✓ Development
+
+How to get:
+1. Login to Make.com
+2. Open your AI Assessment scenario
+3. Add "Webhooks > Custom Webhook" module
+4. Copy the URL (starts with https://hook.us1.make.com/)
+5. Paste here
+
+-----------------------------------
+VARIABLE 2: AIRTABLE_API_KEY (Optional)
+-----------------------------------
+Name: AIRTABLE_API_KEY
+Value: [Get from Airtable tokens]
+Environments: ✓ Production ✓ Preview ✓ Development
+
+How to get:
+1. Go to https://airtable.com/create/tokens
+2. Create new Personal Access Token
+3. Grant: data.records:read, data.records:write
+4. Select your base
+5. Copy token (starts with "pat")
+
+-----------------------------------
+VARIABLE 3: AIRTABLE_BASE_ID (Optional)
+-----------------------------------
+Name: AIRTABLE_BASE_ID
+Value: [Get from Airtable]
+Environments: ✓ Production ✓ Preview ✓ Development
+
+How to get:
+1. Open Airtable base
+2. Go to: Help > API Documentation
+3. Copy Base ID (starts with "app")
+
+-----------------------------------
+VARIABLE 4: AIRTABLE_TABLE_NAME (Optional)
+-----------------------------------
+Name: AIRTABLE_TABLE_NAME
+Value: AI Assessments
+Environments: ✓ Production ✓ Preview ✓ Development
+
+-----------------------------------
+AFTER SETTING VARIABLES:
+-----------------------------------
+1. Redeploy your project (Vercel will use new variables)
+2. Test assessment form
+3. Verify email delivery
+4. Check Airtable records
+
+For detailed setup, see: DEPLOYMENT-GUIDE.md
