@@ -1,0 +1,64 @@
+================================
+VERIFY YOUR VERCEL ENVIRONMENT VARIABLES
+================================
+
+Please verify you have set these EXACT values in Vercel:
+
+1. Go to: https://vercel.com/dashboard
+2. Select: pvrpose-ai-landing-page
+3. Go to: Settings > Environment Variables
+4. Verify these 3 variables exist:
+
+-----------------------------------
+AIRTABLE_API_KEY
+-----------------------------------
+✓ Value should start with: pat...
+✓ Should be around 40+ characters long
+✓ Applied to: Production, Preview, Development
+
+-----------------------------------
+AIRTABLE_BASE_ID
+-----------------------------------
+✓ Value should start with: app...
+✓ Example: appXXXXXXXXXXXXXX
+✓ Applied to: Production, Preview, Development
+
+-----------------------------------
+AIRTABLE_TABLE_NAME
+-----------------------------------
+✓ Value should be EXACTLY: tblKqUTKNYbmmsy6K
+✓ This is the TABLE ID from your URL, NOT the table name
+✓ Applied to: Production, Preview, Development
+
+-----------------------------------
+AFTER VERIFYING:
+-----------------------------------
+1. If any variable is wrong, UPDATE it
+2. Go to: Deployments tab
+3. Click "..." on latest deployment
+4. Click "Redeploy"
+5. Wait for deployment to finish
+6. Try the form again
+
+-----------------------------------
+COMMON MISTAKES:
+-----------------------------------
+❌ Using table NAME instead of table ID (tblXXX)
+❌ Not applying to all environments (Prod/Preview/Dev)
+❌ Extra spaces before or after the value
+❌ Wrong API key or base ID
+❌ Not redeploying after changing variables
+
+-----------------------------------
+TO DEBUG:
+-----------------------------------
+After redeploying, go to:
+1. Vercel Dashboard > Deployments
+2. Click on your deployment
+3. Click "Functions" tab
+4. Click on "api/submit-assessment"
+5. Look for error messages in the logs
+
+The logs will show:
+- "Airtable config: baseId: SET, tableName: tblKqUTKNYbmmsy6K, apiKey: SET"
+- If any show "MISSING", that variable is not set correctly
