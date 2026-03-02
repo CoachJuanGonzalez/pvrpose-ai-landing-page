@@ -493,7 +493,11 @@
 
         // Generate comprehensive AI Implementation Roadmap
         function generatePDFReport(firstName, score, category, recommendations, answers) {
-            const { jsPDF } = window.jspdf;
+            // Handle different jsPDF export formats
+            const jsPDF = window.jspdf?.jsPDF || window.jsPDF;
+            if (!jsPDF) {
+                throw new Error('jsPDF library not loaded');
+            }
             const doc = new jsPDF();
 
             // Brand colors (PVRPOSE AI)
@@ -1058,8 +1062,18 @@
 
                 // Generate PDF report
                 console.log('Generating PDF report...');
-                const pdfBase64 = generatePDFReport(firstName, score, scoreCategory, recommendations, answers);
-                console.log('PDF generated successfully');
+                console.log('jsPDF available:', typeof window.jspdf !== 'undefined');
+
+                let pdfBase64 = null;
+                try {
+                    pdfBase64 = generatePDFReport(firstName, score, scoreCategory, recommendations, answers);
+                    console.log('PDF generated successfully, size:', pdfBase64 ? pdfBase64.length : 0);
+                } catch (pdfError) {
+                    console.error('PDF generation failed:', pdfError);
+                    console.error('PDF error stack:', pdfError.stack);
+                    // Continue without PDF - still submit the assessment data
+                    alert('Note: PDF generation encountered an issue, but your assessment will still be submitted.');
+                }
 
                 submitBtn.textContent = 'Sending Your Roadmap...';
 
