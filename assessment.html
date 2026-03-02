@@ -175,8 +175,8 @@
 
                 <!-- Email Capture -->
                 <div class="bg-gradient-to-br from-pink-500 to-purple-600 p-8 rounded-2xl text-white">
-                    <h3 class="text-2xl font-bold mb-4 text-center">Get Your Personalized AI Implementation Roadmap</h3>
-                    <p class="text-center mb-6 text-white/90">Enter your email to receive a detailed PDF report with custom recommendations for your business.</p>
+                    <h3 class="text-2xl font-bold mb-4 text-center">Get Your Personalized AI Readiness Report</h3>
+                    <p class="text-center mb-6 text-white/90">Enter your email to receive your detailed PDF report with custom recommendations for your business.</p>
 
                     <form id="resultsForm" class="max-w-md mx-auto" onsubmit="submitResults(event)">
                         <div class="space-y-4">
@@ -192,7 +192,7 @@
                                    maxlength="254"
                                    class="w-full px-4 py-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-white">
                             <button type="submit" class="w-full bg-white text-pink-600 px-6 py-4 rounded-xl font-semibold text-lg hover:bg-gray-100 transition">
-                                Send Me My Custom Roadmap →
+                                Send Me My Report →
                             </button>
                             <p class="text-xs text-white/80 text-center">
                                 By submitting, you consent to receive marketing emails from PVRPOSE AI in compliance with CASL.
@@ -213,10 +213,10 @@
     </div>
 
     <!-- Version indicator for debugging -->
-    <div style="position:fixed;bottom:5px;right:5px;font-size:10px;color:#ccc;z-index:9999;">v2.0.2-20260302-0925</div>
+    <div style="position:fixed;bottom:5px;right:5px;font-size:10px;color:#ccc;z-index:9999;">v2.1.0-20260302-0935</div>
 
     <script>
-        console.log('=== ASSESSMENT VERSION: 2.0.2-20260302-0925 ===');
+        console.log('=== ASSESSMENT VERSION: 2.1.0-20260302-0935 - WITH PDF ===');
 
         // Assessment Questions
         const questions = [
@@ -432,7 +432,7 @@
                     "✓ Expected ROI: 10-20× in the first year",
                     "✓ Recommended timeline: Start implementation within 30 days",
                     "✓ Priority focus: " + identifyTopPriority(answers),
-                    "✓ Next step: Schedule a free strategy call to map your custom AI roadmap"
+                    "✓ Next step: Schedule a free strategy call to map your custom AI report"
                 ];
             } else if (score >= 60) {
                 category = "Strong Potential - Good Timing for AI";
@@ -505,7 +505,7 @@
             return categoryMap[topCategory] || 'Workflow automation & process optimization';
         }
 
-        // Generate comprehensive AI Implementation Roadmap
+        // Generate comprehensive AI Readiness Report
         function generatePDFReport(firstName, score, category, recommendations, answers) {
             // Handle different jsPDF export formats
             const jsPDF = window.jspdf?.jsPDF || window.jsPDF;
@@ -536,7 +536,7 @@
                 doc.setFontSize(8);
                 doc.setTextColor(...lightGray);
                 doc.setFont(undefined, 'normal');
-                doc.text('PVRPOSE AI - AI Implementation Roadmap', margin, 10);
+                doc.text('PVRPOSE AI - AI Readiness Report', margin, 10);
                 doc.text(`Page ${pageNumber}`, pageWidth - margin, 10, { align: 'right' });
                 doc.setDrawColor(...veryLightGray);
                 doc.setLineWidth(0.5);
@@ -574,7 +574,7 @@
             yPos = 75;
             doc.setFontSize(24);
             doc.setTextColor(...darkGray);
-            doc.text('AI Implementation Roadmap', 105, yPos, { align: 'center' });
+            doc.text('AI Readiness Report', 105, yPos, { align: 'center' });
 
             // Subtitle
             yPos += 12;
@@ -624,7 +624,7 @@
             doc.setFontSize(9);
             doc.setTextColor(...medGray);
             doc.setFont(undefined, 'italic');
-            const disclaimer = doc.splitTextToSize('This roadmap is based on your assessment responses and provides strategic guidance for implementing AI automation in your business. Results may vary based on execution and market conditions.', contentWidth - 40);
+            const disclaimer = doc.splitTextToSize('This report is based on your assessment responses and provides strategic guidance for implementing AI automation in your business. Results may vary based on execution and market conditions.', contentWidth - 40);
             doc.text(disclaimer, 105, yPos, { align: 'center', maxWidth: contentWidth - 40 });
 
             addFooter(pageNum);
@@ -651,7 +651,7 @@
             if (scoreInt >= 80) {
                 execSummary = `Congratulations, ${firstName}! Your assessment reveals that you are in an excellent position to implement AI automation. Your business demonstrates strong indicators of readiness: sufficient revenue base, clear pain points, and operational maturity. The AI automation systems we implement typically deliver 10-20× ROI in the first year for businesses at your stage, with potential time savings of 10-20 hours per week.\n\nKey opportunities identified: Your current operational challenges align perfectly with proven AI automation solutions. The combination of your revenue level, time spent on repetitive tasks, and openness to technology creates an ideal environment for successful implementation.`;
             } else if (scoreInt >= 60) {
-                execSummary = `Thank you for completing this assessment, ${firstName}. Your results indicate strong potential for AI automation success with the right strategic approach. Your business shows solid fundamentals and clear opportunities for productivity gains. Based on similar implementations, you can expect 5-10× ROI in the first year with time savings of 5-15 hours per week.\n\nKey opportunities identified: While your business is well-positioned, strategic timing and phased implementation will be critical to maximize results. This roadmap outlines a proven path forward that balances quick wins with sustainable long-term transformation.`;
+                execSummary = `Thank you for completing this assessment, ${firstName}. Your results indicate strong potential for AI automation success with the right strategic approach. Your business shows solid fundamentals and clear opportunities for productivity gains. Based on similar implementations, you can expect 5-10× ROI in the first year with time savings of 5-15 hours per week.\n\nKey opportunities identified: While your business is well-positioned, strategic timing and phased implementation will be critical to maximize results. This report outlines a proven path forward that balances quick wins with sustainable long-term transformation.`;
             } else if (scoreInt >= 40) {
                 execSummary = `Thank you for your interest in AI automation, ${firstName}. Your assessment indicates moderate potential for AI implementation. The key to success at this stage is focusing on high-impact, low-complexity automation that delivers immediate value while building toward more comprehensive solutions.\n\nKey opportunities identified: Starting with 1-2 strategic automation workflows will help you build momentum and demonstrate ROI before expanding. This approach minimizes risk while establishing the foundation for future growth.`;
             } else {
@@ -742,7 +742,7 @@
 
             yPos += 12;
 
-            // Phase-based roadmap
+            // Phase-based report
             const phases = [
                 {
                     title: 'Phase 1: Discovery & Strategy (Days 1-14)',
@@ -891,7 +891,7 @@
             const nextSteps = [
                 {
                     step: '1. Schedule Discovery Call',
-                    desc: 'Book a complimentary 30-minute strategy session to discuss your specific needs and opportunities. We\'ll review this roadmap in detail and answer your questions.',
+                    desc: 'Book a complimentary 30-minute strategy session to discuss your specific needs and opportunities. We\'ll review this report in detail and answer your questions.',
                     action: 'Book now: calendly.com/coachjuan-pvrposeai/discovery-call'
                 },
                 {
@@ -1079,12 +1079,29 @@
                 console.log('window.answers available:', typeof window.answers !== 'undefined');
                 console.log('window.answers length:', window.answers ? window.answers.length : 0);
 
-                // TEMPORARILY DISABLED: PDF generation
-                // Will re-enable once basic submissions work
-                console.log('PDF generation temporarily disabled');
-                const pdfBase64 = null;
+                // Extract recommendations from the page
+                const recommendationElements = document.querySelectorAll('#recommendationsContent li span:last-child');
+                const recommendations = Array.from(recommendationElements).map(el => el.textContent.trim());
 
-                submitBtn.textContent = 'Sending Your Roadmap...';
+                // Generate PDF report
+                console.log('Generating PDF report...');
+                console.log('jsPDF available:', typeof window.jspdf !== 'undefined');
+
+                let pdfBase64 = null;
+                try {
+                    const globalAnswers = window.answers || [];
+                    if (!globalAnswers || globalAnswers.length === 0) {
+                        throw new Error('Answers array is not available or empty');
+                    }
+                    pdfBase64 = generatePDFReport(firstName, score, scoreCategory, recommendations, globalAnswers);
+                    console.log('PDF generated successfully, size:', pdfBase64 ? pdfBase64.length : 0);
+                } catch (pdfError) {
+                    console.error('PDF generation failed:', pdfError);
+                    console.error('PDF error stack:', pdfError.stack);
+                    console.log('Continuing submission without PDF...');
+                }
+
+                submitBtn.textContent = 'Sending Your Report...';
 
                 // Generate basic fingerprint for duplicate prevention
                 const fingerprint = btoa(email + navigator.userAgent.substring(0, 50));
@@ -1098,7 +1115,9 @@
                     score: score,
                     answers: assessmentAnswers,
                     timestamp: new Date().toISOString(),
-                    document: 'AI Readiness Assessment',
+                    document: 'AI Readiness Report',
+                    pdf_base64: pdfBase64,
+                    pdf_filename: pdfBase64 ? `PVRPOSE_AI_Readiness_Report_${firstName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf` : null,
                     fingerprint: fingerprint,
                     source: 'pvrposeailandingpage',
                     consent: {
@@ -1132,7 +1151,7 @@
                 console.log('Response data:', responseData);
 
                 if (response.ok && responseData.success) {
-                    submitBtn.textContent = '✓ Roadmap Sent!';
+                    submitBtn.textContent = '✓ Report Sent!';
 
                     // Show success message
                     setTimeout(() => {
@@ -1142,7 +1161,7 @@
                         // window.location.href = 'https://calendly.com/coachjuan-pvrposeai/discovery-call';
                     }, 500);
                 } else {
-                    throw new Error(responseData.message || 'Failed to send roadmap');
+                    throw new Error(responseData.message || 'Failed to send report');
                 }
             } catch (error) {
                 console.error('Error submitting assessment:', error);
