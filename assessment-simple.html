@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Assessment Test</title>
+</head>
+<body>
+    <h1>Simple Assessment Test</h1>
+    <form id="testForm">
+        <input type="text" id="firstName" placeholder="First Name" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <button type="submit">Submit</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        // Simple global answers array
+        window.testAnswers = [
+            {
+                questionId: 1,
+                question: "Test question?",
+                selectedOption: { text: "Test answer", value: 75 },
+                value: 75,
+                weight: 3
+            }
+        ];
+
+        document.getElementById('testForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const firstName = document.getElementById('firstName').value;
+            const email = document.getElementById('email').value;
+
+            console.log('Submitting:', { firstName, email });
+
+            const payload = {
+                first_name: firstName,
+                email: email,
+                score: "75",
+                answers: window.testAnswers,
+                timestamp: new Date().toISOString(),
+                document: 'Test Assessment',
+                fingerprint: 'test123',
+                source: 'pvrposeailandingpage',
+                consent: {
+                    marketing: true,
+                    timestamp: new Date().toISOString(),
+                    jurisdiction: 'CA'
+                }
+            };
+
+            console.log('Payload:', JSON.stringify(payload, null, 2));
+
+            try {
+                const response = await fetch('/api/submit-assessment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                console.log('Response status:', response.status);
+                const data = await response.json();
+                console.log('Response data:', data);
+
+                document.getElementById('result').innerHTML =
+                    `<h2>Success!</h2><pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('result').innerHTML =
+                    `<h2>Error!</h2><pre>${error.message}</pre>`;
+            }
+        });
+    </script>
+</body>
+</html>
