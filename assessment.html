@@ -1056,18 +1056,14 @@
             assessmentRateLimit.lastSubmit = now;
 
             try {
-                // Extract recommendations from the page
-                const recommendationElements = document.querySelectorAll('#recommendationsContent li span:last-child');
-                const recommendations = Array.from(recommendationElements).map(el => el.textContent.trim());
-
                 // Debug logging
-                console.log('Checking variables before PDF generation...');
+                console.log('=== SUBMISSION DEBUG ===');
                 console.log('firstName:', firstName);
+                console.log('email:', email);
                 console.log('score:', score);
                 console.log('scoreCategory:', scoreCategory);
-                console.log('recommendations:', recommendations);
-                console.log('answers (global):', typeof answers !== 'undefined' ? answers : 'UNDEFINED');
-                console.log('answers length:', typeof answers !== 'undefined' ? answers.length : 'N/A');
+                console.log('window.answers available:', typeof window.answers !== 'undefined');
+                console.log('window.answers length:', window.answers ? window.answers.length : 0);
 
                 // TEMPORARILY DISABLED: PDF generation
                 // Will re-enable once basic submissions work
