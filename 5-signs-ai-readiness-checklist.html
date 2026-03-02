@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5 Signs Your Business Is Ready for AI Automation - PVRPOSE AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background: white;
+        }
+
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto;
+            background: white;
+            position: relative;
+            page-break-after: always;
+        }
+
+        .page:last-child {
+            page-break-after: auto;
+        }
+
+        /* Cover Page */
+        .cover {
+            background: linear-gradient(135deg, #1E3A8A 0%, #3b82f6 50%, #ec4899 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px;
+            text-align: center;
+            color: white;
+        }
+
+        .cover-logo {
+            margin-bottom: 80px;
+        }
+
+        .cover-logo img {
+            height: 80px;
+            width: auto;
+        }
+
+        .cover-title {
+            font-size: 56px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 30px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .cover-subtitle {
+            font-size: 24px;
+            font-weight: 400;
+            opacity: 0.95;
+            max-width: 600px;
+            margin-bottom: 60px;
+        }
+
+        .cover-badge {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 16px 32px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .cover-footer {
+            position: absolute;
+            bottom: 40px;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        /* Content Pages */
+        .content {
+            padding: 80px 70px;
+        }
+
+        .header {
+            border-bottom: 3px solid transparent;
+            border-image: linear-gradient(90deg, #ec4899 0%, #8b5cf6 100%);
+            border-image-slice: 1;
+            padding-bottom: 20px;
+            margin-bottom: 50px;
+        }
+
+        .header-logo img {
+            height: 50px;
+            width: auto;
+        }
+
+        h1 {
+            font-size: 42px;
+            font-weight: 800;
+            color: #1E3A8A;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1E3A8A;
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #374151;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .intro {
+            font-size: 18px;
+            color: #4b5563;
+            line-height: 1.8;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+            border-left: 4px solid #ec4899;
+            border-radius: 8px;
+        }
+
+        .sign-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 35px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .sign-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(180deg, #ec4899 0%, #8b5cf6 100%);
+        }
+
+        .sign-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+            color: white;
+            font-size: 32px;
+            font-weight: 800;
+            border-radius: 50%;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(236, 72, 153, 0.3);
+        }
+
+        .sign-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1E3A8A;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        .sign-description {
+            font-size: 16px;
+            color: #4b5563;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .example {
+            background: #f0fdf4;
+            border-left: 3px solid #10b981;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .example-title {
+            font-weight: 700;
+            color: #059669;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        .example-text {
+            color: #065f46;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .warning {
+            background: #fef3c7;
+            border-left: 3px solid #f59e0b;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .warning-title {
+            font-weight: 700;
+            color: #d97706;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        .warning-text {
+            color: #92400e;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .checklist {
+            list-style: none;
+            margin-top: 15px;
+        }
+
+        .checklist li {
+            padding: 12px 0;
+            padding-left: 35px;
+            position: relative;
+            font-size: 15px;
+            color: #374151;
+        }
+
+        .checklist li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #ec4899;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .bonus-section {
+            background: linear-gradient(135deg, #fdf2f8 0%, #fae8ff 100%);
+            border: 3px solid #ec4899;
+            border-radius: 20px;
+            padding: 40px;
+            margin-top: 50px;
+        }
+
+        .bonus-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .bonus-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: #1E3A8A;
+            margin-bottom: 25px;
+        }
+
+        .step-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .step-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 36px;
+            font-weight: 700;
+            margin-right: 15px;
+            font-size: 18px;
+        }
+
+        .step-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1E3A8A;
+            margin-bottom: 10px;
+        }
+
+        .step-description {
+            color: #4b5563;
+            font-size: 15px;
+            line-height: 1.7;
+            margin-left: 51px;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #1E3A8A 0%, #3b82f6 100%);
+            color: white;
+            padding: 50px;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .cta-title {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+        .cta-text {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: white;
+            color: #1E3A8A;
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 18px;
+            text-decoration: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .cta-subtext {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 40px;
+            left: 70px;
+            right: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #9ca3af;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .footer-logo img {
+            height: 30px;
+            width: auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #fdf2f8 0%, #fae8ff 100%);
+            border-radius: 16px;
+            border: 2px solid #ec4899;
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: 600;
+        }
+
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .page {
+                margin: 0;
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- COVER PAGE -->
+    <div class="page cover">
+        <div class="cover-logo">
+            <img src="logotypes-ai-rez-01.jpg" alt="PVRPOSE AI">
+        </div>
+        <h1 class="cover-title">5 Signs Your Business<br>Is Ready for AI Automation</h1>
+        <p class="cover-subtitle">The Essential Checklist for Professional Service & Construction Firms</p>
+        <div class="cover-badge">🎯 Bonus: Where to Start Guide Included</div>
+        <div class="cover-footer">© 2026 PVRPOSE AI • pvrpose.ai • juan@pvrpose.ai</div>
+    </div>
+
+    <!-- PAGE 1: INTRODUCTION -->
+    <div class="page content">
+        <div class="header">
+            <div class="header-logo">
+                <img src="logotypes-ai-rez-01.jpg" alt="PVRPOSE AI">
+            </div>
+        </div>
+
+        <h1>Is Your Business Ready for AI?</h1>
+
+        <div class="intro">
+            <strong>You're not imagining it.</strong> The successful firms in your industry are pulling ahead—and it's not because they're working longer hours. They've automated the busywork that's consuming 20+ hours of your week.
+        </div>
+
+        <p style="font-size: 17px; color: #374151; line-height: 1.8; margin-bottom: 25px;">
+            But here's the truth most AI consultants won't tell you: <strong>not every business is ready for AI automation right now.</strong>
+        </p>
+
+        <p style="font-size: 17px; color: #374151; line-height: 1.8; margin-bottom: 25px;">
+            Implementing AI before you're ready is like hiring a team of specialists when you haven't defined their roles—you'll waste money, create chaos, and wonder why nothing improved.
+        </p>
+
+        <p style="font-size: 17px; color: #374151; line-height: 1.8; margin-bottom: 35px;">
+            This guide will help you identify the <strong>5 telltale signs</strong> that your business is actually ready to benefit from AI automation—plus a practical roadmap for getting started.
+        </p>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">10-20</div>
+                <div class="stat-label">Hours Saved Per Week</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">6-8</div>
+                <div class="stat-label">Weeks to Implementation</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">3-10×</div>
+                <div class="stat-label">Return on Investment</div>
+            </div>
+        </div>
+
+        <h2 style="margin-top: 50px;">Why This Matters Now</h2>
+        <p style="font-size: 16px; color: #4b5563; line-height: 1.8;">
+            Your competitors who adopt AI automation in 2026 will have a <strong>12-24 month competitive advantage</strong> before the market catches up. The firms that wait will spend the next two years playing catch-up while watching their margins shrink and their best team members burn out.
+        </p>
+
+        <div class="footer">
+            <div class="footer-logo">
+                <img src="logotypes-ai-rez-01.jpg" alt="PVRPOSE AI">
+            </div>
+            <div>Page 1</div>
+        </div>
+    </div>
+
+    <!-- PAGE 2: SIGN 1 & 2 -->
+    <div class="page content">
+        <div class="header">
+            <div class="header-logo">
+                <img src="logotypes-ai-rez-01.jpg" alt="PVRPOSE AI">
+            </div>
+        </div>
+
+        <h1>The 5 Signs You're Ready</h1>
+
+        <div class="sign-card">
+            <div class="sign-number">1</div>
+            <div class="sign-title">You're Spending 15+ Hours Per Week on Repetitive Admin Tasks</div>
+            <div class="sign-description">
+                If you or your team are manually handling client follow-ups, data entry, scheduling, proposal generation, or CRM updates week after week—you're ready.
+            </div>
+            <ul class="checklist">
+                <li>Sending similar emails to clients repeatedly</li>
+                <li>Copy-pasting information between systems (email → CRM → spreadsheet)</li>
+                <li>Manually scheduling appointments or follow-ups</li>
+                <li>Creating proposals or quotes from templates</li>
+                <li>Updating client records after every interaction</li>
+            </ul>
+            <div class="example">
+                <div class="example-title">✓ REAL EXAMPLE:</div>
+                <div class="example-text">A coaching firm spent 12 hours/week sending personalized follow-up emails after discovery calls. AI automation now handles this in 2 minutes—customizing each email based on call notes and scheduling the perfect follow-up timing.</div>
+            </div>
+        </div>
+
+        <div class="sign-card">
+            <div class="sign-number">2</div>
+            <div class="sign-title">Your Team Is Growing, But Your Processes Haven't Evolved</div>
+            <div class="sign-description">
+                You've added 2-5 team members in the last year, but everyone's still doing things "the way we've always done them." Knowledge lives in people's heads, not documented systems.
+            </div>
+            <ul class="checklist">
+                <li>New hires ask the same questions over and over</li>
+                <li>Only certain people know how to handle specific tasks</li>
+                <li>Client experience varies depending on who handles the account</li>
+                <li>You're afraid to go on vacation because things will fall apart</li>
+                <li>Training new team members takes 4-8 weeks of hand-holding</li>
+            </ul>
+            <div class="warning">
+                <div class="warning-title">⚠️ WARNING SIGN:</div>
+                <div class="warning-text">If you've ever said "I need to clone myself" or "Only Sarah knows how to do that," you need documented, automated SOPs (Standard Operating Procedures)—not another hire.</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-logo">
+                <img src="logotypes-ai-rez-01.jpg" alt="PVRPOSE AI">
+            </div>
+            <div>Page 2</div>
+        </div>
+    </div>
+
+    <!-- PAGE 3: SIGN 3 & 4 -->
+    <div class="page content">
+        <div class="header">
+            <div class="header-logo">
+                <img src="logotypes-ai-rez-01.jpg" alt="PVRPOSE AI">
+            </div>
+        </div>
+
+        <div class="sign-card">
+            <div class="sign-number">3</div>
+            <div class="sign-title">Clients Are Falling Through the Cracks</div>
+            <div class="sign-description">
+                You're losing revenue not because of bad service, but because you're forgetting to follow up, missing renewal dates, or letting warm leads go cold.
+            </div>
+            <ul class="checklist">
+                <li>Leads from 2-3 weeks ago haven't heard from you</li>
+                <li>Client contracts expire without renewal conversations</li>
+                <li>Follow-up emails sit in your drafts for days</li>
+                <li>You've missed upsell opportunities because you forgot to check in</li>
+                <li>Clients say "I haven't heard from you in a while"</li>
+            </ul>
+            <div class="example">
+                <div class="example-title">✓ REAL EXAMPLE:</div>
+                <div class="example-text">An accounting firm realized they had 47 clients whose annual review was overdue by 60+ days. AI automation now tracks all deadlines and sends personalized reminder sequences—recovering $180K in renewals they would have missed.</div>
+            </div>
+        </div>
+
+        <div class="sign-card">
+            <div class="sign-number">4</div>
+            <div class="sign-title">You Have the Revenue to Invest $15K-$25K</div>
+            <div class="sign-description">
+                AI automation isn't free—but it pays for itself in 3-6 months. You need the cash flow to invest upfront before seeing returns.
+            </div>
+            <ul class="checklist">
+                <li>Annual revenue of $250K+ (solo) or $500K+ (team)</li>
+                <li>Consistent monthly cash flow (not project-dependent)</li>
+                <li>Willing to invest in growth, not just survival</li>
+                <li>Can afford to free up 10-20 hours/week of your time</li>
+                <li>Ready to think 6-12 months ahead, not just this quarter</li>
+            </ul>
+            <div class="warning">
+                <div class="warning-title">⚠️ REALITY CHECK:</div>
+                <div class="warning-text">If you're still in startup mode or revenue is inconsistent, focus on sales first. AI automation multiplies efficiency—but you need a foundation to build on. Come back when you're turning away work or drowning in delivery.</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-logo">
+                <img src="logotypes-ai-rez-01.jpg" alt="PVRPOSE AI">
+            </div>
+            <div>Page 3</div>
+        </div>
+    </div>
+
+    <!-- PAGE 4: SIGN 5 -->
+    <div class="page content">
+        <div class="header">
+            <div class="header-logo">
+                <img src="logotypes-ai-rez-01.jpg" alt="PVRPOSE AI">
+            </div>
+        </div>
+
+        <div class="sign-card">
+            <div class="sign-number">5</div>
+            <div class="sign-title">You're Ready to Document Your Processes (Even If They're Messy)</div>
+            <div class="sign-description">
+                AI can't automate chaos. But if you're willing to spend 2-4 weeks mapping your current workflows—even the imperfect ones—you're ready to transform them.
+            </div>
+            <ul class="checklist">
+                <li>You can describe your client journey from lead to delivery</li>
+                <li>You know which tasks you do weekly vs. monthly vs. quarterly</li>
+                <li>You're willing to record yourself doing key processes (15-30 min each)</li>
+                <li>You're open to changing "how you've always done things"</li>
+                <li>You trust that better systems = better client experience</li>
+            </ul>
+            <div class="example">
+                <div class="example-title">✓ WHAT THIS LOOKS LIKE:</div>
+                <div class="example-text">During our AI Readiness Audit, we don't need perfect SOPs—we need you to walk us through your messiest, most time-consuming processes. We'll handle the documentation and optimization. Your job is to be honest about what's broken.</div>
+            </div>
+            <div class="warning">
+                <div class="warning-title">⚠️ NOT READY IF:</div>
+                <div class="warning-text">If you're still pivoting your business model every 90 days, wait. AI automation works best when core processes are stable (even if manual). Get to consistent delivery first, then automate.</div>
+            </div>
+        </div>
+
+        <h2 style="margin-top: 50px; color: #1E3A8A;">How Many Signs Did You Check?</h2>
+
+        <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-left: 4px solid #10b981; padding: 30px; border-radius: 12px; margin-top: 25px;">
+            <p style="font-size: 18px; font-weight: 700; color: #065f46; margin-bottom: 15px;">✓ 4-5 Signs: You're Ready Now</p>
+            <p style="color: #064e3b; font-size: 15px; line-height: 1.7;">Your business is in the ideal position to benefit from AI automation. You have the volume, revenue, and mindset to see 3-10× ROI within 6 months. <strong>Don't wait—your competitors are already implementing.</strong></p>
+        </div>
+
+        <div style="background: linear-gradient(135deg, #fef9c3 0%, #fef3c7 100%); border-left: 4px solid #f59e0b; padding: 30px; border-radius: 12px; margin-top: 20px;">
+            <p style="font-size: 18px; font-weight: 700; color: #92400e; margin-bottom: 15px;">⚠️ 2-3 Signs: Almost Ready</p>
+            <p style="color: #78350f; font-size: 15px; line-height: 1.7;">You're close, but focus on fixing the gaps first. If revenue is the issue, prioritize sales. If processes are the issue, start documenting. Come back in 3-6 months.</p>
+        </div>
+
+        <div style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-left: 4px solid #ef4444; padding: 30px; border-radius: 12px; margin-top: 20px;">
+            <p style="font-size: 18px; font-weight: 700; color: #991b1b; margin-bottom: 15px;">❌ 0-1 Signs: Not Yet</p>
+            <p style="color: #7f1d1d; font-size: 15px; line-height: 1.7;">You're in growth mode—keep hustling. AI automation will be powerful for you later, but right now, focus on getting consistent clients and refining your delivery. Save this guide for when you're turning away work.</p>
+        </div>
+
+        <div class="footer">
+            <div class="footer-logo">
+                <img src="logotypes-ai-rez-01.jpg" alt="PVRPOSE AI">
+            </div>
+            <div>Page 4</div>
+        </div>
+    </div>
+
+    <!-- PAGE 5: BONUS SECTION -->
+    <div class="page content">
+        <div class="header">
+            <div class="header-logo">
+                <img src="logotypes-ai-rez-01.jpg" alt="PVRPOSE AI">
+            </div>
+        </div>
+
+        <div class="bonus-section">
+            <div class="bonus-badge">🎁 Bonus</div>
+            <h2 class="bonus-title">Where to Start: Your First 4 Weeks</h2>
+            <p style="font-size: 16px; color: #4b5563; line-height: 1.8; margin-bottom: 30px;">
+                If you checked 4-5 signs above, here's the exact roadmap we use with clients to go from manual chaos to AI-powered efficiency in 6-8 weeks.
+            </p>
+
+            <div class="step-card">
+                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                    <span class="step-number">1</span>
+                    <span class="step-title">Week 1: Audit Your Time</span>
+                </div>
+                <div class="step-description">
+                    Track everything you do for one week. Use a time-tracking app or just a simple spreadsheet. Label tasks as: <strong>Revenue-Generating</strong>, <strong>Client Delivery</strong>, or <strong>Admin/Repetitive</strong>. You'll likely find 15-25 hours in the "Admin" bucket—that's your automation target.
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                    <span class="step-number">2</span>
+                    <span class="step-title">Week 2: Identify Your Top 3 Bottlenecks</span>
+                </div>
+                <div class="step-description">
+                    What tasks are you avoiding because they're tedious? What makes you say "I'll get to that later" every week? Common answers: client follow-ups, proposal generation, data entry, scheduling, CRM updates. Pick the top 3 that waste the most time or lose you the most money when they're delayed.
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                    <span class="step-number">3</span>
+                    <span class="step-title">Week 3: Record Your Current Process</span>
+                </div>
+                <div class="step-description">
+                    For each bottleneck, record a screen share (10-20 min) of you doing the task start-to-finish. Talk through your decisions out loud: "I check the CRM to see if they responded... then I copy this template... then I customize these 3 sections..." This becomes the blueprint for automation.
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                    <span class="step-number">4</span>
+                    <span class="step-title">Week 4: Get Expert Mapping (That's Us)</span>
+                </div>
+                <div class="step-description">
+                    Book a free <strong>AI Readiness Audit</strong> with PVRPOSE AI. We'll review your recordings, map your workflows, and show you exactly which tasks can be automated (70-90% of admin work), which need human oversight (10-20%), and what your ROI will look like. No pressure, no sales pitch—just a clear roadmap.
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-logo">
+                <img src="logotypes-ai-rez-01.jpg" alt="PVRPOSE AI">
+            </div>
+            <div>Page 5</div>
+        </div>
+    </div>
+
+    <!-- PAGE 6: BONUS CONTINUED + CTA -->
+    <div class="page content">
+        <div class="header">
+            <div class="header-logo">
+                <img src="logotypes-ai-rez-01.jpg" alt="PVRPOSE AI">
+            </div>
+        </div>
+
+        <h2 style="color: #1E3A8A; margin-bottom: 25px;">What Happens After Week 4?</h2>
+
+        <p style="font-size: 16px; color: #374151; line-height: 1.8; margin-bottom: 20px;">
+            If we're a good fit, here's the typical journey our clients take:
+        </p>
+
+        <div style="background: #f9fafb; padding: 30px; border-radius: 12px; margin-bottom: 30px;">
+            <h3 style="color: #1E3A8A; margin-top: 0;">Weeks 5-6: System Design & Build</h3>
+            <p style="color: #4b5563; font-size: 15px; line-height: 1.8; margin-bottom: 15px;">
+                We design your custom AI system—not off-the-shelf templates, but workflows built specifically for your business. You'll see prototypes and give feedback before anything goes live.
+            </p>
+
+            <h3 style="color: #1E3A8A;">Weeks 7-8: Testing & Training</h3>
+            <p style="color: #4b5563; font-size: 15px; line-height: 1.8; margin-bottom: 15px;">
+                We test with real data (starting with a small batch of clients), train your team on the new system, and document everything in video SOPs so you're never dependent on us.
+            </p>
+
+            <h3 style="color: #1E3A8A;">Week 9+: Live & Optimizing</h3>
+            <p style="color: #4b5563; font-size: 15px; line-height: 1.8;">
+                Your AI system goes live. We monitor for 30 days, fix any edge cases, and optimize based on real-world performance. Most clients start seeing time savings in week 1, full ROI by month 3-6.
+            </p>
+        </div>
+
+        <h2 style="color: #1E3A8A; margin-bottom: 20px;">What Makes PVRPOSE AI Different?</h2>
+
+        <ul class="checklist" style="margin-bottom: 35px;">
+            <li><strong>We Build Custom, Not Templates:</strong> Your business isn't generic, so your AI shouldn't be either.</li>
+            <li><strong>We Document Everything:</strong> AI-generated SOPs, video training, and process blueprints so you own the system.</li>
+            <li><strong>We're Adaptive to Change:</strong> Business evolves. Our AI systems self-update as you grow—no manual reprogramming.</li>
+            <li><strong>We're Canada-Based & Compliance-First:</strong> CASL, PIPEDA, AODA/WCAG AA compliant. We handle the legal complexity.</li>
+            <li><strong>We Measure ROI, Not Features:</strong> Success = hours saved × your hourly rate. We optimize for your bottom line.</li>
+        </ul>
+
+        <div class="cta-section">
+            <h2 class="cta-title">Ready to See Your Roadmap?</h2>
+            <p class="cta-text">
+                Take our free 2-minute AI Readiness Assessment and get a personalized implementation plan for your business.
+            </p>
+            <a href="https://pvrpose.ai/assessment.html" class="cta-button">
+                Take Free Assessment →
+            </a>
+            <p class="cta-subtext">
+                Or book a discovery call: <strong>calendly.com/coachjuan-pvrposeai/discovery-call</strong>
+            </p>
+        </div>
+
+        <div style="margin-top: 50px; padding: 30px; background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border-radius: 12px; text-align: center;">
+            <p style="font-size: 16px; color: #1E3A8A; font-weight: 700; margin-bottom: 10px;">Questions? Let's talk.</p>
+            <p style="color: #4b5563; font-size: 14px; margin-bottom: 5px;">📧 juan@pvrpose.ai</p>
+            <p style="color: #4b5563; font-size: 14px; margin-bottom: 5px;">🌐 pvrpose.ai</p>
+            <p style="color: #4b5563; font-size: 14px;">💼 linkedin.com/company/pvrpose-ai</p>
+        </div>
+
+        <div class="footer">
+            <div class="footer-logo">
+                <img src="logotypes-ai-rez-01.jpg" alt="PVRPOSE AI">
+            </div>
+            <div>Page 6</div>
+        </div>
+    </div>
+
+</body>
+</html>
