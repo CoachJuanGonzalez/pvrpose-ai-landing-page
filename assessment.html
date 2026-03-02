@@ -1060,12 +1060,24 @@
                 const recommendationElements = document.querySelectorAll('#recommendationsContent li span:last-child');
                 const recommendations = Array.from(recommendationElements).map(el => el.textContent.trim());
 
+                // Debug logging
+                console.log('Checking variables before PDF generation...');
+                console.log('firstName:', firstName);
+                console.log('score:', score);
+                console.log('scoreCategory:', scoreCategory);
+                console.log('recommendations:', recommendations);
+                console.log('answers (global):', typeof answers !== 'undefined' ? answers : 'UNDEFINED');
+                console.log('answers length:', typeof answers !== 'undefined' ? answers.length : 'N/A');
+
                 // Generate PDF report
                 console.log('Generating PDF report...');
                 console.log('jsPDF available:', typeof window.jspdf !== 'undefined');
 
                 let pdfBase64 = null;
                 try {
+                    if (typeof answers === 'undefined' || !answers || answers.length === 0) {
+                        throw new Error('Answers array is not available or empty');
+                    }
                     pdfBase64 = generatePDFReport(firstName, score, scoreCategory, recommendations, answers);
                     console.log('PDF generated successfully, size:', pdfBase64 ? pdfBase64.length : 0);
                 } catch (pdfError) {
