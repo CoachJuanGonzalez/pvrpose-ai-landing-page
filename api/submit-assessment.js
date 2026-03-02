@@ -31,7 +31,7 @@ export default async function handler(req, res) {
     });
 
     try {
-        const { first_name, email, score, answers, timestamp, fingerprint, source, consent } = req.body;
+        const { first_name, email, score, answers, timestamp, fingerprint, source, consent, document, pdf_base64, pdf_filename } = req.body;
 
         // Validation
         if (!first_name || !email || !score || !answers) {
@@ -63,6 +63,9 @@ export default async function handler(req, res) {
             timestamp: timestamp || new Date().toISOString(),
             fingerprint: fingerprint || '',
             source: source || 'pvrposeailandingpage',
+            document: document || '',
+            pdf_base64: pdf_base64 || null,
+            pdf_filename: pdf_filename || null,
             consent: consent || {
                 marketing: true,
                 timestamp: new Date().toISOString(),
@@ -134,6 +137,21 @@ async function submitToAirtable(payload) {
         'status': 'New',
         'top_priority': topPriority
     };
+
+    // Add document field if provided
+    if (payload.document) {
+        fields['document'] = payload.document;
+    }
+
+    // Add PDF attachment if provided
+    if (payload.pdf_base64 && payload.pdf_filename) {
+        fields['pdf_report'] = [
+            {
+                filename: payload.pdf_filename,
+                url: `data:application/pdf;base64,${payload.pdf_base64}`
+            }
+        ];
+    }
 
     // Add optional fields if they're not computed in Airtable
     if (payload.timestamp) {

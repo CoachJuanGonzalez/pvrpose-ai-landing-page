@@ -39,6 +39,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+    <!-- jsPDF Library for PDF Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
     <style>
         body {
             font-family: 'Inter', 'Helvetica', system-ui, sans-serif;
@@ -488,6 +491,505 @@
             return categoryMap[topCategory] || 'Workflow automation & process optimization';
         }
 
+        // Generate comprehensive AI Implementation Roadmap
+        function generatePDFReport(firstName, score, category, recommendations, answers) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Brand colors (PVRPOSE AI)
+            const brandPink = [236, 72, 153];
+            const brandPurple = [139, 92, 246];
+            const darkGray = [31, 41, 55];
+            const medGray = [75, 85, 99];
+            const lightGray = [156, 163, 175];
+            const veryLightGray = [243, 244, 246];
+            const white = [255, 255, 255];
+
+            const pageWidth = 210; // A4 width in mm
+            const margin = 20;
+            const contentWidth = pageWidth - (margin * 2);
+
+            // Helper function to add page with header
+            function addPageWithHeader(pageNumber) {
+                if (pageNumber > 1) {
+                    doc.addPage();
+                }
+                // Header on every page
+                doc.setFontSize(8);
+                doc.setTextColor(...lightGray);
+                doc.setFont(undefined, 'normal');
+                doc.text('PVRPOSE AI - AI Implementation Roadmap', margin, 10);
+                doc.text(`Page ${pageNumber}`, pageWidth - margin, 10, { align: 'right' });
+                doc.setDrawColor(...veryLightGray);
+                doc.setLineWidth(0.5);
+                doc.line(margin, 12, pageWidth - margin, 12);
+                return 25; // Starting Y position for content
+            }
+
+            // Helper function to add footer
+            function addFooter(pageNum) {
+                doc.setFontSize(8);
+                doc.setTextColor(...lightGray);
+                doc.setFont(undefined, 'italic');
+                doc.text('© 2026 PVRPOSE AI | Confidential & Proprietary', margin, 285);
+                doc.text('juan@pvrpose.ai | www.pvrpose.ai', pageWidth - margin, 285, { align: 'right' });
+            }
+
+            let pageNum = 1;
+            let yPos = 15;
+
+            // =====================
+            // COVER PAGE
+            // =====================
+
+            // Gradient effect (simulated with rectangles)
+            doc.setFillColor(...veryLightGray);
+            doc.rect(0, 0, pageWidth, 297, 'F');
+
+            // PVRPOSE AI Title
+            doc.setFontSize(32);
+            doc.setTextColor(...brandPink);
+            doc.setFont(undefined, 'bold');
+            doc.text('PVRPOSE AI', 105, 60, { align: 'center' });
+
+            // Document Title
+            yPos = 75;
+            doc.setFontSize(24);
+            doc.setTextColor(...darkGray);
+            doc.text('AI Implementation Roadmap', 105, yPos, { align: 'center' });
+
+            // Subtitle
+            yPos += 12;
+            doc.setFontSize(14);
+            doc.setTextColor(...medGray);
+            doc.setFont(undefined, 'normal');
+            doc.text('Your Personalized Strategy for AI Automation Success', 105, yPos, { align: 'center' });
+
+            // White box for client info
+            yPos = 110;
+            doc.setFillColor(...white);
+            doc.setDrawColor(...lightGray);
+            doc.roundedRect(40, yPos, 130, 40, 3, 3, 'FD');
+
+            yPos += 15;
+            doc.setFontSize(12);
+            doc.setTextColor(...darkGray);
+            doc.setFont(undefined, 'bold');
+            doc.text(`Prepared for:`, 105, yPos, { align: 'center' });
+            yPos += 8;
+            doc.setFontSize(16);
+            doc.setTextColor(...brandPurple);
+            doc.text(firstName, 105, yPos, { align: 'center' });
+            yPos += 8;
+            doc.setFontSize(10);
+            doc.setTextColor(...medGray);
+            doc.setFont(undefined, 'normal');
+            doc.text(new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }), 105, yPos, { align: 'center' });
+
+            // AI Readiness Score highlight
+            yPos = 170;
+            doc.setFillColor(...brandPink);
+            doc.roundedRect(60, yPos, 90, 50, 3, 3, 'F');
+
+            yPos += 12;
+            doc.setFontSize(12);
+            doc.setTextColor(...white);
+            doc.setFont(undefined, 'bold');
+            doc.text('YOUR AI READINESS SCORE', 105, yPos, { align: 'center' });
+
+            yPos += 20;
+            doc.setFontSize(48);
+            doc.text(`${score}%`, 105, yPos, { align: 'center' });
+
+            // Footer disclaimer
+            yPos = 260;
+            doc.setFontSize(9);
+            doc.setTextColor(...medGray);
+            doc.setFont(undefined, 'italic');
+            const disclaimer = doc.splitTextToSize('This roadmap is based on your assessment responses and provides strategic guidance for implementing AI automation in your business. Results may vary based on execution and market conditions.', contentWidth - 40);
+            doc.text(disclaimer, 105, yPos, { align: 'center', maxWidth: contentWidth - 40 });
+
+            addFooter(pageNum);
+
+            // =====================
+            // PAGE 2: EXECUTIVE SUMMARY
+            // =====================
+            pageNum++;
+            yPos = addPageWithHeader(pageNum);
+
+            doc.setFontSize(18);
+            doc.setTextColor(...brandPink);
+            doc.setFont(undefined, 'bold');
+            doc.text('Executive Summary', margin, yPos);
+
+            yPos += 10;
+            doc.setFontSize(10);
+            doc.setTextColor(...darkGray);
+            doc.setFont(undefined, 'normal');
+
+            const scoreInt = parseInt(score);
+            let execSummary = '';
+
+            if (scoreInt >= 80) {
+                execSummary = `Congratulations, ${firstName}! Your assessment reveals that you are in an excellent position to implement AI automation. Your business demonstrates strong indicators of readiness: sufficient revenue base, clear pain points, and operational maturity. The AI automation systems we implement typically deliver 10-20× ROI in the first year for businesses at your stage, with potential time savings of 10-20 hours per week.\n\nKey opportunities identified: Your current operational challenges align perfectly with proven AI automation solutions. The combination of your revenue level, time spent on repetitive tasks, and openness to technology creates an ideal environment for successful implementation.`;
+            } else if (scoreInt >= 60) {
+                execSummary = `Thank you for completing this assessment, ${firstName}. Your results indicate strong potential for AI automation success with the right strategic approach. Your business shows solid fundamentals and clear opportunities for productivity gains. Based on similar implementations, you can expect 5-10× ROI in the first year with time savings of 5-15 hours per week.\n\nKey opportunities identified: While your business is well-positioned, strategic timing and phased implementation will be critical to maximize results. This roadmap outlines a proven path forward that balances quick wins with sustainable long-term transformation.`;
+            } else if (scoreInt >= 40) {
+                execSummary = `Thank you for your interest in AI automation, ${firstName}. Your assessment indicates moderate potential for AI implementation. The key to success at this stage is focusing on high-impact, low-complexity automation that delivers immediate value while building toward more comprehensive solutions.\n\nKey opportunities identified: Starting with 1-2 strategic automation workflows will help you build momentum and demonstrate ROI before expanding. This approach minimizes risk while establishing the foundation for future growth.`;
+            } else {
+                execSummary = `Thank you for taking this assessment, ${firstName}. Your results suggest that your business may benefit from strengthening foundational processes before implementing comprehensive AI automation. This doesn't mean AI isn't in your future—it means building the right foundation first will maximize your success when you're ready.\n\nKey opportunities identified: Focus on documenting current processes, building revenue, and learning AI fundamentals. This preparation will dramatically improve your ROI when you implement automation in 6-12 months.`;
+            }
+
+            const summaryLines = doc.splitTextToSize(execSummary, contentWidth);
+            doc.text(summaryLines, margin, yPos);
+            yPos += (summaryLines.length * 5) + 15;
+
+            // Category callout box
+            doc.setFillColor(...veryLightGray);
+            doc.setDrawColor(...brandPurple);
+            doc.setLineWidth(1);
+            doc.roundedRect(margin, yPos, contentWidth, 25, 2, 2, 'FD');
+
+            yPos += 8;
+            doc.setFontSize(11);
+            doc.setTextColor(...brandPurple);
+            doc.setFont(undefined, 'bold');
+            doc.text('Assessment Category:', margin + 5, yPos);
+            yPos += 7;
+            doc.setFontSize(12);
+            doc.setTextColor(...darkGray);
+            const categoryLines = doc.splitTextToSize(category, contentWidth - 10);
+            doc.text(categoryLines, margin + 5, yPos);
+
+            yPos += 25;
+
+            addFooter(pageNum);
+
+            // =====================
+            // PAGE 3: YOUR STRATEGIC RECOMMENDATIONS
+            // =====================
+            pageNum++;
+            yPos = addPageWithHeader(pageNum);
+
+            doc.setFontSize(18);
+            doc.setTextColor(...brandPink);
+            doc.setFont(undefined, 'bold');
+            doc.text('Your Strategic Recommendations', margin, yPos);
+
+            yPos += 12;
+            doc.setFontSize(10);
+            doc.setTextColor(...darkGray);
+            doc.setFont(undefined, 'normal');
+            const introText = 'Based on your assessment, we\'ve identified the following strategic priorities for your AI implementation journey:';
+            doc.text(introText, margin, yPos);
+
+            yPos += 10;
+
+            recommendations.forEach((rec, index) => {
+                if (yPos > 255) {
+                    addFooter(pageNum);
+                    pageNum++;
+                    yPos = addPageWithHeader(pageNum);
+                }
+
+                // Number circle
+                doc.setFillColor(...brandPink);
+                doc.circle(margin + 3, yPos - 1, 3, 'F');
+                doc.setFontSize(9);
+                doc.setTextColor(...white);
+                doc.setFont(undefined, 'bold');
+                doc.text(String(index + 1), margin + 3, yPos + 1, { align: 'center' });
+
+                // Recommendation text
+                doc.setFontSize(10);
+                doc.setTextColor(...darkGray);
+                doc.setFont(undefined, 'normal');
+                const recLines = doc.splitTextToSize(rec, contentWidth - 15);
+                doc.text(recLines, margin + 10, yPos);
+                yPos += (recLines.length * 5) + 6;
+            });
+
+            addFooter(pageNum);
+
+            // =====================
+            // PAGE 4: IMPLEMENTATION ROADMAP
+            // =====================
+            pageNum++;
+            yPos = addPageWithHeader(pageNum);
+
+            doc.setFontSize(18);
+            doc.setTextColor(...brandPink);
+            doc.setFont(undefined, 'bold');
+            doc.text('90-Day Implementation Roadmap', margin, yPos);
+
+            yPos += 12;
+
+            // Phase-based roadmap
+            const phases = [
+                {
+                    title: 'Phase 1: Discovery & Strategy (Days 1-14)',
+                    items: [
+                        'Conduct comprehensive business process audit',
+                        'Identify highest-impact automation opportunities',
+                        'Map current workflows and pain points',
+                        'Define success metrics and KPIs',
+                        'Create detailed implementation plan'
+                    ]
+                },
+                {
+                    title: 'Phase 2: Quick Wins & Foundation (Days 15-45)',
+                    items: [
+                        'Implement 2-3 high-impact automation workflows',
+                        'Set up core AI infrastructure and integrations',
+                        'Train your team on new systems',
+                        'Establish monitoring and optimization processes',
+                        'Measure and document early results'
+                    ]
+                },
+                {
+                    title: 'Phase 3: Scale & Optimize (Days 46-90)',
+                    items: [
+                        'Expand automation to additional processes',
+                        'Refine and optimize existing workflows',
+                        'Implement advanced AI capabilities',
+                        'Build internal AI competency',
+                        'Plan for continued expansion and ROI acceleration'
+                    ]
+                }
+            ];
+
+            phases.forEach((phase, phaseIndex) => {
+                if (yPos > 240) {
+                    addFooter(pageNum);
+                    pageNum++;
+                    yPos = addPageWithHeader(pageNum);
+                }
+
+                // Phase header
+                doc.setFillColor(...brandPurple);
+                doc.roundedRect(margin, yPos, contentWidth, 8, 1, 1, 'F');
+                doc.setFontSize(11);
+                doc.setTextColor(...white);
+                doc.setFont(undefined, 'bold');
+                doc.text(phase.title, margin + 3, yPos + 5.5);
+                yPos += 12;
+
+                // Phase items
+                doc.setFontSize(9);
+                doc.setTextColor(...darkGray);
+                doc.setFont(undefined, 'normal');
+
+                phase.items.forEach((item, itemIndex) => {
+                    if (yPos > 265) {
+                        addFooter(pageNum);
+                        pageNum++;
+                        yPos = addPageWithHeader(pageNum);
+                    }
+
+                    doc.setTextColor(...brandPink);
+                    doc.text('•', margin + 3, yPos);
+                    doc.setTextColor(...darkGray);
+                    const itemLines = doc.splitTextToSize(item, contentWidth - 10);
+                    doc.text(itemLines, margin + 8, yPos);
+                    yPos += (itemLines.length * 4.5) + 2;
+                });
+
+                yPos += 5;
+            });
+
+            addFooter(pageNum);
+
+            // =====================
+            // PAGE 5: ROI & EXPECTED OUTCOMES
+            // =====================
+            pageNum++;
+            yPos = addPageWithHeader(pageNum);
+
+            doc.setFontSize(18);
+            doc.setTextColor(...brandPink);
+            doc.setFont(undefined, 'bold');
+            doc.text('Expected ROI & Business Impact', margin, yPos);
+
+            yPos += 12;
+
+            let roiContent = '';
+            if (scoreInt >= 80) {
+                roiContent = 'Time Savings: 10-20 hours per week\nCost Reduction: 40-60% reduction in manual task costs\nRevenue Impact: 15-25% productivity increase enabling revenue growth\nImplementation Timeline: Full ROI typically achieved within 3-6 months\nFirst-Year ROI: 10-20× return on investment';
+            } else if (scoreInt >= 60) {
+                roiContent = 'Time Savings: 5-15 hours per week\nCost Reduction: 25-40% reduction in manual task costs\nRevenue Impact: 10-20% productivity increase\nImplementation Timeline: Full ROI typically achieved within 6-9 months\nFirst-Year ROI: 5-10× return on investment';
+            } else {
+                roiContent = 'Time Savings: 3-8 hours per week initially\nCost Reduction: 15-25% reduction in manual task costs\nRevenue Impact: 5-15% productivity increase\nImplementation Timeline: Focus on quick wins and foundation building\nExpected ROI: 3-5× return on investment in first year';
+            }
+
+            doc.setFillColor(...veryLightGray);
+            doc.roundedRect(margin, yPos, contentWidth, 50, 2, 2, 'F');
+            yPos += 8;
+            doc.setFontSize(10);
+            doc.setTextColor(...darkGray);
+            doc.setFont(undefined, 'normal');
+            const roiLines = roiContent.split('\n');
+            roiLines.forEach(line => {
+                const [label, value] = line.split(':');
+                doc.setFont(undefined, 'bold');
+                doc.setTextColor(...brandPurple);
+                doc.text(label + ':', margin + 5, yPos);
+                doc.setFont(undefined, 'normal');
+                doc.setTextColor(...darkGray);
+                doc.text(value.trim(), margin + 60, yPos);
+                yPos += 7;
+            });
+
+            yPos += 10;
+
+            // Industry Context
+            doc.setFontSize(14);
+            doc.setTextColor(...brandPurple);
+            doc.setFont(undefined, 'bold');
+            doc.text('Industry Context & Best Practices', margin, yPos);
+            yPos += 8;
+
+            doc.setFontSize(9);
+            doc.setTextColor(...darkGray);
+            doc.setFont(undefined, 'normal');
+            const industryContext = 'According to McKinsey Global Institute (2023), businesses implementing AI automation report average productivity gains of 20-35% in automated processes. Gartner research (2024) indicates that by 2026, 75% of service-based businesses will have implemented some form of AI automation.\n\nKey success factors from industry leaders:\n• Start with high-impact, low-complexity workflows\n• Ensure strong leadership buy-in and change management\n• Focus on user adoption and training\n• Maintain human oversight and continuous optimization\n• Measure and iterate based on real performance data';
+            const contextLines = doc.splitTextToSize(industryContext, contentWidth);
+            doc.text(contextLines, margin, yPos);
+
+            addFooter(pageNum);
+
+            // =====================
+            // PAGE 6: NEXT STEPS
+            // =====================
+            pageNum++;
+            yPos = addPageWithHeader(pageNum);
+
+            doc.setFontSize(18);
+            doc.setTextColor(...brandPink);
+            doc.setFont(undefined, 'bold');
+            doc.text('Your Next Steps', margin, yPos);
+
+            yPos += 12;
+
+            const nextSteps = [
+                {
+                    step: '1. Schedule Discovery Call',
+                    desc: 'Book a complimentary 30-minute strategy session to discuss your specific needs and opportunities. We\'ll review this roadmap in detail and answer your questions.',
+                    action: 'Book now: calendly.com/coachjuan-pvrposeai/discovery-call'
+                },
+                {
+                    step: '2. Business Process Assessment',
+                    desc: 'If we\'re a good fit, we\'ll conduct a comprehensive assessment of your workflows to identify the highest-impact automation opportunities.',
+                    action: ''
+                },
+                {
+                    step: '3. Custom Implementation Plan',
+                    desc: 'Receive a detailed, customized plan with specific automation workflows, timelines, and investment requirements tailored to your business.',
+                    action: ''
+                },
+                {
+                    step: '4. Begin Implementation',
+                    desc: 'Start your AI transformation with our proven framework and expert guidance. Most clients see measurable results within the first 30 days.',
+                    action: ''
+                }
+            ];
+
+            nextSteps.forEach((step, index) => {
+                if (yPos > 235) {
+                    addFooter(pageNum);
+                    pageNum++;
+                    yPos = addPageWithHeader(pageNum);
+                }
+
+                doc.setFillColor(...brandPurple);
+                doc.roundedRect(margin, yPos, contentWidth, 8, 1, 1, 'F');
+                doc.setFontSize(11);
+                doc.setTextColor(...white);
+                doc.setFont(undefined, 'bold');
+                doc.text(step.step, margin + 3, yPos + 5.5);
+                yPos += 12;
+
+                doc.setFontSize(9);
+                doc.setTextColor(...darkGray);
+                doc.setFont(undefined, 'normal');
+                const descLines = doc.splitTextToSize(step.desc, contentWidth - 6);
+                doc.text(descLines, margin + 3, yPos);
+                yPos += (descLines.length * 4.5) + 3;
+
+                if (step.action) {
+                    doc.setFontSize(9);
+                    doc.setTextColor(...brandPink);
+                    doc.setFont(undefined, 'italic');
+                    doc.text('→ ' + step.action, margin + 3, yPos);
+                    yPos += 8;
+                }
+
+                yPos += 3;
+            });
+
+            yPos += 10;
+
+            // Contact CTA
+            doc.setFillColor(...brandPink);
+            doc.roundedRect(margin, yPos, contentWidth, 35, 2, 2, 'F');
+            yPos += 10;
+            doc.setFontSize(14);
+            doc.setTextColor(...white);
+            doc.setFont(undefined, 'bold');
+            doc.text('Ready to Transform Your Business?', 105, yPos, { align: 'center' });
+            yPos += 8;
+            doc.setFontSize(11);
+            doc.setFont(undefined, 'normal');
+            doc.text('Contact Juan Gonzalez, Founder & AI Automation Strategist', 105, yPos, { align: 'center' });
+            yPos += 6;
+            doc.setFontSize(10);
+            doc.text('Email: juan@pvrpose.ai | Web: www.pvrpose.ai', 105, yPos, { align: 'center' });
+
+            addFooter(pageNum);
+
+            // =====================
+            // APPENDIX: YOUR ASSESSMENT RESPONSES
+            // =====================
+            pageNum++;
+            yPos = addPageWithHeader(pageNum);
+
+            doc.setFontSize(18);
+            doc.setTextColor(...brandPink);
+            doc.setFont(undefined, 'bold');
+            doc.text('Appendix: Your Assessment Responses', margin, yPos);
+
+            yPos += 12;
+
+            doc.setFontSize(9);
+            doc.setTextColor(...darkGray);
+            doc.setFont(undefined, 'normal');
+
+            answers.forEach((answer, index) => {
+                if (yPos > 260) {
+                    addFooter(pageNum);
+                    pageNum++;
+                    yPos = addPageWithHeader(pageNum);
+                }
+
+                // Question
+                doc.setFont(undefined, 'bold');
+                doc.setTextColor(...brandPurple);
+                const questionLines = doc.splitTextToSize(`Q${index + 1}: ${answer.question}`, contentWidth);
+                doc.text(questionLines, margin, yPos);
+                yPos += (questionLines.length * 4.5) + 3;
+
+                // Answer
+                doc.setFont(undefined, 'normal');
+                doc.setTextColor(...darkGray);
+                doc.text(`Answer: ${answer.selectedOption.text}`, margin + 3, yPos);
+                yPos += 8;
+            });
+
+            addFooter(pageNum);
+
+            // Return PDF as base64 for upload to Airtable
+            return doc.output('datauristring').split(',')[1];
+        }
+
         // Rate limiting for assessment form
         const assessmentRateLimit = {
             lastSubmit: 0,
@@ -540,15 +1042,27 @@
             }
 
             const score = document.getElementById('finalScore').textContent;
+            const scoreCategory = document.getElementById('scoreCategory').textContent;
             const submitBtn = event.target.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
 
             // Prevent double submission and provide immediate feedback
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Sending Your Roadmap...';
+            submitBtn.textContent = 'Generating Your PDF Report...';
             assessmentRateLimit.lastSubmit = now;
 
             try {
+                // Extract recommendations from the page
+                const recommendationElements = document.querySelectorAll('#recommendationsContent li span:last-child');
+                const recommendations = Array.from(recommendationElements).map(el => el.textContent.trim());
+
+                // Generate PDF report
+                console.log('Generating PDF report...');
+                const pdfBase64 = generatePDFReport(firstName, score, scoreCategory, recommendations, answers);
+                console.log('PDF generated successfully');
+
+                submitBtn.textContent = 'Sending Your Roadmap...';
+
                 // Generate basic fingerprint for duplicate prevention
                 const fingerprint = btoa(email + navigator.userAgent.substring(0, 50));
 
@@ -558,7 +1072,9 @@
                     score: score,
                     answers: answers,
                     timestamp: new Date().toISOString(),
-                    document: 'Personalized AI Implementation Roadmap',
+                    document: 'AI Implementation Roadmap',
+                    pdf_base64: pdfBase64,
+                    pdf_filename: `PVRPOSE_AI_Implementation_Roadmap_${firstName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`,
                     fingerprint: fingerprint,
                     source: 'pvrposeailandingpage',
                     consent: {
