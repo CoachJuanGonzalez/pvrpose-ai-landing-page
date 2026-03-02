@@ -1075,16 +1075,17 @@
 
                 let pdfBase64 = null;
                 try {
-                    if (typeof answers === 'undefined' || !answers || answers.length === 0) {
+                    const globalAnswers = window.answers || [];
+                    if (!globalAnswers || globalAnswers.length === 0) {
                         throw new Error('Answers array is not available or empty');
                     }
-                    pdfBase64 = generatePDFReport(firstName, score, scoreCategory, recommendations, answers);
+                    pdfBase64 = generatePDFReport(firstName, score, scoreCategory, recommendations, globalAnswers);
                     console.log('PDF generated successfully, size:', pdfBase64 ? pdfBase64.length : 0);
                 } catch (pdfError) {
                     console.error('PDF generation failed:', pdfError);
                     console.error('PDF error stack:', pdfError.stack);
                     // Continue without PDF - still submit the assessment data
-                    alert('Note: PDF generation encountered an issue, but your assessment will still be submitted.');
+                    console.log('Continuing submission without PDF...');
                 }
 
                 submitBtn.textContent = 'Sending Your Roadmap...';
@@ -1092,15 +1093,18 @@
                 // Generate basic fingerprint for duplicate prevention
                 const fingerprint = btoa(email + navigator.userAgent.substring(0, 50));
 
+                // Use window.answers to ensure we access the global variable
+                const assessmentAnswers = window.answers || [];
+
                 const payload = {
                     first_name: firstName,
                     email: email,
                     score: score,
-                    answers: answers,
+                    answers: assessmentAnswers,
                     timestamp: new Date().toISOString(),
                     document: 'AI Implementation Roadmap',
                     pdf_base64: pdfBase64,
-                    pdf_filename: `PVRPOSE_AI_Implementation_Roadmap_${firstName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`,
+                    pdf_filename: pdfBase64 ? `PVRPOSE_AI_Implementation_Roadmap_${firstName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf` : null,
                     fingerprint: fingerprint,
                     source: 'pvrposeailandingpage',
                     consent: {
