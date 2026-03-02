@@ -1069,24 +1069,10 @@
                 console.log('answers (global):', typeof answers !== 'undefined' ? answers : 'UNDEFINED');
                 console.log('answers length:', typeof answers !== 'undefined' ? answers.length : 'N/A');
 
-                // Generate PDF report
-                console.log('Generating PDF report...');
-                console.log('jsPDF available:', typeof window.jspdf !== 'undefined');
-
-                let pdfBase64 = null;
-                try {
-                    const globalAnswers = window.answers || [];
-                    if (!globalAnswers || globalAnswers.length === 0) {
-                        throw new Error('Answers array is not available or empty');
-                    }
-                    pdfBase64 = generatePDFReport(firstName, score, scoreCategory, recommendations, globalAnswers);
-                    console.log('PDF generated successfully, size:', pdfBase64 ? pdfBase64.length : 0);
-                } catch (pdfError) {
-                    console.error('PDF generation failed:', pdfError);
-                    console.error('PDF error stack:', pdfError.stack);
-                    // Continue without PDF - still submit the assessment data
-                    console.log('Continuing submission without PDF...');
-                }
+                // TEMPORARILY DISABLED: PDF generation
+                // Will re-enable once basic submissions work
+                console.log('PDF generation temporarily disabled');
+                const pdfBase64 = null;
 
                 submitBtn.textContent = 'Sending Your Roadmap...';
 
@@ -1102,9 +1088,7 @@
                     score: score,
                     answers: assessmentAnswers,
                     timestamp: new Date().toISOString(),
-                    document: 'AI Implementation Roadmap',
-                    pdf_base64: pdfBase64,
-                    pdf_filename: pdfBase64 ? `PVRPOSE_AI_Implementation_Roadmap_${firstName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf` : null,
+                    document: 'AI Readiness Assessment',
                     fingerprint: fingerprint,
                     source: 'pvrposeailandingpage',
                     consent: {
@@ -1113,6 +1097,13 @@
                         jurisdiction: 'CA' // Canadian compliance
                     }
                 };
+
+                console.log('Final payload ready:', {
+                    hasFirstName: !!payload.first_name,
+                    hasEmail: !!payload.email,
+                    score: payload.score,
+                    answersCount: payload.answers.length
+                });
 
                 console.log('Sending payload:', payload);
 
