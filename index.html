@@ -380,7 +380,7 @@
                 </div>
 
                 <!-- Mobile Menu Button -->
-                <button id="mobileMenuBtn" class="md:hidden text-gray-700 focus:outline-none">
+                <button id="mobileMenuBtn" class="md:hidden text-gray-700 focus:outline-none" aria-label="Toggle mobile menu" aria-expanded="false">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                     </svg>
@@ -709,7 +709,7 @@
                 <!-- Optimized YouTube Embed with Lazy Loading -->
                 <div class="relative" style="padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; border-radius: 16px;">
                     <!-- Thumbnail Preview (loads instantly, no iframe until clicked) -->
-                    <div id="videoThumb" class="absolute inset-0 cursor-pointer group" onclick="loadVideo()">
+                    <div id="videoThumb" class="absolute inset-0 cursor-pointer group" onclick="loadVideo()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();loadVideo();}" role="button" tabindex="0" aria-label="Play video testimonial">
                         <img
                             src="https://img.youtube.com/vi/jFOygpP7kes/maxresdefault.jpg"
                             alt="Client Testimonial - James Green, Dominion Equity Holdings"
@@ -827,7 +827,7 @@
                         </div>
 
                         <p class="text-xl md:text-2xl font-semibold text-gray-900 mb-6 italic leading-relaxed">
-                            "Launching ILLUMMAA to tackle Canada's housing crisis meant we needed the right system from day one. I was looking for enterprise-level quality without the enterprise price tag, and that's exactly what I got—Juan delivered Fortune 500 quality at a startup-friendly price. No manual lead grinding, no admin chaos. He built our complete AI infrastructure in 6 weeks: a smart website with automated developer qualification, plus a HighLevel CRM with custom workflows handling outreach, proposals, and pipeline management. We're projecting significant ROI with 15+ hours saved per week once we go live, letting us finally focus on what matters: scaling premium modular homes."
+                            "Launching ILLUMMAA to tackle Canada's housing crisis meant we needed the right system from day one. I was looking for enterprise-level quality without the enterprise price tag, and that's exactly what I got: Juan delivered Fortune 500 quality at a startup-friendly price. No manual lead grinding, no admin chaos. He built our complete AI infrastructure in 6 weeks: a smart website with automated developer qualification, plus a HighLevel CRM with custom workflows handling outreach, proposals, and pipeline management. We're projecting significant ROI with 15+ hours saved per week once we go live, letting us finally focus on what matters: scaling premium modular homes."
                         </p>
 
                         <div class="border-t border-gray-200 pt-4">
@@ -850,7 +850,7 @@
                 <!-- Optimized YouTube Embed with Lazy Loading -->
                 <div class="relative" style="padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; border-radius: 16px;">
                     <!-- Thumbnail Preview (loads instantly, no iframe until clicked) -->
-                    <div id="videoThumb2" class="absolute inset-0 cursor-pointer group" onclick="loadVideo2()">
+                    <div id="videoThumb2" class="absolute inset-0 cursor-pointer group" onclick="loadVideo2()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();loadVideo2();}" role="button" tabindex="0" aria-label="Play video testimonial">
                         <img
                             src="https://img.youtube.com/vi/_6A20lEqDtg/maxresdefault.jpg"
                             alt="Client Testimonial - James Evans, Vensa Coaching"
@@ -2033,7 +2033,7 @@
     <!-- Exit Intent Popup -->
     <div id="exitPopup" class="exit-popup">
         <div class="bg-white max-w-md w-full mx-4 p-10 rounded-3xl shadow-2xl relative border-2 border-pink-500">
-            <button id="closePopup" class="absolute top-4 right-4 text-gray-400 hover:text-gray-900 text-3xl font-bold transition">&times;</button>
+            <button id="closePopup" class="absolute top-4 right-4 text-gray-400 hover:text-gray-900 text-3xl font-bold transition" aria-label="Close popup">&times;</button>
 
             <!-- Icon/Visual Element -->
             <div class="text-center mb-6">
@@ -2331,7 +2331,9 @@
         // Mobile menu toggle
         document.getElementById('mobileMenuBtn').addEventListener('click', function() {
             const mobileMenu = document.getElementById('mobileMenu');
-            mobileMenu.classList.toggle('hidden');
+            const isHidden = mobileMenu.classList.toggle('hidden');
+            // Update aria-expanded for accessibility
+            this.setAttribute('aria-expanded', !isHidden);
         });
 
         // Close mobile menu when clicking a link
