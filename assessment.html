@@ -181,8 +181,8 @@
                     <form id="resultsForm" class="max-w-md mx-auto" onsubmit="submitResults(event)">
                         <div class="space-y-4">
                             <!-- Honeypot field (hidden from users, visible to bots) -->
-                            <input type="text" name="company" id="userCompany" autocomplete="off" tabindex="-1"
-                                   style="position:absolute;left:-5000px;" aria-hidden="true">
+                            <input type="text" name="website_url" id="userCompany" autocomplete="new-password" tabindex="-1"
+                                   style="position:absolute;left:-5000px;opacity:0;height:0;width:0;" aria-hidden="true" readonly>
 
                             <input type="text" id="userFirstName" name="first_name" required placeholder="First Name"
                                    autocomplete="given-name" maxlength="100"
