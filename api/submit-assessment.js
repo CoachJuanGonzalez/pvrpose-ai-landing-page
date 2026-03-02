@@ -134,12 +134,14 @@ async function submitToAirtable(payload, pdfUrl = null) {
     const airtableUrl = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}`;
 
     // Transform answers array to Airtable-friendly format
-    const answersText = payload.answers.map(a =>
-        `Q${a.questionId}: ${a.question}\nA: ${a.selectedOption.text} (Score: ${a.value})`
-    ).join('\n\n');
+    const answersText = payload.answers && payload.answers.length > 0
+        ? payload.answers.map(a =>
+            `Q${a.questionId}: ${a.question}\nA: ${a.selectedOption.text} (Score: ${a.value})`
+        ).join('\n\n')
+        : 'Quick Reference Signup - No Assessment';
 
     // Extract top priority from answers
-    const topPriority = extractTopPriority(payload.answers);
+    const topPriority = extractTopPriority(payload.answers || []);
 
     // Build fields object - only include fields that exist in Airtable
     const fields = {

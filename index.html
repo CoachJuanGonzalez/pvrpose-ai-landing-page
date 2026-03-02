@@ -2282,7 +2282,7 @@
                         first_name: firstName,
                         email: email,
                         score: 0, // No assessment score for quick reference signup
-                        answers: JSON.stringify([]), // Empty answers array
+                        answers: [], // Empty answers array (not stringified - API expects array)
                         timestamp: new Date().toISOString(),
                         fingerprint: fingerprint,
                         source: 'pvrposeaiquickreference',
