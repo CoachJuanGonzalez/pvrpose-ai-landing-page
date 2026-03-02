@@ -2,7 +2,6 @@
   "name": "pvrpose-ai-landing-page",
   "version": "1.0.0",
   "description": "PVRPOSE AI Landing Page with Assessment Tool",
-  "type": "module",
   "scripts": {
     "dev": "vercel dev",
     "build": "echo 'No build needed for static site'"

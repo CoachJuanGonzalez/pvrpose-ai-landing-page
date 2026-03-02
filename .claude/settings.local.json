@@ -56,7 +56,9 @@
       "Bash(tail:*)",
       "Bash(find:*)",
       "Bash(claude --version)",
-      "Bash(claude update)"
+      "Bash(claude update)",
+      "Bash(start:*)",
+      "Bash(vercel env:*)"
     ]
   }
 }
