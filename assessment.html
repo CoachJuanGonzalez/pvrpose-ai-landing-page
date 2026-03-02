@@ -301,6 +301,9 @@
         let currentQuestionIndex = 0;
         let answers = [];
 
+        // Make answers accessible globally via window
+        window.answers = answers;
+
         function startAssessment() {
             document.getElementById('introSection').classList.add('hidden');
             document.getElementById('progressSection').classList.remove('hidden');
@@ -340,7 +343,7 @@
                 const question = questions[questionIndex];
                 const option = question.options[optionIndex];
 
-                // Store answer
+                // Store answer in both local and window.answers
                 answers[questionIndex] = {
                     questionId: question.id,
                     question: question.question,
@@ -350,6 +353,7 @@
                     category: option.category || null,
                     niche: option.niche || null
                 };
+                window.answers = answers; // Ensure window.answers is updated
 
                 // Visual feedback
                 document.querySelectorAll('.option-card').forEach(card => {
