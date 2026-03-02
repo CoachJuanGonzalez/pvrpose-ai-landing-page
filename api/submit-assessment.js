@@ -143,8 +143,9 @@ async function submitToAirtable(payload) {
         fields['document'] = payload.document;
     }
 
-    // Add PDF attachment if provided
-    if (payload.pdf_base64 && payload.pdf_filename) {
+    // Add PDF attachment if provided (only if both are non-null)
+    if (payload.pdf_base64 && payload.pdf_filename &&
+        payload.pdf_base64 !== null && payload.pdf_filename !== null) {
         fields['pdf_report'] = [
             {
                 filename: payload.pdf_filename,
@@ -179,6 +180,8 @@ async function submitToAirtable(payload) {
     };
 
     console.log('Sending to Airtable:', airtableUrl);
+    console.log('Airtable payload:', JSON.stringify(airtablePayload, null, 2));
+    console.log('Field names being sent:', Object.keys(fields));
 
     const response = await fetch(airtableUrl, {
         method: 'POST',
