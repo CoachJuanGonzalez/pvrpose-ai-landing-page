@@ -36,15 +36,15 @@ module.exports = async function handler(req, res) {
     try {
         const { first_name, email, score, answers, timestamp, fingerprint, source, consent, document, pdf_base64, pdf_filename } = req.body;
 
-        // Validation
-        if (!first_name || !email || !score || !answers) {
+        // Validation (note: score can be 0 for popup signups, so check for null/undefined only)
+        if (!first_name || !email || score === null || score === undefined || answers === null || answers === undefined) {
             console.error('Validation failed - missing fields:', { first_name, email, score, answers: !!answers });
             return res.status(400).json({
                 error: 'Missing required fields',
                 details: {
                     first_name: !!first_name,
                     email: !!email,
-                    score: !!score,
+                    score: score,
                     answers: !!answers
                 }
             });
