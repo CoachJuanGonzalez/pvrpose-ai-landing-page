@@ -59,6 +59,28 @@
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://pvrpose.ai">
 
+    <!-- Google Analytics 4 (GA4) -->
+    <!-- Replace G-XXXXXXXXXX with your actual GA4 Measurement ID -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        // Initialize GA4 with enhanced measurement
+        gtag('config', 'G-XXXXXXXXXX', {
+            'send_page_view': true,
+            'cookie_flags': 'SameSite=None;Secure',
+            'anonymize_ip': true // GDPR/PIPEDA compliance
+        });
+
+        // Custom event tracking helper function
+        window.trackEvent = function(eventName, eventParams) {
+            gtag('event', eventName, eventParams);
+            console.log('GA4 Event:', eventName, eventParams); // Debug logging
+        };
+    </script>
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -412,12 +434,22 @@
             <div class="mb-8 flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <a href="/assessment.html"
                    class="inline-block btn-primary text-white px-12 py-6 rounded-xl text-xl md:text-2xl font-semibold"
-                   aria-label="Take AI Readiness Assessment">
+                   aria-label="Take AI Readiness Assessment"
+                   onclick="trackEvent('cta_click', {
+                       'cta_type': 'assessment',
+                       'cta_location': 'hero',
+                       'cta_text': 'Take Free Assessment'
+                   })">
                     Take Free Assessment →
                 </a>
                 <a href="#calculator"
                    class="inline-block bg-white text-gray-800 border-2 border-gray-300 px-12 py-6 rounded-xl text-xl md:text-2xl font-semibold hover:border-pink-500 hover:bg-gray-50 transition"
-                   aria-label="Calculate your ROI">
+                   aria-label="Calculate your ROI"
+                   onclick="trackEvent('cta_click', {
+                       'cta_type': 'roi_calculator',
+                       'cta_location': 'hero',
+                       'cta_text': 'Calculate ROI'
+                   })">
                     Calculate ROI
                 </a>
             </div>
@@ -1448,7 +1480,12 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
                 <!-- Change: Added "Most Adaptive to Change" reinforcement with retainer evidence -->
-                <div class="bg-gradient-to-br from-pink-50 to-purple-50 p-6 rounded-2xl shadow-lg text-center hover-lift border-2 border-pink-200">
+                <div id="adaptive-feature-card" class="bg-gradient-to-br from-pink-50 to-purple-50 p-6 rounded-2xl shadow-lg text-center hover-lift border-2 border-pink-200"
+                     onclick="trackEvent('feature_card_click', {
+                         'card_name': 'Most Adaptive to Change',
+                         'section': 'why_different',
+                         'card_position': 1
+                     })">
                     <div class="text-4xl mb-4">🔄</div>
                     <h3 class="font-bold text-lg mb-2">Most Adaptive to Change</h3>
                     <p class="text-gray-700 text-sm">Our systems evolve daily with your needs, integrating the latest AI advancements and compliance updates—unlike rigid off-the-shelf tools.</p>
@@ -1491,7 +1528,12 @@
                 </div>
 
                 <!-- Strategic Addition 1: AI-Powered SOPs for legal/accounting/construction segment appeal -->
-                <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-2xl shadow-lg text-center hover-lift border-2 border-blue-200">
+                <div id="sop-feature-card" class="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-2xl shadow-lg text-center hover-lift border-2 border-blue-200"
+                     onclick="trackEvent('feature_card_click', {
+                         'card_name': 'AI-Powered SOPs',
+                         'section': 'why_different',
+                         'card_position': 8
+                     })">
                     <div class="text-4xl mb-4">📋</div>
                     <h3 class="font-bold text-lg mb-2">AI-Powered SOPs (Standard Operating Procedures)</h3>
                     <p class="text-gray-700 text-sm">Transform chaotic workflows into documented, repeatable SOPs that evolve with your business—no manual updates needed.</p>
@@ -2360,6 +2402,143 @@
             });
         }
         sanitizeURLParams();
+
+        // ============================================
+        // ADVANCED GOOGLE ANALYTICS TRACKING
+        // ============================================
+
+        // Scroll Depth Tracking
+        let scrollDepthTracked = {
+            '25': false,
+            '50': false,
+            '75': false,
+            '90': false
+        };
+
+        window.addEventListener('scroll', function() {
+            const scrollPercent = Math.round((window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100);
+
+            Object.keys(scrollDepthTracked).forEach(depth => {
+                if (scrollPercent >= parseInt(depth) && !scrollDepthTracked[depth]) {
+                    scrollDepthTracked[depth] = true;
+                    trackEvent('scroll_depth', {
+                        'depth_percentage': depth,
+                        'page_location': window.location.pathname
+                    });
+                }
+            });
+        });
+
+        // Section View Tracking (Intersection Observer)
+        const sectionViewTracking = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const sectionId = entry.target.id || entry.target.querySelector('h2')?.textContent || 'unnamed_section';
+                    trackEvent('section_view', {
+                        'section_id': sectionId,
+                        'section_position': entry.target.getBoundingClientRect().top
+                    });
+                    // Only track once per session
+                    sectionViewTracking.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.5 // Trigger when 50% of section is visible
+        });
+
+        // Track key sections
+        const sectionsToTrack = document.querySelectorAll('section[id], section:has(h2)');
+        sectionsToTrack.forEach(section => {
+            sectionViewTracking.observe(section);
+        });
+
+        // Time on Page Tracking (send when user leaves)
+        let pageLoadTime = Date.now();
+        window.addEventListener('beforeunload', function() {
+            const timeOnPage = Math.round((Date.now() - pageLoadTime) / 1000); // seconds
+            trackEvent('time_on_page', {
+                'duration_seconds': timeOnPage,
+                'page_location': window.location.pathname
+            });
+        });
+
+        // Track SOP Card Impression (Visibility Tracking)
+        const sopCard = document.getElementById('sop-feature-card');
+        if (sopCard) {
+            const sopCardObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        trackEvent('sop_card_impression', {
+                            'card_visible': true,
+                            'viewport_position': entry.intersectionRatio
+                        });
+                        sopCardObserver.unobserve(sopCard);
+                    }
+                });
+            }, { threshold: 0.8 }); // Track when 80% visible
+
+            sopCardObserver.observe(sopCard);
+        }
+
+        // Track ROI Calculator Interaction
+        const roiForm = document.getElementById('roiCalculator');
+        if (roiForm) {
+            roiForm.addEventListener('submit', function(e) {
+                const revenue = document.getElementById('revenue')?.value;
+                const adminHours = document.getElementById('adminHours')?.value;
+                trackEvent('roi_calculator_submit', {
+                    'revenue_range': revenue,
+                    'admin_hours': adminHours
+                });
+            });
+        }
+
+        // Track Exit Intent Popup Interaction
+        const exitPopup = document.getElementById('exitPopup');
+        if (exitPopup) {
+            const exitPopupObserver = new MutationObserver((mutations) => {
+                mutations.forEach(mutation => {
+                    if (mutation.target.classList.contains('active')) {
+                        trackEvent('exit_popup_shown', {
+                            'trigger': 'exit_intent'
+                        });
+                    }
+                });
+            });
+            exitPopupObserver.observe(exitPopup, {
+                attributes: true,
+                attributeFilter: ['class']
+            });
+        }
+
+        // Track External Link Clicks
+        document.querySelectorAll('a[href^="http"]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const url = this.href;
+                if (!url.includes('pvrpose.ai')) {
+                    trackEvent('external_link_click', {
+                        'link_url': url,
+                        'link_text': this.textContent.trim()
+                    });
+                }
+            });
+        });
+
+        // Track Video Testimonial Plays
+        ['loadVideo', 'loadVideo2'].forEach((funcName, index) => {
+            const originalFunc = window[funcName];
+            if (originalFunc) {
+                window[funcName] = function() {
+                    trackEvent('video_testimonial_play', {
+                        'video_number': index + 1,
+                        'video_location': index === 0 ? 'James Green' : 'James Evans'
+                    });
+                    originalFunc.apply(this, arguments);
+                };
+            }
+        });
+
+        console.log('✅ Advanced GA4 tracking initialized');
     </script>
 </body>
 </html>
