@@ -1,11 +1,14 @@
 /**
  * Vercel Serverless Function - AI Assessment Submission Handler
- * Sends assessment data directly to Airtable
+ * Sends assessment data directly to Airtable with PDF upload to Vercel Blob Storage
  * Environment Variables Required:
  * - AIRTABLE_API_KEY: Airtable Personal Access Token
  * - AIRTABLE_BASE_ID: Airtable Base ID
  * - AIRTABLE_TABLE_NAME: Airtable Table Name (default: "tblAssessmentSubmissions")
+ * - BLOB_READ_WRITE_TOKEN: Vercel Blob Storage token (auto-configured by Vercel)
  */
+
+import { put } from '@vercel/blob';
 
 export default async function handler(req, res) {
     // CORS headers - allow all origins for now to debug
@@ -75,8 +78,20 @@ export default async function handler(req, res) {
 
         console.log('Payload prepared:', payload);
 
-        // Submit to Airtable
-        const airtableResult = await submitToAirtable(payload);
+        // Upload PDF to Vercel Blob Storage if provided
+        let pdfUrl = null;
+        if (payload.pdf_base64 && payload.pdf_filename) {
+            try {
+                pdfUrl = await uploadPdfToBlob(payload.pdf_base64, payload.pdf_filename, payload.email);
+                console.log('PDF uploaded to Blob Storage:', pdfUrl);
+            } catch (error) {
+                console.error('PDF upload failed, continuing without PDF:', error.message);
+                // Continue even if PDF upload fails - don't block the submission
+            }
+        }
+
+        // Submit to Airtable with PDF URL if available
+        const airtableResult = await submitToAirtable(payload, pdfUrl);
 
         console.log('Airtable submission successful:', airtableResult);
 
@@ -99,9 +114,9 @@ export default async function handler(req, res) {
 }
 
 /**
- * Submit directly to Airtable
+ * Submit directly to Airtable with optional PDF URL
  */
-async function submitToAirtable(payload) {
+async function submitToAirtable(payload, pdfUrl = null) {
     const baseId = process.env.AIRTABLE_BASE_ID;
     const tableName = process.env.AIRTABLE_TABLE_NAME || 'tblAssessmentSubmissions';
     const apiKey = process.env.AIRTABLE_API_KEY;
@@ -143,15 +158,19 @@ async function submitToAirtable(payload) {
         fields['document'] = payload.document;
     }
 
-    // Add PDF attachment if provided (only if both are non-null)
-    if (payload.pdf_base64 && payload.pdf_filename &&
-        payload.pdf_base64 !== null && payload.pdf_filename !== null) {
+    // Add PDF attachment if URL is provided from Vercel Blob Storage
+    if (pdfUrl) {
         fields['pdf_report'] = [
             {
-                filename: payload.pdf_filename,
-                url: `data:application/pdf;base64,${payload.pdf_base64}`
+                url: pdfUrl
             }
         ];
+        fields['pdf_filename'] = payload.pdf_filename;
+        console.log('PDF attachment added with Blob Storage URL:', pdfUrl);
+    } else if (payload.pdf_filename) {
+        // Store filename even if upload failed
+        fields['pdf_filename'] = payload.pdf_filename;
+        console.log('PDF filename stored (no URL available)');
     }
 
     // Add optional fields if they're not computed in Airtable
@@ -225,4 +244,41 @@ function extractTopPriority(answers) {
     };
 
     return categoryMap[topCategory] || 'Workflow automation & process optimization';
+}
+
+/**
+ * Upload PDF to Vercel Blob Storage
+ * @param {string} base64Data - Base64 encoded PDF data
+ * @param {string} filename - Original filename
+ * @param {string} email - User email for organizing files
+ * @returns {Promise<string>} - Public URL of uploaded PDF
+ */
+async function uploadPdfToBlob(base64Data, filename, email) {
+    try {
+        // Convert base64 to Buffer
+        const buffer = Buffer.from(base64Data, 'base64');
+
+        // Create a clean filename with timestamp and email prefix
+        const timestamp = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+        const emailPrefix = email.split('@')[0].replace(/[^a-zA-Z0-9]/g, '_');
+        const cleanFilename = `${timestamp}_${emailPrefix}_${filename}`;
+
+        // Upload to Vercel Blob Storage
+        const blob = await put(cleanFilename, buffer, {
+            access: 'public',
+            contentType: 'application/pdf',
+            addRandomSuffix: true // Prevents filename collisions
+        });
+
+        console.log('Blob upload successful:', {
+            url: blob.url,
+            size: buffer.length,
+            filename: cleanFilename
+        });
+
+        return blob.url;
+    } catch (error) {
+        console.error('Blob upload error:', error);
+        throw new Error(`Failed to upload PDF to Blob Storage: ${error.message}`);
+    }
 }

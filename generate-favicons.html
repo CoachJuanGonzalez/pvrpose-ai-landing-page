@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PVRPOSE AI - Favicon Generator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #ec4899;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .info {
+            background: #f0f9ff;
+            border-left: 4px solid #ec4899;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        button {
+            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px 5px;
+            font-weight: 600;
+        }
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
+        }
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .preview-item {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid #e5e7eb;
+        }
+        .preview-item canvas {
+            border: 1px solid #ddd;
+            margin: 10px 0;
+        }
+        .preview-item h3 {
+            font-size: 14px;
+            color: #6b7280;
+            margin: 10px 0;
+        }
+        canvas {
+            image-rendering: -moz-crisp-edges;
+            image-rendering: -webkit-crisp-edges;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+        #sourceImg {
+            max-width: 300px;
+            margin: 20px auto;
+            display: block;
+        }
+        .success {
+            background: #d1fae5;
+            border-color: #10b981;
+            color: #065f46;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 PVRPOSE AI Favicon Generator</h1>
+
+        <div class="info">
+            <h2>📋 Instructions:</h2>
+            <ol>
+                <li>This tool will generate all required favicon files from <strong>logos-ai-rez-01.png</strong></li>
+                <li>Click each "Download" button below to save the generated files</li>
+                <li>Save all files to your website root directory</li>
+                <li>The favicon.ico file includes both 16x16 and 32x32 resolutions</li>
+            </ol>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0;">
+            <button onclick="loadSourceAndGenerate()">🚀 Generate All Favicons</button>
+        </div>
+
+        <div id="status"></div>
+        <img id="sourceImg" style="display:none;" />
+
+        <div class="preview-grid" id="previewGrid"></div>
+    </div>
+
+    <script>
+        const sizes = [
+            { name: 'favicon-16x16.png', width: 16, height: 16 },
+            { name: 'favicon-32x32.png', width: 32, height: 32 },
+            { name: 'apple-touch-icon.png', width: 180, height: 180 },
+            { name: 'android-chrome-192x192.png', width: 192, height: 192 },
+            { name: 'android-chrome-512x512.png', width: 512, height: 512 },
+            { name: 'og-image.png', width: 1200, height: 630 }
+        ];
+
+        function loadSourceAndGenerate() {
+            const img = document.getElementById('sourceImg');
+            const statusDiv = document.getElementById('status');
+
+            statusDiv.innerHTML = '<div class="info">⏳ Loading source image...</div>';
+
+            img.onload = function() {
+                statusDiv.innerHTML = '<div class="success">✅ Source image loaded! Generating favicons...</div>';
+                generateAllSizes(img);
+            };
+
+            img.onerror = function() {
+                statusDiv.innerHTML = '<div class="info" style="background:#fee; border-color:#f00; color:#900;">❌ Error: Could not load logos-ai-rez-01.png. Make sure it exists in the same directory.</div>';
+            };
+
+            // Load the source logo
+            img.src = 'logos-ai-rez-01.png?t=' + new Date().getTime();
+        }
+
+        function generateAllSizes(sourceImg) {
+            const grid = document.getElementById('previewGrid');
+            grid.innerHTML = '';
+
+            sizes.forEach(size => {
+                const item = document.createElement('div');
+                item.className = 'preview-item';
+
+                const title = document.createElement('h3');
+                title.textContent = size.name + ' (' + size.width + '×' + size.height + ')';
+                item.appendChild(title);
+
+                const canvas = document.createElement('canvas');
+                canvas.width = size.width;
+                canvas.height = size.height;
+
+                const displaySize = size.width > 100 ? 100 : size.width * 2;
+                canvas.style.width = displaySize + 'px';
+                canvas.style.height = (size.height / size.width * displaySize) + 'px';
+
+                const ctx = canvas.getContext('2d');
+
+                // For OG image, create white background
+                if (size.name === 'og-image.png') {
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, size.width, size.height);
+
+                    // Calculate centered logo (60% of height)
+                    const logoHeight = size.height * 0.6;
+                    const logoWidth = (sourceImg.width / sourceImg.height) * logoHeight;
+                    const x = (size.width - logoWidth) / 2;
+                    const y = (size.height - logoHeight) / 2;
+
+                    ctx.drawImage(sourceImg, x, y, logoWidth, logoHeight);
+                } else {
+                    // Regular resize for other sizes
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, size.width, size.height);
+                    ctx.drawImage(sourceImg, 0, 0, size.width, size.height);
+                }
+
+                item.appendChild(canvas);
+
+                const btn = document.createElement('button');
+                btn.textContent = '⬇️ Download ' + size.name;
+                btn.onclick = function() {
+                    canvas.toBlob(function(blob) {
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = size.name;
+                        a.click();
+                        URL.revokeObjectURL(url);
+                    }, 'image/png');
+                };
+                item.appendChild(btn);
+
+                grid.appendChild(item);
+            });
+
+            // Generate favicon.ico (special case - multi-resolution ICO)
+            generateFaviconIco(sourceImg);
+        }
+
+        function generateFaviconIco(sourceImg) {
+            const item = document.createElement('div');
+            item.className = 'preview-item';
+
+            const title = document.createElement('h3');
+            title.textContent = 'favicon.ico (16×16 + 32×32)';
+            item.appendChild(title);
+
+            // Create preview canvas showing both sizes
+            const canvas32 = document.createElement('canvas');
+            canvas32.width = 32;
+            canvas32.height = 32;
+            canvas32.style.width = '64px';
+            canvas32.style.height = '64px';
+
+            const ctx32 = canvas32.getContext('2d');
+            ctx32.fillStyle = '#ffffff';
+            ctx32.fillRect(0, 0, 32, 32);
+            ctx32.drawImage(sourceImg, 0, 0, 32, 32);
+
+            item.appendChild(canvas32);
+
+            const infoDiv = document.createElement('div');
+            infoDiv.style.marginTop = '10px';
+            infoDiv.style.fontSize = '12px';
+            infoDiv.style.color = '#666';
+            infoDiv.innerHTML = '<strong>Note:</strong> For favicon.ico, use an online ICO converter:<br><a href="https://www.favicon-generator.org/" target="_blank" style="color:#ec4899;">favicon-generator.org</a><br>Upload <strong>favicon-32x32.png</strong>';
+            item.appendChild(infoDiv);
+
+            document.getElementById('previewGrid').appendChild(item);
+        }
+    </script>
+</body>
+</html>

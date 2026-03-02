@@ -52,6 +52,17 @@ OPTIONAL FIELDS (Nice to have):
 12. jurisdiction
     Type: Single line text
 
+13. pdf_filename
+    Type: Single line text
+    Note: Stores the PDF filename for reference
+
+14. pdf_report
+    Type: Attachment
+    Note: Stores the actual PDF file uploaded to Vercel Blob Storage
+
+15. document
+    Type: Single line text
+
 
 IMPORTANT NOTES:
 ---------------------------------
