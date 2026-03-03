@@ -7,6 +7,38 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- jsPDF for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        .pdf-download-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: linear-gradient(135deg, #1E3A8A 0%, #8b5cf6 60%, #ec4899 100%);
+            color: white;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 9999;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+        }
+        .pdf-download-bar span { font-size: 15px; font-weight: 600; opacity: 0.95; }
+        .pdf-btn {
+            background: white;
+            color: #1E3A8A;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            transition: transform 0.15s;
+        }
+        .pdf-btn:hover { transform: scale(1.04); }
+        .pdf-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        body.has-bar { padding-top: 52px; }
+    </style>
     <style>
         * {
             margin: 0;
@@ -894,5 +926,566 @@
         </div>
     </div>
 
+    <!-- Download bar -->
+    <div class="pdf-download-bar">
+        <span>5 Signs Your Business Is Ready for AI Automation — PVRPOSE AI</span>
+        <button class="pdf-btn" id="pdfBtn" onclick="generateChecklist()">⬇ Download PDF</button>
+    </div>
+
+    <script>
+    document.body.classList.add('has-bar');
+
+    async function generateChecklist() {
+        const btn = document.getElementById('pdfBtn');
+        btn.disabled = true;
+        btn.textContent = 'Generating…';
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+        const pageWidth = 210, pageHeight = 297;
+        const margin = 15, contentWidth = pageWidth - margin * 2;
+
+        // Brand palette
+        const deepBlue   = [30, 58, 138];
+        const brandPink  = [236, 72, 153];
+        const brandPurple= [139, 92, 246];
+        const white      = [255, 255, 255];
+        const darkGray   = [55, 65, 81];
+        const medGray    = [107, 114, 128];
+        const lightGray  = [243, 244, 246];
+        const green      = [16, 185, 129];
+        const amber      = [245, 158, 11];
+        const red        = [239, 68, 68];
+
+        // ── helpers ──────────────────────────────────────────────
+        function gradientRect(x, y, w, h, c1, c2, vertical = true) {
+            const steps = vertical ? h : w;
+            for (let i = 0; i < steps; i++) {
+                const a = i / steps;
+                doc.setFillColor(
+                    Math.round(c1[0] + (c2[0] - c1[0]) * a),
+                    Math.round(c1[1] + (c2[1] - c1[1]) * a),
+                    Math.round(c1[2] + (c2[2] - c1[2]) * a)
+                );
+                if (vertical) doc.rect(x, y + i, w, 1, 'F');
+                else          doc.rect(x + i, y, 1, h, 'F');
+            }
+        }
+
+        function pageFooter(pageNum, total) {
+            doc.setDrawColor(229, 231, 235);
+            doc.setLineWidth(0.4);
+            doc.line(margin, pageHeight - 12, pageWidth - margin, pageHeight - 12);
+            doc.setFontSize(8); doc.setTextColor(...medGray); doc.setFont(undefined, 'normal');
+            doc.text('© 2026 PVRPOSE AI  •  pvrpose.ai  •  juan@pvrpose.ai', margin, pageHeight - 7);
+            doc.text(`Page ${pageNum}`, pageWidth - margin, pageHeight - 7, { align: 'right' });
+        }
+
+        function pageHeader(logoDataUrl) {
+            // Pink-to-purple gradient bar
+            gradientRect(0, 0, pageWidth, 14, brandPink, brandPurple, false);
+            if (logoDataUrl) {
+                try { doc.addImage(logoDataUrl, 'JPEG', margin, 3, 28, 6); } catch(e) {}
+            }
+            doc.setFontSize(7.5); doc.setTextColor(...white); doc.setFont(undefined, 'bold');
+            doc.text('5 Signs Your Business Is Ready for AI Automation', pageWidth - margin, 8.5, { align: 'right' });
+            return 22; // yPos after header
+        }
+
+        function signCard(y, num, title, description, bullets, extra, extraType) {
+            // Card background
+            doc.setFillColor(255, 255, 255);
+            doc.setDrawColor(243, 232, 255);
+            doc.setLineWidth(0.6);
+
+            // Pre-measure height
+            doc.setFontSize(9);
+            let h = 8 + 6 + 5; // title + desc start
+            const titleLines = doc.splitTextToSize(title, contentWidth - 20);
+            h += titleLines.length * 5;
+            const descLines = doc.splitTextToSize(description, contentWidth - 20);
+            h += descLines.length * 4.5 + 4;
+            bullets.forEach(b => {
+                const bl = doc.splitTextToSize(b, contentWidth - 30);
+                h += bl.length * 4 + 2;
+            });
+            if (extra) {
+                const el = doc.splitTextToSize(extra, contentWidth - 30);
+                h += el.length * 4 + 14;
+            }
+            h += 8; // bottom padding
+
+            doc.roundedRect(margin, y, contentWidth, h, 3, 3, 'FD');
+
+            // Left accent bar (pink→purple)
+            gradientRect(margin, y, 5, h, brandPink, brandPurple);
+
+            // Number circle
+            doc.setFillColor(...brandPink);
+            doc.circle(margin + 14, y + 11, 7, 'F');
+            doc.setFontSize(11); doc.setTextColor(...white); doc.setFont(undefined, 'bold');
+            doc.text(String(num), margin + 14, y + 14, { align: 'center' });
+
+            // Title
+            let cy = y + 8;
+            doc.setFontSize(10.5); doc.setTextColor(...deepBlue); doc.setFont(undefined, 'bold');
+            doc.text(titleLines, margin + 24, cy);
+            cy += titleLines.length * 5 + 3;
+
+            // Description
+            doc.setFontSize(8.5); doc.setTextColor(...darkGray); doc.setFont(undefined, 'normal');
+            doc.text(descLines, margin + 8, cy);
+            cy += descLines.length * 4.5 + 4;
+
+            // Bullets
+            bullets.forEach(b => {
+                doc.setFillColor(...brandPink);
+                doc.circle(margin + 10, cy - 1, 1.2, 'F');
+                doc.setFontSize(8); doc.setTextColor(...darkGray); doc.setFont(undefined, 'normal');
+                const bl = doc.splitTextToSize(b, contentWidth - 30);
+                doc.text(bl, margin + 14, cy);
+                cy += bl.length * 4 + 2;
+            });
+
+            // Extra box (example = green, warning = amber)
+            if (extra) {
+                cy += 3;
+                const isWarning = extraType === 'warning';
+                const bgCol  = isWarning ? [254, 243, 199] : [240, 253, 244];
+                const brdCol = isWarning ? amber : green;
+                const txtCol = isWarning ? [146, 64, 14] : [6, 95, 70];
+                const label  = isWarning ? 'WARNING:' : 'REAL EXAMPLE:';
+                const el = doc.splitTextToSize(extra, contentWidth - 30);
+                const bh = el.length * 4 + 14;
+                doc.setFillColor(...bgCol);
+                doc.setDrawColor(...brdCol);
+                doc.setLineWidth(0.8);
+                doc.roundedRect(margin + 8, cy, contentWidth - 16, bh, 2, 2, 'FD');
+                doc.setFontSize(7.5); doc.setTextColor(...brdCol); doc.setFont(undefined, 'bold');
+                doc.text(label, margin + 11, cy + 6);
+                doc.setFontSize(7.5); doc.setTextColor(...txtCol); doc.setFont(undefined, 'normal');
+                doc.text(el, margin + 11, cy + 11);
+            }
+
+            return y + h + 5; // next y
+        }
+
+        // ── Load logos ────────────────────────────────────────────
+        let coverLogo = null, headerLogo = null;
+        try {
+            const r1 = await fetch('logotypes-ai-rez-03.png');
+            if (r1.ok) {
+                const blob1 = await r1.blob();
+                coverLogo = await new Promise(res => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => res(reader.result);
+                    reader.readAsDataURL(blob1);
+                });
+            }
+        } catch(e) {}
+        try {
+            const r2 = await fetch('logotypes-ai-rez-01.jpg');
+            if (r2.ok) {
+                const blob2 = await r2.blob();
+                headerLogo = await new Promise(res => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => res(reader.result);
+                    reader.readAsDataURL(blob2);
+                });
+            }
+        } catch(e) {}
+
+        // ════════════════════════════════════════════════════
+        // COVER PAGE
+        // ════════════════════════════════════════════════════
+        // Full-page gradient background: deep blue → purple → pink
+        gradientRect(0, 0, pageWidth, Math.floor(pageHeight * 0.5), deepBlue, brandPurple);
+        gradientRect(0, Math.floor(pageHeight * 0.5), pageWidth, Math.ceil(pageHeight * 0.5), brandPurple, brandPink);
+
+        // Logo
+        let cy = 42;
+        if (coverLogo) {
+            try { doc.addImage(coverLogo, 'PNG', 75, cy, 60, 12); cy += 15; }
+            catch(e) { doc.setFontSize(20); doc.setTextColor(...white); doc.setFont(undefined,'bold'); doc.text('PVRPOSE AI', 105, cy + 8, { align:'center' }); cy += 16; }
+        } else {
+            doc.setFontSize(20); doc.setTextColor(...white); doc.setFont(undefined,'bold'); doc.text('PVRPOSE AI', 105, cy + 8, { align:'center' }); cy += 16;
+        }
+
+        // Tagline
+        cy += 2;
+        doc.setFontSize(9); doc.setTextColor(...white); doc.setFont(undefined, 'italic');
+        doc.text('Own Your Voice. Vision. Vibe.', 105, cy, { align: 'center' });
+        cy += 14;
+
+        // Title
+        doc.setFontSize(28); doc.setTextColor(...white); doc.setFont(undefined, 'bold');
+        const titleL = doc.splitTextToSize('5 Signs Your Business Is Ready for AI Automation', 150);
+        doc.text(titleL, 105, cy, { align: 'center' });
+        cy += titleL.length * 12 + 6;
+
+        // Subtitle
+        doc.setFontSize(13); doc.setTextColor(255, 255, 255); doc.setFont(undefined, 'normal');
+        doc.text('The Essential Checklist for Professional Service &', 105, cy, { align: 'center' });
+        cy += 7;
+        doc.text('Construction Firms', 105, cy, { align: 'center' });
+        cy += 18;
+
+        // Badge pill
+        doc.setFillColor(255, 255, 255, 0.25);
+        doc.setFillColor(80, 60, 140);
+        doc.setDrawColor(255, 255, 255);
+        doc.setLineWidth(1.2);
+        doc.roundedRect(55, cy, 100, 12, 6, 6, 'FD');
+        doc.setFontSize(9); doc.setTextColor(...white); doc.setFont(undefined, 'bold');
+        doc.text('Bonus: Where to Start Guide Included', 105, cy + 8, { align: 'center' });
+        cy += 22;
+
+        // Stats row
+        const stats = [['10-20', 'Hours Saved/Week'], ['6-8', 'Weeks to Live'], ['10-20x', 'ROI in Year 1']];
+        const sw = 48, sg = 6, sx = (pageWidth - (sw * 3 + sg * 2)) / 2;
+        stats.forEach((s, i) => {
+            const bx = sx + i * (sw + sg);
+            doc.setFillColor(255, 255, 255, 0.15);
+            doc.setFillColor(50, 30, 100);
+            doc.setDrawColor(255, 255, 255);
+            doc.setLineWidth(0.8);
+            doc.roundedRect(bx, cy, sw, 22, 3, 3, 'FD');
+            doc.setFontSize(14); doc.setTextColor(...white); doc.setFont(undefined, 'bold');
+            doc.text(s[0], bx + sw / 2, cy + 10, { align: 'center' });
+            doc.setFontSize(7); doc.setFont(undefined, 'normal');
+            doc.text(s[1], bx + sw / 2, cy + 17, { align: 'center' });
+        });
+
+        // Cover footer
+        doc.setFontSize(8); doc.setTextColor(...white); doc.setFont(undefined, 'normal');
+        doc.text('© 2026 PVRPOSE AI  •  pvrpose.ai  •  juan@pvrpose.ai', 105, pageHeight - 10, { align: 'center' });
+
+        // ════════════════════════════════════════════════════
+        // PAGE 1 — INTRODUCTION
+        // ════════════════════════════════════════════════════
+        doc.addPage();
+        let y = pageHeader(headerLogo);
+
+        doc.setFontSize(18); doc.setTextColor(...deepBlue); doc.setFont(undefined, 'bold');
+        doc.text('Is Your Business Ready for AI?', margin, y); y += 10;
+
+        // Intro highlight box
+        const introText = 'You\'re not imagining it. The successful firms in your industry are pulling ahead — and it\'s not because they\'re working longer hours. They\'ve automated the busywork that\'s consuming 20+ hours of your week.';
+        const introLines = doc.splitTextToSize(introText, contentWidth - 12);
+        const introH = introLines.length * 5 + 12;
+        doc.setFillColor(253, 242, 248);
+        doc.setDrawColor(...brandPink);
+        doc.setLineWidth(0);
+        doc.roundedRect(margin, y, contentWidth, introH, 2, 2, 'F');
+        doc.setFillColor(...brandPink);
+        doc.rect(margin, y, 4, introH, 'F');
+        doc.setFontSize(9); doc.setTextColor(...darkGray); doc.setFont(undefined, 'normal');
+        doc.text(introLines, margin + 8, y + 6); y += introH + 8;
+
+        const bodyParas = [
+            'But here\'s the truth most AI consultants won\'t tell you: not every business is ready for AI automation right now.',
+            'Implementing AI before you\'re ready is like hiring a team of specialists when you haven\'t defined their roles — you\'ll waste money, create chaos, and wonder why nothing improved.',
+            'This guide will help you identify the 5 telltale signs that your business is actually ready to benefit from AI automation — plus a practical roadmap for getting started.'
+        ];
+        bodyParas.forEach(p => {
+            doc.setFontSize(9); doc.setTextColor(...darkGray); doc.setFont(undefined, 'normal');
+            const pl = doc.splitTextToSize(p, contentWidth);
+            doc.text(pl, margin, y); y += pl.length * 4.5 + 5;
+        });
+
+        // Stats grid
+        y += 4;
+        const statData = [
+            ['10-20', 'Hours Saved Per Week'],
+            ['6-8',   'Weeks to Implementation'],
+            ['10-20x','ROI in Year 1 ($100K+ firms)']
+        ];
+        const cw3 = (contentWidth - 10) / 3;
+        statData.forEach((s, i) => {
+            const bx = margin + i * (cw3 + 5);
+            doc.setFillColor(253, 242, 248);
+            doc.setDrawColor(...brandPurple);
+            doc.setLineWidth(0.8);
+            doc.roundedRect(bx, y, cw3, 22, 3, 3, 'FD');
+            doc.setFontSize(14); doc.setTextColor(...brandPink); doc.setFont(undefined, 'bold');
+            doc.text(s[0], bx + cw3 / 2, y + 10, { align: 'center' });
+            doc.setFontSize(7); doc.setTextColor(...medGray); doc.setFont(undefined, 'normal');
+            doc.text(s[1], bx + cw3 / 2, y + 17, { align: 'center' });
+        });
+        y += 30;
+
+        doc.setFontSize(13); doc.setTextColor(...deepBlue); doc.setFont(undefined, 'bold');
+        doc.text('Why This Matters Now', margin, y); y += 7;
+        doc.setFontSize(9); doc.setTextColor(...darkGray); doc.setFont(undefined, 'normal');
+        const whyText = 'Your competitors who adopt AI automation in 2026 will have a 12-24 month competitive advantage before the market catches up. The firms that wait will spend the next two years playing catch-up while watching their margins shrink and their best team members burn out.';
+        const whyLines = doc.splitTextToSize(whyText, contentWidth);
+        doc.text(whyLines, margin, y); y += whyLines.length * 4.5;
+
+        pageFooter(1, 6);
+
+        // ════════════════════════════════════════════════════
+        // PAGE 2 — SIGNS 1 & 2
+        // ════════════════════════════════════════════════════
+        doc.addPage();
+        y = pageHeader(headerLogo);
+        doc.setFontSize(16); doc.setTextColor(...deepBlue); doc.setFont(undefined, 'bold');
+        doc.text('The 5 Signs You\'re Ready', margin, y); y += 10;
+
+        y = signCard(y, 1,
+            'You\'re Spending 10+ Hours Per Week on Repetitive Admin Tasks',
+            'If you or your team are manually handling client follow-ups, data entry, scheduling, proposal generation, or CRM updates week after week — you\'re ready.',
+            ['Sending similar emails to clients repeatedly',
+             'Copy-pasting information between systems (email → CRM → spreadsheet)',
+             'Manually scheduling appointments or follow-ups',
+             'Creating proposals or quotes from templates',
+             'Updating client records after every interaction'],
+            'A coaching firm spent 12 hours/week sending personalized follow-up emails after discovery calls. AI automation now handles this in 2 minutes — customizing each email based on call notes and scheduling the perfect follow-up timing.',
+            'example'
+        );
+
+        y = signCard(y, 2,
+            'Your Team Is Growing, But Your Processes Haven\'t Evolved',
+            'You\'ve added 2-5 team members in the last year, but everyone\'s still doing things "the way we\'ve always done them." Knowledge lives in people\'s heads, not documented systems.',
+            ['New hires ask the same questions over and over',
+             'Only certain people know how to handle specific tasks',
+             'Client experience varies depending on who handles the account',
+             'You\'re afraid to go on vacation because things will fall apart',
+             'Training new team members takes 4-8 weeks of hand-holding'],
+            'If you\'ve ever said "I need to clone myself" or "Only Sarah knows how to do that," you need documented, automated SOPs — not another hire.',
+            'warning'
+        );
+
+        pageFooter(2, 6);
+
+        // ════════════════════════════════════════════════════
+        // PAGE 3 — SIGNS 3 & 4
+        // ════════════════════════════════════════════════════
+        doc.addPage();
+        y = pageHeader(headerLogo);
+
+        y = signCard(y, 3,
+            'Clients Are Falling Through the Cracks',
+            'You\'re losing revenue not because of bad service, but because you\'re forgetting to follow up, missing renewal dates, or letting warm leads go cold.',
+            ['Leads from 2-3 weeks ago haven\'t heard from you',
+             'Client contracts expire without renewal conversations',
+             'Follow-up emails sit in your drafts for days',
+             'You\'ve missed upsell opportunities because you forgot to check in',
+             'Clients say "I haven\'t heard from you in a while"'],
+            'An accounting firm realized they had 47 clients whose annual review was overdue by 60+ days. AI automation now tracks all deadlines and sends personalized reminder sequences — recovering $180K in renewals they would have missed.',
+            'example'
+        );
+
+        y = signCard(y, 4,
+            'You Have the Revenue to Invest $15K-$25K',
+            'AI automation isn\'t free — but it pays for itself in 3-6 months. You need the cash flow to invest upfront before seeing returns.',
+            ['Doing $50K–$100K+ annually and ready to scale — or already past $100K and growing faster',
+             'Consistent monthly cash flow (not project-dependent)',
+             'Willing to invest in growth, not just survival',
+             'Admin work is taking 10+ hours/week of your time',
+             'Ready to think 6-12 months ahead, not just this quarter'],
+            'If you\'re pre-revenue or under $50K annually, focus on sales first. AI automation multiplies efficiency — but you need a foundation to build on. Come back when you\'re turning away work or drowning in delivery.',
+            'warning'
+        );
+
+        pageFooter(3, 6);
+
+        // ════════════════════════════════════════════════════
+        // PAGE 4 — SIGN 5 + SCORECARD
+        // ════════════════════════════════════════════════════
+        doc.addPage();
+        y = pageHeader(headerLogo);
+
+        y = signCard(y, 5,
+            'You\'re Ready to Document Your Processes (Even If They\'re Messy)',
+            'AI can\'t automate chaos. But if you\'re willing to spend 2-4 weeks mapping your current workflows — even the imperfect ones — you\'re ready to transform them.',
+            ['You can describe your client journey from lead to delivery',
+             'You know which tasks you do weekly vs. monthly vs. quarterly',
+             'You\'re willing to record yourself doing key processes (15-30 min each)',
+             'You\'re open to changing "how you\'ve always done things"',
+             'You trust that better systems = better client experience'],
+            'During our AI Readiness Audit, we don\'t need perfect SOPs — we need you to walk us through your messiest, most time-consuming processes. We\'ll handle the documentation and optimization. Your job is to be honest about what\'s broken.',
+            'example'
+        );
+
+        // Scorecard
+        y += 4;
+        doc.setFontSize(13); doc.setTextColor(...deepBlue); doc.setFont(undefined, 'bold');
+        doc.text('How Many Signs Did You Check?', margin, y); y += 8;
+
+        const scores = [
+            { icon: '✓', label: '4-5 Signs: You\'re Ready Now', bg: [240, 253, 244], border: green,  text: [6, 95, 70],  body: 'Your business is in the ideal position. You have the volume, revenue, and mindset to see 10-20x ROI in Year 1 ($100K+ firms, 10+ hrs/week admin). Don\'t wait — your competitors are already implementing.' },
+            { icon: '⚠', label: '2-3 Signs: Almost Ready',     bg: [254, 249, 195], border: amber,  text: [120, 53, 15], body: 'You\'re close, but focus on fixing the gaps first. If revenue is the issue, prioritize sales. If processes are the issue, start documenting. Come back in 3-6 months.' },
+            { icon: '✗', label: '0-1 Signs: Not Yet',          bg: [254, 226, 226], border: red,    text: [153, 27, 27], body: 'You\'re in growth mode — keep hustling. AI automation will be powerful for you later. Save this guide for when you\'re turning away work.' }
+        ];
+
+        scores.forEach(s => {
+            const bl = doc.splitTextToSize(s.body, contentWidth - 16);
+            const bh = bl.length * 4 + 18;
+            doc.setFillColor(...s.bg);
+            doc.setDrawColor(...s.border);
+            doc.setLineWidth(0);
+            doc.roundedRect(margin, y, contentWidth, bh, 2, 2, 'F');
+            doc.setFillColor(...s.border);
+            doc.rect(margin, y, 4, bh, 'F');
+            doc.setFontSize(9); doc.setTextColor(...s.text); doc.setFont(undefined, 'bold');
+            doc.text(s.label, margin + 8, y + 7);
+            doc.setFont(undefined, 'normal'); doc.setFontSize(8);
+            doc.text(bl, margin + 8, y + 13);
+            y += bh + 4;
+        });
+
+        pageFooter(4, 6);
+
+        // ════════════════════════════════════════════════════
+        // PAGE 5 — BONUS: WHERE TO START
+        // ════════════════════════════════════════════════════
+        doc.addPage();
+        y = pageHeader(headerLogo);
+
+        // Bonus badge
+        gradientRect(margin, y, contentWidth, 10, brandPink, brandPurple, false);
+        doc.setFontSize(8); doc.setTextColor(...white); doc.setFont(undefined, 'bold');
+        doc.text('BONUS', 105, y + 7, { align: 'center' });
+        y += 14;
+
+        doc.setFontSize(15); doc.setTextColor(...deepBlue); doc.setFont(undefined, 'bold');
+        doc.text('Where to Start: Your First 4 Weeks', margin, y); y += 8;
+        doc.setFontSize(9); doc.setTextColor(...darkGray); doc.setFont(undefined, 'normal');
+        const bonusIntro = doc.splitTextToSize('If you checked 4-5 signs above, here\'s the exact roadmap we use with clients to go from manual chaos to AI-powered efficiency in 6-8 weeks.', contentWidth);
+        doc.text(bonusIntro, margin, y); y += bonusIntro.length * 4.5 + 8;
+
+        const steps = [
+            { n: '1', title: 'Week 1: Audit Your Time', desc: 'Track everything you do for one week. Use a time-tracking app or just a simple spreadsheet. Label tasks as: Revenue-Generating, Client Delivery, or Admin/Repetitive. You\'ll likely find 15-25 hours in the "Admin" bucket — that\'s your automation target.' },
+            { n: '2', title: 'Week 2: Identify Your Top 3 Bottlenecks', desc: 'What tasks are you avoiding because they\'re tedious? Common answers: client follow-ups, proposal generation, data entry, scheduling, CRM updates. Pick the top 3 that waste the most time or cost you the most revenue when delayed.' },
+            { n: '3', title: 'Week 3: Record Your Current Process', desc: 'For each bottleneck, record a screen share (10-20 min) of you doing the task start-to-finish. Talk through your decisions out loud. This becomes the blueprint for automation.' },
+            { n: '4', title: 'Week 4: Get Expert Mapping (That\'s Us)', desc: 'Book a free 30-minute discovery call with PVRPOSE AI. We\'ll map your biggest workflow gaps and show you exactly which tasks can be automated (70-90%), which need human oversight (10-20%), and what your ROI will look like. If there\'s a fit, we\'ll scope your AI Readiness Audit ($5,000–$7,500 CAD) as the next step.' }
+        ];
+
+        steps.forEach(s => {
+            const dl = doc.splitTextToSize(s.desc, contentWidth - 22);
+            const sh = dl.length * 4.5 + 18;
+            doc.setFillColor(249, 250, 251);
+            doc.setDrawColor(...brandPurple);
+            doc.setLineWidth(0.5);
+            doc.roundedRect(margin, y, contentWidth, sh, 3, 3, 'FD');
+
+            // Step number circle
+            doc.setFillColor(...brandPink);
+            doc.circle(margin + 8, y + 8, 5, 'F');
+            doc.setFontSize(9); doc.setTextColor(...white); doc.setFont(undefined, 'bold');
+            doc.text(s.n, margin + 8, y + 10.5, { align: 'center' });
+
+            doc.setFontSize(9.5); doc.setTextColor(...deepBlue); doc.setFont(undefined, 'bold');
+            doc.text(s.title, margin + 16, y + 9);
+
+            doc.setFontSize(8); doc.setTextColor(...darkGray); doc.setFont(undefined, 'normal');
+            doc.text(dl, margin + 16, y + 15);
+            y += sh + 5;
+        });
+
+        pageFooter(5, 6);
+
+        // ════════════════════════════════════════════════════
+        // PAGE 6 — WHAT HAPPENS NEXT + OS + CTA
+        // ════════════════════════════════════════════════════
+        doc.addPage();
+        y = pageHeader(headerLogo);
+
+        doc.setFontSize(14); doc.setTextColor(...deepBlue); doc.setFont(undefined, 'bold');
+        doc.text('What Happens After Week 4?', margin, y); y += 7;
+        doc.setFontSize(9); doc.setTextColor(...darkGray); doc.setFont(undefined, 'normal');
+        doc.text('If we\'re a good fit, here\'s the typical journey our clients take:', margin, y); y += 8;
+
+        const journey = [
+            ['Weeks 5-6: AI Readiness Audit ($5K-$7.5K · 2 weeks)', 'We map your workflows, identify your top 3 automation opportunities, and deliver exact ROI projections. If we don\'t find 10x ROI potential, we tell you honestly.'],
+            ['Weeks 7-14: AI Implementation Sprint ($15K-$25K · 6-8 weeks)', 'We build your PVRPOSE AI OS — custom workflows, CRM, Airtable dashboard, and AI-generated SOPs. Weekly sprints. You approve every automation before it goes live. You own all code.'],
+            ['Week 15+: Live + 30-Day Support', 'Your systems go live. We monitor for 30 days, fix edge cases, and optimize. Most clients start seeing time savings in Week 1. Optional retainer from $3,000 CAD/month.']
+        ];
+        journey.forEach(j => {
+            const jl = doc.splitTextToSize(j[1], contentWidth - 16);
+            const jh = jl.length * 4.5 + 16;
+            doc.setFillColor(249, 250, 251);
+            doc.setDrawColor(229, 231, 235);
+            doc.setLineWidth(0.4);
+            doc.roundedRect(margin, y, contentWidth, jh, 2, 2, 'FD');
+            doc.setFontSize(8.5); doc.setTextColor(...deepBlue); doc.setFont(undefined, 'bold');
+            doc.text(j[0], margin + 5, y + 7);
+            doc.setFontSize(8); doc.setTextColor(...darkGray); doc.setFont(undefined, 'normal');
+            doc.text(jl, margin + 5, y + 13);
+            y += jh + 4;
+        });
+
+        y += 4;
+        // PVRPOSE AI OS section
+        doc.setFontSize(13); doc.setTextColor(...deepBlue); doc.setFont(undefined, 'bold');
+        doc.text('What Makes PVRPOSE AI Different?', margin, y); y += 6;
+        doc.setFontSize(8.5); doc.setTextColor(...medGray); doc.setFont(undefined, 'italic');
+        doc.text('Every automation runs on the PVRPOSE AI OS — Own Your Voice. Vision. Vibe.', margin, y); y += 8;
+
+        // Three OS pillars
+        const pillars = [
+            ['Voice', 'Sounds like you — your tone, your terminology, your standards'],
+            ['Vision', 'Built to your blueprint — mapped to your actual workflow gaps'],
+            ['Vibe',   'Feels like your brand — consistent client experience, end to end']
+        ];
+        const pw = (contentWidth - 8) / 3;
+        pillars.forEach((p, i) => {
+            const px = margin + i * (pw + 4);
+            doc.setFillColor(253, 242, 248);
+            doc.setDrawColor(...brandPurple);
+            doc.setLineWidth(0.6);
+            doc.roundedRect(px, y, pw, 20, 2, 2, 'FD');
+            doc.setFontSize(9); doc.setTextColor(...brandPink); doc.setFont(undefined, 'bold');
+            doc.text(p[0], px + pw / 2, y + 8, { align: 'center' });
+            const pl2 = doc.splitTextToSize(p[1], pw - 4);
+            doc.setFontSize(6.5); doc.setTextColor(...darkGray); doc.setFont(undefined, 'normal');
+            doc.text(pl2, px + pw / 2, y + 13, { align: 'center' });
+        });
+        y += 24;
+        doc.setFontSize(7); doc.setTextColor(...medGray); doc.setFont(undefined, 'italic');
+        doc.text('Powered by n8n  ·  Claude AI  ·  Airtable  ·  GoHighLevel / HubSpot', 105, y, { align: 'center' });
+        y += 8;
+
+        // Differentiators
+        const diffs = [
+            'We Build Custom, Not Templates — your business isn\'t generic, so your AI shouldn\'t be either',
+            'We Document Everything — AI-generated SOPs, video training, process blueprints. You own all code, no vendor lock-in',
+            '130+ Agile Teams Coached — 15+ years of tech transformation experience applied to your business',
+            'Canada-Based & Compliance-First — CASL, PIPEDA, GDPR, CCPA. We handle the legal complexity',
+            'Over 90% Referral Rate — we earn trust before we earn business'
+        ];
+        diffs.forEach(d => {
+            doc.setFillColor(...brandPink);
+            doc.circle(margin + 2, y - 1, 1.2, 'F');
+            doc.setFontSize(8); doc.setTextColor(...darkGray); doc.setFont(undefined, 'normal');
+            const dl = doc.splitTextToSize(d, contentWidth - 8);
+            doc.text(dl, margin + 6, y);
+            y += dl.length * 4 + 2;
+        });
+
+        y += 5;
+        // CTA gradient box
+        gradientRect(margin, y, contentWidth, 38, deepBlue, brandPink, false);
+        doc.setDrawColor(...white); doc.setLineWidth(1.5);
+        doc.roundedRect(margin, y, contentWidth, 38, 3, 3, 'S');
+        doc.setFontSize(13); doc.setTextColor(...white); doc.setFont(undefined, 'bold');
+        doc.text('Ready to See Your Roadmap?', 105, y + 10, { align: 'center' });
+        doc.setFontSize(9); doc.setFont(undefined, 'normal');
+        doc.text('Take our free 2-minute AI Readiness Assessment', 105, y + 18, { align: 'center' });
+        doc.setFontSize(9); doc.setFont(undefined, 'bold');
+        doc.textWithLink('pvrpose.ai/assessment.html', 105, y + 25, { url: 'https://pvrpose.ai/assessment.html', align: 'center' });
+        doc.setFontSize(8); doc.setFont(undefined, 'normal');
+        doc.text('Or book a discovery call: calendly.com/coachjuan-pvrposeai/discovery-call', 105, y + 32, { align: 'center' });
+
+        pageFooter(6, 6);
+
+        // ── Save ──────────────────────────────────────────────────
+        doc.save('5-Signs-AI-Readiness-Checklist-PVRPOSE-AI.pdf');
+
+        btn.disabled = false;
+        btn.textContent = '⬇ Download PDF';
+    }
+    </script>
 </body>
 </html>
