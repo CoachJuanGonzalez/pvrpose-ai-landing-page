@@ -516,10 +516,10 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
 
-            // Load logo image
+            // Load logo image (PNG with transparency)
             let logoDataUrl = null;
             try {
-                const response = await fetch('logotypes-ai-rez-01.jpg');
+                const response = await fetch('logotypes-ai-rez-03.png');
                 const blob = await response.blob();
                 logoDataUrl = await new Promise((resolve) => {
                     const reader = new FileReader();
@@ -549,10 +549,10 @@
                 if (pageNumber > 1) {
                     doc.addPage();
                 }
-                // Header on every page with logo
+                // Header on every page with logo (PNG with transparency)
                 if (logoDataUrl) {
                     try {
-                        doc.addImage(logoDataUrl, 'JPEG', margin, 6, 30, 6);
+                        doc.addImage(logoDataUrl, 'PNG', margin, 6, 30, 6);
                     } catch (error) {
                         console.warn('Could not add logo to header:', error);
                         doc.setFontSize(8);
@@ -625,10 +625,10 @@
                 doc.rect(0, i, pageWidth, 1, 'F');
             }
 
-            // PVRPOSE AI Logo (centered)
+            // PVRPOSE AI Logo (centered) - PNG with transparency
             if (logoDataUrl) {
                 try {
-                    doc.addImage(logoDataUrl, 'JPEG', 65, 45, 80, 16);
+                    doc.addImage(logoDataUrl, 'PNG', 65, 45, 80, 16);
                 } catch (error) {
                     console.warn('Could not add logo to cover:', error);
                     // Fallback to text
