@@ -214,10 +214,10 @@
     </div>
 
     <!-- Version indicator for debugging -->
-    <div style="position:fixed;bottom:5px;right:5px;font-size:10px;color:#ccc;z-index:9999;">v2.1.6-20260303</div>
+    <div style="position:fixed;bottom:5px;right:5px;font-size:10px;color:#ccc;z-index:9999;">v2.1.7-20260303</div>
 
     <script>
-        console.log('=== ASSESSMENT VERSION: 2.1.6-20260303 - PDF LINK FIX ===');
+        console.log('=== ASSESSMENT VERSION: 2.1.7-20260303 - PDF DOWNLOAD+LINK FIX ===');
 
         // Assessment Questions
         const questions = [
@@ -509,7 +509,7 @@
         }
 
         // Generate comprehensive AI Readiness Report
-        async function generatePDFReport(firstName, score, category, recommendations, answers) {
+        async function generatePDFReport(firstName, score, category, recommendations, answers, filename) {
             // Access jsPDF from global scope
             if (typeof window.jspdf === 'undefined') {
                 throw new Error('jsPDF library not loaded');
@@ -1158,19 +1158,20 @@
                     const urlMatch = step.action.match(/(https?:\/\/[^\s]+)/);
                     if (urlMatch) {
                         const url = urlMatch[1];
-                        const linkText = '→ ' + step.action;
+                        // Split into prefix and the URL part so we can embed the link on the whole line
+                        const prefixText = '→ Book now: ';
+                        const urlText = url;
 
-                        // Set font before measuring so getTextWidth matches rendered width
+                        // Set font before measuring
                         doc.setFontSize(9);
                         doc.setFont(undefined, 'italic');
 
-                        // Add text
-                        doc.text(linkText, margin + 3, yPos);
+                        // Render prefix (non-linked)
+                        doc.text(prefixText, margin + 3, yPos);
+                        const prefixWidth = doc.getTextWidth(prefixText);
 
-                        // Clickable hotspot covers the entire rendered line
-                        // Y anchor: text baseline is at yPos, hotspot starts 4pt above, 6pt tall
-                        const fullTextWidth = doc.getTextWidth(linkText);
-                        doc.link(margin + 3, yPos - 4, fullTextWidth, 6, { url: url });
+                        // Render URL as an embedded hyperlink using textWithLink
+                        doc.textWithLink(urlText, margin + 3 + prefixWidth, yPos, { url: url });
                     } else {
                         doc.text('→ ' + step.action, margin + 3, yPos);
                     }
@@ -1252,6 +1253,11 @@
             });
 
             addFooter(pageNum);
+
+            // Trigger browser download with correct filename
+            const downloadFilename = filename || `PVRPOSE_AI_Readiness_Report_${firstName.replace(/\s+/g, '_')}.pdf`;
+            console.log('Saving PDF to browser:', downloadFilename);
+            doc.save(downloadFilename);
 
             // Return PDF as base64 for upload to Airtable
             console.log('Generating PDF output...');
@@ -1396,7 +1402,8 @@
                             answersCount: globalAnswers.length
                         });
 
-                        pdfBase64 = await generatePDFReport(firstName, score, scoreCategory, recommendations, globalAnswers);
+                        const pdfFilename = `PVRPOSE_AI_Readiness_Report_${firstName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+                        pdfBase64 = await generatePDFReport(firstName, score, scoreCategory, recommendations, globalAnswers, pdfFilename);
 
                         if (!pdfBase64) {
                             throw new Error('PDF generation returned null or undefined');
