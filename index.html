@@ -739,7 +739,7 @@
                 <!-- Optimized YouTube Embed with Lazy Loading -->
                 <div class="relative" style="padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; border-radius: 16px;">
                     <!-- Thumbnail Preview (loads instantly, no iframe until clicked) -->
-                    <div id="videoThumb" class="absolute inset-0 cursor-pointer group" onclick="loadVideo()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();loadVideo();}" role="button" tabindex="0" aria-label="Play video testimonial">
+                    <div id="videoThumb" class="absolute inset-0 cursor-pointer group" onclick="loadVideo(event)" ontouchend="loadVideo(event)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();loadVideo(event);}" role="button" tabindex="0" aria-label="Play video testimonial">
                         <img
                             src="https://img.youtube.com/vi/jFOygpP7kes/maxresdefault.jpg"
                             alt="Client Testimonial - James Green, Dominion Equity Holdings"
@@ -880,7 +880,7 @@
                 <!-- Optimized YouTube Embed with Lazy Loading -->
                 <div class="relative" style="padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; border-radius: 16px;">
                     <!-- Thumbnail Preview (loads instantly, no iframe until clicked) -->
-                    <div id="videoThumb2" class="absolute inset-0 cursor-pointer group" onclick="loadVideo2()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();loadVideo2();}" role="button" tabindex="0" aria-label="Play video testimonial">
+                    <div id="videoThumb2" class="absolute inset-0 cursor-pointer group" onclick="loadVideo2(event)" ontouchend="loadVideo2(event)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();loadVideo2(event);}" role="button" tabindex="0" aria-label="Play video testimonial">
                         <img
                             src="https://img.youtube.com/vi/_6A20lEqDtg/maxresdefault.jpg"
                             alt="Client Testimonial - James Evans, Vensa Coaching"
@@ -978,34 +978,24 @@
     </section>
 
     <script>
-        // Lazy load YouTube iframe on click (performance optimization)
-        function loadVideo() {
-            requestAnimationFrame(function() {
-                const thumb = document.getElementById('videoThumb');
-                const iframe = document.getElementById('youtubeIframe');
-
-                // Set iframe src with autoplay
-                iframe.src = 'https://www.youtube.com/embed/jFOygpP7kes?autoplay=1&rel=0&modestbranding=1';
-
-                // Hide thumbnail, show iframe
-                thumb.style.display = 'none';
-                iframe.style.display = 'block';
-            });
+        // Lazy load YouTube iframe on click — synchronous to preserve user gesture for autoplay on mobile
+        function loadVideo(e) {
+            if (e) e.preventDefault();
+            const thumb = document.getElementById('videoThumb');
+            const iframe = document.getElementById('youtubeIframe');
+            iframe.src = 'https://www.youtube.com/embed/jFOygpP7kes?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+            thumb.style.display = 'none';
+            iframe.style.display = 'block';
         }
 
-        // Lazy load second YouTube iframe on click (performance optimization)
-        function loadVideo2() {
-            requestAnimationFrame(function() {
-                const thumb = document.getElementById('videoThumb2');
-                const iframe = document.getElementById('youtubeIframe2');
-
-                // Set iframe src with autoplay
-                iframe.src = 'https://www.youtube.com/embed/_6A20lEqDtg?autoplay=1&rel=0&modestbranding=1';
-
-                // Hide thumbnail, show iframe
-                thumb.style.display = 'none';
-                iframe.style.display = 'block';
-            });
+        // Lazy load second YouTube iframe on click — synchronous to preserve user gesture for autoplay on mobile
+        function loadVideo2(e) {
+            if (e) e.preventDefault();
+            const thumb = document.getElementById('videoThumb2');
+            const iframe = document.getElementById('youtubeIframe2');
+            iframe.src = 'https://www.youtube.com/embed/_6A20lEqDtg?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+            thumb.style.display = 'none';
+            iframe.style.display = 'block';
         }
     </script>
 
