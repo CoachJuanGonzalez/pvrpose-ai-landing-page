@@ -975,6 +975,13 @@
 
             yPos = roiBoxStartY + 50 + 15; // Box height + spacing
 
+            // Check if we need a new page for Industry Context section
+            if (yPos > 200) {
+                addFooter(pageNum);
+                pageNum++;
+                yPos = addPageWithHeader(pageNum);
+            }
+
             // Industry Context
             doc.setFontSize(14);
             doc.setTextColor(...brandPurple);
@@ -987,6 +994,15 @@
             doc.setFont(undefined, 'normal');
             const industryContext = 'According to McKinsey Global Institute (2023), businesses implementing AI automation report average productivity gains of 20-35% in automated processes. Gartner research (2024) indicates that by 2026, 75% of service-based businesses will have implemented some form of AI automation.\n\nKey success factors from industry leaders:\n• Start with high-impact, low-complexity workflows\n• Ensure strong leadership buy-in and change management\n• Focus on user adoption and training\n• Maintain human oversight and continuous optimization\n• Measure and iterate based on real performance data';
             const contextLines = doc.splitTextToSize(industryContext, contentWidth);
+
+            // Check if content will fit on current page
+            const contextHeight = contextLines.length * 4;
+            if (yPos + contextHeight > 270) {
+                addFooter(pageNum);
+                pageNum++;
+                yPos = addPageWithHeader(pageNum);
+            }
+
             doc.text(contextLines, margin, yPos);
 
             addFooter(pageNum);
@@ -1142,7 +1158,12 @@
             addFooter(pageNum);
 
             // Return PDF as base64 for upload to Airtable
-            return doc.output('datauristring').split(',')[1];
+            console.log('Generating PDF output...');
+            const pdfOutput = doc.output('datauristring');
+            console.log('PDF output generated, full length:', pdfOutput.length);
+            const base64Data = pdfOutput.split(',')[1];
+            console.log('Base64 data extracted, length:', base64Data.length);
+            return base64Data;
         }
 
         // Rate limiting for assessment form
@@ -1235,19 +1256,38 @@
                     console.log('Continuing submission without PDF...');
                 } else {
                     try {
+                        console.log('Starting PDF generation...');
                         const globalAnswers = window.answers || [];
+                        console.log('Global answers count:', globalAnswers.length);
+
                         if (!globalAnswers || globalAnswers.length === 0) {
                             throw new Error('Answers array is not available or empty');
                         }
                         if (!scoreCategory) {
                             throw new Error('Score category not available');
                         }
+
+                        console.log('Calling generatePDFReport with:', {
+                            firstName,
+                            score,
+                            scoreCategory,
+                            recommendationsCount: recommendations.length,
+                            answersCount: globalAnswers.length
+                        });
+
                         pdfBase64 = await generatePDFReport(firstName, score, scoreCategory, recommendations, globalAnswers);
-                        console.log('PDF generated successfully, size:', pdfBase64 ? pdfBase64.length : 0);
+
+                        if (!pdfBase64) {
+                            throw new Error('PDF generation returned null or undefined');
+                        }
+
+                        console.log('PDF generated successfully, size:', pdfBase64.length, 'characters');
                     } catch (pdfError) {
                         console.error('PDF generation failed:', pdfError);
+                        console.error('PDF error message:', pdfError.message);
                         console.error('PDF error stack:', pdfError.stack);
                         console.log('Continuing submission without PDF...');
+                        pdfBase64 = null; // Explicitly set to null on error
                     }
                 }
 
