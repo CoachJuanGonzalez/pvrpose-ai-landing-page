@@ -618,10 +618,15 @@
             // =====================
             console.log('Starting cover page generation...');
 
-            // Gradient background effect (simplified for jsPDF compatibility)
+            // Gradient background effect (optimized with fewer steps for jsPDF)
             console.log('Generating gradient background...');
-            for (let i = 0; i < 297; i++) {
-                const alpha = i / 297;
+            const gradientSteps = 100; // Reduced from 297 for better performance
+            const stepHeight = 297 / gradientSteps;
+
+            for (let i = 0; i < gradientSteps; i++) {
+                const alpha = i / gradientSteps;
+                const yPos = i * stepHeight;
+
                 // Gradient from deep blue to purple to pink
                 let r, g, b;
                 if (alpha < 0.5) {
@@ -638,8 +643,9 @@
                     b = Math.round(246 + (153 - 246) * localAlpha);
                 }
                 doc.setFillColor(r, g, b);
-                doc.rect(0, i, pageWidth, 1, 'F');
+                doc.rect(0, yPos, pageWidth, stepHeight, 'F');
             }
+            console.log('Gradient background complete');
 
             // PVRPOSE AI Logo (centered) - PNG with transparency
             console.log('Adding logo to cover page, logoDataUrl available:', !!logoDataUrl);
@@ -666,11 +672,13 @@
             }
 
             // Document Title
+            console.log('Adding document title...');
             yPos = 80;
             doc.setFontSize(28);
             doc.setTextColor(...white);
             doc.setFont(undefined, 'bold');
             doc.text('AI Readiness Report', 105, yPos, { align: 'center' });
+            console.log('Document title added');
 
             // Subtitle
             yPos += 12;
@@ -680,6 +688,7 @@
             doc.text('Your Personalized Strategy for AI Automation Success', 105, yPos, { align: 'center' });
 
             // Semi-transparent client info box
+            console.log('Adding client info box...');
             yPos = 115;
             // Draw semi-transparent white background using light color
             doc.setFillColor(240, 220, 250); // Very light purple/pink tint
@@ -704,6 +713,7 @@
             doc.text(new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }), 105, yPos, { align: 'center' });
 
             // AI Readiness Score highlight with gradient
+            console.log('Adding score box...');
             yPos = 180;
 
             // Create gradient effect for score box (pink to purple)
@@ -733,6 +743,7 @@
             doc.text(`${score}%`, 105, yPos, { align: 'center' });
 
             // Footer disclaimer
+            console.log('Adding footer disclaimer...');
             yPos = 265;
             doc.setFontSize(9);
             doc.setTextColor(...white);
@@ -750,6 +761,7 @@
             // =====================
             // PAGE 2: EXECUTIVE SUMMARY
             // =====================
+            console.log('Starting page 2 - Executive Summary');
             pageNum++;
             yPos = addPageWithHeader(pageNum);
 
