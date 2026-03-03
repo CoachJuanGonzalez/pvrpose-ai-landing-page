@@ -659,25 +659,27 @@
             doc.setFont(undefined, 'normal');
             doc.text('Your Personalized Strategy for AI Automation Success', 105, yPos, { align: 'center' });
 
-            // White box for client info
+            // Semi-transparent client info box
             yPos = 115;
-            doc.setFillColor(255, 255, 255);
+            // Draw semi-transparent white background using light color
+            doc.setFillColor(240, 220, 250); // Very light purple/pink tint
             doc.setDrawColor(255, 255, 255);
             doc.setLineWidth(2);
             doc.roundedRect(40, yPos, 130, 40, 5, 5, 'FD');
 
             yPos += 15;
             doc.setFontSize(12);
-            doc.setTextColor(...white);
+            doc.setTextColor(...deepBlue);
             doc.setFont(undefined, 'bold');
             doc.text(`Prepared for:`, 105, yPos, { align: 'center' });
             yPos += 8;
             doc.setFontSize(18);
-            doc.setTextColor(...white);
+            doc.setTextColor(...brandPink);
+            doc.setFont(undefined, 'bold');
             doc.text(firstName, 105, yPos, { align: 'center' });
             yPos += 8;
             doc.setFontSize(10);
-            doc.setTextColor(...white);
+            doc.setTextColor(...medGray);
             doc.setFont(undefined, 'normal');
             doc.text(new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }), 105, yPos, { align: 'center' });
 
@@ -823,7 +825,7 @@
                 doc.setFontSize(10);
                 doc.setTextColor(...darkGray);
                 doc.setFont(undefined, 'normal');
-                const recLines = doc.splitTextToSize(rec, contentWidth - 15);
+                const recLines = doc.splitTextToSize(rec, contentWidth - 12);
                 doc.text(recLines, margin + 10, yPos);
                 yPos += (recLines.length * 5) + 6;
             });
@@ -949,11 +951,13 @@
             }
 
             // ROI box with brand colors
+            const roiBoxStartY = yPos;
             doc.setFillColor(253, 242, 248); // Light pink
             doc.setDrawColor(...brandPurple);
             doc.setLineWidth(1.5);
-            doc.roundedRect(margin, yPos, contentWidth, 50, 3, 3, 'FD');
-            yPos += 8;
+            doc.roundedRect(margin, roiBoxStartY, contentWidth, 50, 3, 3, 'FD');
+
+            yPos = roiBoxStartY + 8;
             doc.setFontSize(10);
             doc.setTextColor(...darkGray);
             doc.setFont(undefined, 'normal');
@@ -969,7 +973,7 @@
                 yPos += 7;
             });
 
-            yPos += 10;
+            yPos = roiBoxStartY + 50 + 15; // Box height + spacing
 
             // Industry Context
             doc.setFontSize(14);
@@ -1004,7 +1008,7 @@
                 {
                     step: '1. Schedule Discovery Call',
                     desc: 'Book a complimentary 30-minute strategy session to discuss your specific needs and opportunities. We\'ll review this report in detail and answer your questions.',
-                    action: 'Book now: calendly.com/coachjuan-pvrposeai/discovery-call'
+                    action: 'Book now: https://calendly.com/coachjuan-pvrposeai/discovery-call'
                 },
                 {
                     step: '2. Business Process Assessment',
