@@ -217,7 +217,7 @@
             letter-spacing: -0.02em;
         }
 
-        /* Sticky CTA */
+        /* Sticky CTA (desktop pill — bottom right, appears after 50% scroll) */
         .sticky-cta {
             position: fixed;
             bottom: 20px;
@@ -229,6 +229,42 @@
         .sticky-cta.visible {
             display: block;
             animation: fadeInUp 0.5s ease-out;
+        }
+
+        /* Mobile Bottom Bar CTA — visible immediately, hidden on md+ */
+        .mobile-cta-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            background: linear-gradient(135deg, #ec4899 0%, #9333ea 100%);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 -4px 24px rgba(147, 51, 234, 0.35);
+            /* Slide up on load */
+            animation: slideUp 0.4s ease-out;
+        }
+
+        /* Hide on tablet (md = 768px) and above */
+        @media (min-width: 768px) {
+            .mobile-cta-bar {
+                display: none;
+            }
+        }
+
+        /* Push page content above bar so nothing is obscured */
+        @media (max-width: 767px) {
+            body {
+                padding-bottom: 68px;
+            }
+            /* When cookie banner is visible, push bar above it */
+            body.cookie-visible .mobile-cta-bar {
+                display: none;
+            }
         }
 
         /* Exit popup */
@@ -2143,6 +2179,23 @@
         </div>
     </footer>
 
+    <!-- Mobile Bottom Bar CTA (always visible on mobile, hidden on tablet/desktop) -->
+    <div id="mobileCTABar" class="mobile-cta-bar" role="complementary" aria-label="Book a free discovery call">
+        <a href="https://calendly.com/coachjuan-pvrposeai/discovery-call"
+           target="_blank"
+           rel="noopener noreferrer"
+           onclick="trackEvent('cta_click', {'cta_type': 'discovery_call', 'cta_location': 'mobile_bottom_bar', 'cta_text': 'Book Free Call'})"
+           class="flex-1 text-center text-white font-bold text-base py-2 rounded-xl bg-white/15 hover:bg-white/25 transition">
+            📅 Book Free Call
+        </a>
+        <span class="text-white/40 text-lg font-light select-none">|</span>
+        <a href="/assessment.html"
+           onclick="trackEvent('cta_click', {'cta_type': 'assessment', 'cta_location': 'mobile_bottom_bar', 'cta_text': 'Free Assessment'})"
+           class="flex-1 text-center text-white font-bold text-base py-2 rounded-xl bg-white/15 hover:bg-white/25 transition">
+            ✅ Free Assessment
+        </a>
+    </div>
+
     <!-- Sticky CTA (appears after scroll) -->
     <div id="stickyCTA" class="sticky-cta">
         <a href="https://pvrpose.ai/assessment.html" class="btn-primary text-white px-6 py-3 rounded-xl font-semibold shadow-2xl block">
@@ -2473,6 +2526,8 @@
                 // Show cookie banner after 2 seconds
                 setTimeout(() => {
                     document.getElementById('cookieConsent').style.display = 'block';
+                    // Hide mobile CTA bar while cookie banner is visible (both occupy bottom on mobile)
+                    document.body.classList.add('cookie-visible');
                 }, 2000);
             }
         }
@@ -2486,6 +2541,8 @@
             };
             localStorage.setItem(COOKIE_CONSENT_KEY, JSON.stringify(consentData));
             document.getElementById('cookieConsent').style.display = 'none';
+            // Restore mobile CTA bar once cookie banner is dismissed
+            document.body.classList.remove('cookie-visible');
 
             // Log consent for compliance tracking
             console.log('Cookie consent recorded:', consentData);
