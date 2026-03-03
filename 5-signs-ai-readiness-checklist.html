@@ -41,7 +41,7 @@
 
         /* Cover Page */
         .cover {
-            background: linear-gradient(135deg, #1E3A8A 0%, #3b82f6 50%, #ec4899 100%);
+            background: linear-gradient(135deg, #1E3A8A 0%, #2563eb 30%, #8b5cf6 70%, #ec4899 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -49,15 +49,34 @@
             padding: 60px;
             text-align: center;
             color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cover::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.2) 0%, transparent 70%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.1); opacity: 0.5; }
         }
 
         .cover-logo {
-            margin-bottom: 80px;
+            margin-bottom: 60px;
         }
 
         .cover-logo img {
-            height: 80px;
+            height: 120px;
             width: auto;
+            filter: drop-shadow(0 10px 30px rgba(255, 255, 255, 0.3));
         }
 
         .cover-title {
@@ -65,32 +84,43 @@
             font-weight: 800;
             line-height: 1.1;
             margin-bottom: 30px;
-            text-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+            letter-spacing: -0.02em;
         }
 
         .cover-subtitle {
             font-size: 24px;
-            font-weight: 400;
+            font-weight: 500;
             opacity: 0.95;
             max-width: 600px;
             margin-bottom: 60px;
+            position: relative;
+            z-index: 1;
+            line-height: 1.4;
         }
 
         .cover-badge {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.25);
             backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            padding: 16px 32px;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            padding: 18px 36px;
             border-radius: 50px;
             font-size: 18px;
-            font-weight: 600;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
         }
 
         .cover-footer {
             position: absolute;
             bottom: 40px;
             font-size: 14px;
-            opacity: 0.8;
+            opacity: 0.9;
+            z-index: 1;
+            font-weight: 500;
         }
 
         /* Content Pages */
@@ -107,8 +137,9 @@
         }
 
         .header-logo img {
-            height: 50px;
+            height: 60px;
             width: auto;
+            filter: drop-shadow(0 2px 8px rgba(236, 72, 153, 0.2));
         }
 
         h1 {
@@ -117,6 +148,7 @@
             color: #1E3A8A;
             margin-bottom: 20px;
             line-height: 1.2;
+            letter-spacing: -0.02em;
         }
 
         h2 {
@@ -137,24 +169,26 @@
 
         .intro {
             font-size: 18px;
-            color: #4b5563;
+            color: #374151;
             line-height: 1.8;
             margin-bottom: 40px;
-            padding: 30px;
-            background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
-            border-left: 4px solid #ec4899;
-            border-radius: 8px;
+            padding: 30px 35px;
+            background: linear-gradient(135deg, #fdf2f8 0%, #fae8ff 100%);
+            border-left: 5px solid #ec4899;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(236, 72, 153, 0.1);
         }
 
         .sign-card {
             background: white;
-            border: 2px solid #e5e7eb;
-            border-radius: 16px;
-            padding: 35px;
+            border: 2px solid #f3e8ff;
+            border-radius: 20px;
+            padding: 40px;
             margin-bottom: 30px;
             position: relative;
             overflow: hidden;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.08);
         }
 
         .sign-card::before {
@@ -162,32 +196,34 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 6px;
+            width: 7px;
             height: 100%;
             background: linear-gradient(180deg, #ec4899 0%, #8b5cf6 100%);
+            box-shadow: 2px 0 12px rgba(236, 72, 153, 0.3);
         }
 
         .sign-number {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 60px;
-            height: 60px;
+            width: 70px;
+            height: 70px;
             background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
             color: white;
-            font-size: 32px;
+            font-size: 36px;
             font-weight: 800;
             border-radius: 50%;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 25px rgba(236, 72, 153, 0.3);
+            margin-bottom: 25px;
+            box-shadow: 0 12px 30px rgba(236, 72, 153, 0.35);
         }
 
         .sign-title {
-            font-size: 26px;
-            font-weight: 700;
+            font-size: 27px;
+            font-weight: 800;
             color: #1E3A8A;
-            margin-bottom: 15px;
+            margin-bottom: 18px;
             line-height: 1.3;
+            letter-spacing: -0.01em;
         }
 
         .sign-description {
@@ -263,10 +299,26 @@
 
         .bonus-section {
             background: linear-gradient(135deg, #fdf2f8 0%, #fae8ff 100%);
-            border: 3px solid #ec4899;
-            border-radius: 20px;
-            padding: 40px;
+            border: 4px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+            border-radius: 24px;
+            padding: 45px;
             margin-top: 50px;
+            box-shadow: 0 8px 32px rgba(236, 72, 153, 0.2);
+        }
+
+        .bonus-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            padding: 4px;
+            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
         }
 
         .bonus-badge {
@@ -291,24 +343,26 @@
 
         .step-card {
             background: white;
-            border-radius: 12px;
-            padding: 25px;
+            border-radius: 16px;
+            padding: 28px;
             margin-bottom: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.12);
+            border: 2px solid rgba(236, 72, 153, 0.1);
         }
 
         .step-number {
             display: inline-block;
             background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
             color: white;
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             text-align: center;
-            line-height: 36px;
-            font-weight: 700;
+            line-height: 40px;
+            font-weight: 800;
             margin-right: 15px;
-            font-size: 18px;
+            font-size: 19px;
+            box-shadow: 0 4px 16px rgba(236, 72, 153, 0.3);
         }
 
         .step-title {
@@ -326,42 +380,74 @@
         }
 
         .cta-section {
-            background: linear-gradient(135deg, #1E3A8A 0%, #3b82f6 100%);
+            background: linear-gradient(135deg, #1E3A8A 0%, #2563eb 50%, #3b82f6 100%);
             color: white;
-            padding: 50px;
-            border-radius: 20px;
+            padding: 55px 50px;
+            border-radius: 24px;
             text-align: center;
             margin-top: 50px;
+            box-shadow: 0 12px 40px rgba(30, 58, 138, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, transparent 70%);
+            animation: pulse-cta 10s ease-in-out infinite;
+        }
+
+        @keyframes pulse-cta {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+            50% { transform: translate(10%, 10%) scale(1.1); opacity: 0.5; }
         }
 
         .cta-title {
-            font-size: 36px;
+            font-size: 38px;
             font-weight: 800;
-            margin-bottom: 20px;
+            margin-bottom: 22px;
+            position: relative;
+            z-index: 1;
+            letter-spacing: -0.02em;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         }
 
         .cta-text {
-            font-size: 18px;
-            margin-bottom: 30px;
+            font-size: 19px;
+            margin-bottom: 32px;
             opacity: 0.95;
+            position: relative;
+            z-index: 1;
+            line-height: 1.6;
         }
 
         .cta-button {
             display: inline-block;
             background: white;
             color: #1E3A8A;
-            padding: 18px 40px;
+            padding: 20px 48px;
             border-radius: 50px;
-            font-weight: 700;
-            font-size: 18px;
+            font-weight: 800;
+            font-size: 19px;
             text-decoration: none;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            margin-bottom: 20px;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.25);
+            margin-bottom: 22px;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
         }
 
         .cta-subtext {
-            font-size: 14px;
-            opacity: 0.8;
+            font-size: 15px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+            font-weight: 500;
         }
 
         .footer {
@@ -379,8 +465,9 @@
         }
 
         .footer-logo img {
-            height: 30px;
+            height: 36px;
             width: auto;
+            filter: drop-shadow(0 1px 4px rgba(236, 72, 153, 0.15));
         }
 
         .stats-grid {
@@ -392,10 +479,26 @@
 
         .stat-card {
             text-align: center;
-            padding: 30px;
+            padding: 35px 30px;
             background: linear-gradient(135deg, #fdf2f8 0%, #fae8ff 100%);
-            border-radius: 16px;
-            border: 2px solid #ec4899;
+            border-radius: 20px;
+            border: 3px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+            box-shadow: 0 6px 24px rgba(236, 72, 153, 0.15);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            padding: 3px;
+            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
         }
 
         .stat-number {
@@ -430,7 +533,7 @@
     <!-- COVER PAGE -->
     <div class="page cover">
         <div class="cover-logo">
-            <img src="logotypes-ai-rez-01.jpg" alt="PVRPOSE AI">
+            <img src="logotypes-ai-rez-01.jpg" alt="PVRPOSE AI Logo">
         </div>
         <h1 class="cover-title">5 Signs Your Business<br>Is Ready for AI Automation</h1>
         <p class="cover-subtitle">The Essential Checklist for Professional Service & Construction Firms</p>
