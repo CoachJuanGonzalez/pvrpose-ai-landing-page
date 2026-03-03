@@ -214,10 +214,10 @@
     </div>
 
     <!-- Version indicator for debugging -->
-    <div style="position:fixed;bottom:5px;right:5px;font-size:10px;color:#ccc;z-index:9999;">v2.2.4-20260303</div>
+    <div style="position:fixed;bottom:5px;right:5px;font-size:10px;color:#ccc;z-index:9999;">v2.2.5-20260303</div>
 
     <script>
-        console.log('=== ASSESSMENT VERSION: 2.2.4-20260303 - FIX iOS SAFARI LOAD FAILED - LEAN PAYLOAD ===');
+        console.log('=== ASSESSMENT VERSION: 2.2.5-20260303 - FIX iOS SAFARI: DEFER doc.save() AFTER fetch() ===');
 
         // Assessment Questions
         const questions = [
@@ -1395,10 +1395,10 @@
 
             addFooter(pageNum);
 
-            // Trigger browser download with correct filename
-            const downloadFilename = filename || `AI_Readiness_Report_${firstName.replace(/\s+/g, '_')}.pdf`;
-            console.log('Saving PDF to browser:', downloadFilename);
-            doc.save(downloadFilename);
+            // NOTE: doc.save() intentionally NOT called here.
+            // On iOS Safari, calling doc.save() (blob URL navigation) before fetch() causes
+            // the network request to be aborted with "Load failed".
+            // The caller (submitResults) will trigger the download AFTER the API call succeeds.
 
             // Return PDF as base64 for upload to Airtable
             console.log('Generating PDF output...');
@@ -1509,7 +1509,48 @@
                 const recommendationElements = document.querySelectorAll('#recommendationsContent li span:last-child');
                 const recommendations = Array.from(recommendationElements).map(el => el.textContent.trim());
 
-                submitBtn.textContent = 'Submitting...';
+                // Generate PDF report (doc.save NOT called yet — Safari fix)
+                console.log('Generating PDF report...');
+                console.log('window.jspdf exists:', typeof window.jspdf !== 'undefined');
+                console.log('scoreCategory value:', scoreCategory);
+                console.log('recommendations count:', recommendations.length);
+
+                let pdfBase64 = null;
+                let pdfDoc = null;
+
+                // Check if jsPDF library loaded
+                if (typeof window.jspdf === 'undefined') {
+                    console.error('jsPDF library failed to load from CDN');
+                    console.log('Continuing submission without PDF...');
+                } else {
+                    try {
+                        console.log('Starting PDF generation...');
+                        const globalAnswers = window.answers || [];
+                        console.log('Global answers count:', globalAnswers.length);
+
+                        if (!globalAnswers || globalAnswers.length === 0) {
+                            throw new Error('Answers array is not available or empty');
+                        }
+                        if (!scoreCategory) {
+                            throw new Error('Score category not available');
+                        }
+
+                        const pdfFilename = `AI_Readiness_Report_${firstName.replace(/\s+/g, '_')}.pdf`;
+                        pdfBase64 = await generatePDFReport(firstName, score, scoreCategory, recommendations, globalAnswers, pdfFilename);
+
+                        if (!pdfBase64) {
+                            throw new Error('PDF generation returned null or undefined');
+                        }
+
+                        console.log('PDF generated successfully, size:', pdfBase64.length, 'characters');
+                    } catch (pdfError) {
+                        console.error('PDF generation failed:', pdfError.message);
+                        console.log('Continuing submission without PDF...');
+                        pdfBase64 = null;
+                    }
+                }
+
+                submitBtn.textContent = 'Sending Your Report...';
 
                 // Generate basic fingerprint for duplicate prevention
                 const fingerprint = btoa(email + navigator.userAgent.substring(0, 50));
@@ -1517,7 +1558,8 @@
                 // Use window.answers to ensure we access the global variable
                 const assessmentAnswers = window.answers || [];
 
-                // STEP 1: Submit lean payload to API (no PDF — avoids iOS Safari "Load failed" on large bodies)
+                const pdfFilename = `AI_Readiness_Report_${firstName.replace(/\s+/g, '_')}.pdf`;
+
                 const payload = {
                     first_name: firstName,
                     email: email,
@@ -1525,8 +1567,8 @@
                     answers: assessmentAnswers,
                     timestamp: new Date().toISOString(),
                     document: 'AI Readiness Report',
-                    pdf_base64: null,
-                    pdf_filename: null,
+                    pdf_base64: pdfBase64,
+                    pdf_filename: pdfBase64 ? pdfFilename : null,
                     fingerprint: fingerprint,
                     source: 'pvrposeailandingpage',
                     consent: {
@@ -1536,11 +1578,12 @@
                     }
                 };
 
-                console.log('Sending lean payload (no PDF):', {
+                console.log('Payload ready:', {
                     hasFirstName: !!payload.first_name,
                     hasEmail: !!payload.email,
                     score: payload.score,
-                    answersCount: payload.answers.length
+                    answersCount: payload.answers.length,
+                    hasPdf: !!payload.pdf_base64
                 });
 
                 // Send assessment data via secure API endpoint
@@ -1557,30 +1600,39 @@
                 const responseData = await response.json();
                 console.log('Response data:', responseData);
 
-                if (!response.ok || !responseData.success) {
-                    throw new Error(responseData.message || 'Failed to send report');
-                }
+                if (response.ok && responseData.success) {
+                    submitBtn.textContent = '✓ Report Sent!';
 
-                submitBtn.textContent = '✓ Submitted!';
-
-                // STEP 2: Generate and download PDF client-side only (after successful submission)
-                submitBtn.textContent = 'Generating Your PDF...';
-                console.log('Starting client-side PDF generation...');
-
-                if (typeof window.jspdf !== 'undefined') {
-                    try {
-                        const globalAnswers = window.answers || [];
-                        const pdfFilename = `AI_Readiness_Report_${firstName.replace(/\s+/g, '_')}.pdf`;
-                        await generatePDFReport(firstName, score, scoreCategory, recommendations, globalAnswers, pdfFilename);
-                        console.log('PDF downloaded successfully');
-                        submitBtn.textContent = '✓ Report Downloaded!';
-                    } catch (pdfError) {
-                        console.error('PDF generation failed (non-blocking):', pdfError.message);
-                        submitBtn.textContent = '✓ Submitted!';
+                    // Trigger browser PDF download AFTER API succeeds.
+                    // Must be after fetch() — on iOS Safari, doc.save() fires a blob URL
+                    // navigation event that aborts any pending network request.
+                    if (pdfBase64) {
+                        try {
+                            const { jsPDF } = window.jspdf;
+                            const pdfBlob = new Blob(
+                                [Uint8Array.from(atob(pdfBase64), c => c.charCodeAt(0))],
+                                { type: 'application/pdf' }
+                            );
+                            const blobUrl = URL.createObjectURL(pdfBlob);
+                            const a = document.createElement('a');
+                            a.href = blobUrl;
+                            a.download = pdfFilename;
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
+                            console.log('PDF download triggered via anchor element');
+                        } catch (dlError) {
+                            console.warn('PDF download trigger failed (non-blocking):', dlError.message);
+                        }
                     }
+
+                    // Show success message
+                    setTimeout(() => {
+                        alert(`Thank you, ${firstName}! Your assessment has been submitted successfully. We'll be in touch soon!`);
+                    }, 500);
                 } else {
-                    console.warn('jsPDF not available — skipping PDF download');
-                    submitBtn.textContent = '✓ Submitted!';
+                    throw new Error(responseData.message || 'Failed to send report');
                 }
 
             } catch (error) {
