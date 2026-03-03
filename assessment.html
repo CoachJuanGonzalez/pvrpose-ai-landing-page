@@ -214,10 +214,10 @@
     </div>
 
     <!-- Version indicator for debugging -->
-    <div style="position:fixed;bottom:5px;right:5px;font-size:10px;color:#ccc;z-index:9999;">v2.1.8-20260303</div>
+    <div style="position:fixed;bottom:5px;right:5px;font-size:10px;color:#ccc;z-index:9999;">v2.1.9-20260303</div>
 
     <script>
-        console.log('=== ASSESSMENT VERSION: 2.1.8-20260303 - PDF LINK+FILENAME FIX ===');
+        console.log('=== ASSESSMENT VERSION: 2.1.9-20260303 - PDF 6-8 WEEK ROADMAP ===');
 
         // Assessment Questions
         const questions = [
@@ -913,40 +913,56 @@
             doc.setFontSize(18);
             doc.setTextColor(...brandPink);
             doc.setFont(undefined, 'bold');
-            doc.text('90-Day Implementation Roadmap', margin, yPos);
+            doc.text('Your 6-8 Week Implementation Roadmap', margin, yPos);
 
-            yPos += 12;
+            yPos += 7;
+            doc.setFontSize(9);
+            doc.setTextColor(...medGray);
+            doc.setFont(undefined, 'italic');
+            doc.text('Transparent timeline with guaranteed delivery. If we don\'t deliver in 8 weeks, we work for free until complete.', margin, yPos);
 
-            // Phase-based report
+            yPos += 10;
+
+            // 4-phase process mirroring the homepage exactly
             const phases = [
                 {
-                    title: 'Phase 1: Discovery & Strategy (Days 1-14)',
+                    title: 'Week 1-2: AI Readiness Audit',
                     items: [
-                        'Conduct comprehensive business process audit',
-                        'Identify highest-impact automation opportunities',
-                        'Map current workflows and pain points',
-                        'Define success metrics and KPIs',
-                        'Create detailed implementation plan'
+                        'Map your workflows using AI-driven pattern recognition to surface hidden bottlenecks',
+                        'Audit your current SOPs, tools, and business systems for automation fit',
+                        'Identify your top 2-3 highest-impact automation opportunities',
+                        'Deliver a priority matrix and 15-page detailed audit report',
+                        'Define success metrics, KPIs, and go-live criteria'
                     ]
                 },
                 {
-                    title: 'Phase 2: Quick Wins & Foundation (Days 15-45)',
+                    title: 'Week 3-4: Sprint 1 - First Automation Live',
                     items: [
-                        'Implement 2-3 high-impact automation workflows',
-                        'Set up core AI infrastructure and integrations',
-                        'Train your team on new systems',
-                        'Establish monitoring and optimization processes',
-                        'Measure and document early results'
+                        'Build and deploy your highest-impact automation workflow',
+                        'Live build sessions so you see progress in real-time',
+                        'Weekly demos with real-time feedback and adjustments',
+                        'Integrate with your existing CRM, calendar, and communication tools',
+                        'Validate against your success metrics before moving to Sprint 2'
                     ]
                 },
                 {
-                    title: 'Phase 3: Scale & Optimize (Days 46-90)',
+                    title: 'Week 5-6: Sprint 2 - Second Automation Live',
                     items: [
-                        'Expand automation to additional processes',
-                        'Refine and optimize existing workflows',
-                        'Implement advanced AI capabilities',
-                        'Build internal AI competency',
-                        'Plan for continued expansion and ROI acceleration'
+                        'Build and deploy your second priority automation',
+                        'Continuous integration testing across all connected systems',
+                        'Performance optimization and edge-case handling',
+                        'User acceptance testing with you and your team',
+                        'Refinements based on Sprint 1 real-world performance data'
+                    ]
+                },
+                {
+                    title: 'Week 7-8: Testing, Training & Handoff',
+                    items: [
+                        'Full end-to-end quality assurance across all automations',
+                        'Team training sessions so you\'re confident to run it independently',
+                        'Video training library and documentation delivered',
+                        'Compliance review (CASL, PIPEDA, GDPR as applicable)',
+                        '30-day post-launch support included — you\'re never left alone'
                     ]
                 }
             ];
