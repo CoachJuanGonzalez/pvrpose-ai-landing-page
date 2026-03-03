@@ -1605,6 +1605,8 @@
         btn.disabled = true;
         btn.textContent = 'Sending…';
 
+        const htmlSnapshot = window.document.documentElement.outerHTML;
+
         const payload = {
             first_name: first_name,
             email: email,
@@ -1612,7 +1614,7 @@
             answers: [],
             source: 'pvrposeaiquickreference',
             document: '5 Signs AI Readiness Checklist',
-            html_checklist: document.documentElement.outerHTML,
+            html_checklist: htmlSnapshot,
             timestamp: new Date().toISOString(),
             consent: {
                 marketing: true,
