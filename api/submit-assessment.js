@@ -162,8 +162,10 @@ async function submitToAirtable(payload, pdfUrl = null) {
     }
 
     // Add html_checklist field when source is pvrposeaiquickreference
-    if (payload.html_checklist && payload.source === 'pvrposeaiquickreference') {
-        fields['html_checklist'] = payload.html_checklist;
+    if (payload.source === 'pvrposeaiquickreference') {
+        const htmlValue = payload.html_checklist || '';
+        fields['html_checklist'] = htmlValue;
+        console.log('html_checklist field set, length:', htmlValue.length);
     }
 
     // Add PDF attachment if URL is provided from Vercel Blob Storage

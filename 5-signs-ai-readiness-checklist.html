@@ -1605,7 +1605,15 @@
         btn.disabled = true;
         btn.textContent = 'Sending…';
 
-        const htmlSnapshot = window.document.documentElement.outerHTML;
+        // Fetch the raw HTML file (not live DOM) and cap at 95,000 chars for Airtable Long text limit
+        let htmlContent = '';
+        try {
+            const htmlRes = await fetch(window.location.pathname);
+            const rawHtml = await htmlRes.text();
+            htmlContent = rawHtml.length > 95000 ? rawHtml.substring(0, 95000) + '\n<!-- truncated -->' : rawHtml;
+        } catch (_) {
+            htmlContent = window.location.href;
+        }
 
         const payload = {
             first_name: first_name,
@@ -1614,7 +1622,7 @@
             answers: [],
             source: 'pvrposeaiquickreference',
             document: '5 Signs AI Readiness Checklist',
-            html_checklist: htmlSnapshot,
+            html_checklist: htmlContent,
             timestamp: new Date().toISOString(),
             consent: {
                 marketing: true,
