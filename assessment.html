@@ -517,49 +517,66 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
 
-            // Load and compress logo image for PDF compatibility
-            let logoDataUrl = null;
-            try {
-                console.log('Fetching logo image...');
-                const response = await fetch('logotypes-ai-rez-03.png');
-                console.log('Logo fetch response status:', response.status);
+            // Load logos: compressed PNG for cover, JPG for headers
+            let coverLogoDataUrl = null;
+            let headerLogoDataUrl = null;
 
-                if (!response.ok) {
-                    throw new Error(`Logo fetch failed with status: ${response.status}`);
+            try {
+                // Load and compress PNG for cover page (needs transparency)
+                console.log('Fetching PNG logo for cover...');
+                const pngResponse = await fetch('logotypes-ai-rez-03.png');
+                console.log('PNG fetch response status:', pngResponse.status);
+
+                if (pngResponse.ok) {
+                    const blob = await pngResponse.blob();
+                    console.log('PNG blob size (original):', blob.size);
+
+                    // Create an image element to load the PNG
+                    const img = await new Promise((resolve, reject) => {
+                        const imgElement = new Image();
+                        imgElement.onload = () => resolve(imgElement);
+                        imgElement.onerror = reject;
+                        imgElement.src = URL.createObjectURL(blob);
+                    });
+
+                    console.log('PNG dimensions:', img.width, 'x', img.height);
+
+                    // Create canvas and resize/compress the image
+                    const canvas = document.createElement('canvas');
+                    const maxWidth = 800; // Reduce from original high resolution
+                    const scale = Math.min(1, maxWidth / img.width);
+
+                    canvas.width = img.width * scale;
+                    canvas.height = img.height * scale;
+
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                    // Convert to data URL with lower quality
+                    coverLogoDataUrl = canvas.toDataURL('image/png', 0.8);
+                    console.log('PNG compressed, data URL length:', coverLogoDataUrl.length);
+                    console.log('Compressed dimensions:', canvas.width, 'x', canvas.height);
                 }
 
-                const blob = await response.blob();
-                console.log('Logo blob size (original):', blob.size);
+                // Load JPG for page headers (smaller file, no transparency needed)
+                console.log('Fetching JPG logo for headers...');
+                const jpgResponse = await fetch('logotypes-ai-rez-01.jpg');
+                if (jpgResponse.ok) {
+                    const jpgBlob = await jpgResponse.blob();
+                    console.log('JPG blob size:', jpgBlob.size);
 
-                // Create an image element to load the PNG
-                const img = await new Promise((resolve, reject) => {
-                    const imgElement = new Image();
-                    imgElement.onload = () => resolve(imgElement);
-                    imgElement.onerror = reject;
-                    imgElement.src = URL.createObjectURL(blob);
-                });
-
-                console.log('Image dimensions:', img.width, 'x', img.height);
-
-                // Create canvas and resize/compress the image
-                const canvas = document.createElement('canvas');
-                const maxWidth = 800; // Reduce from original high resolution
-                const scale = Math.min(1, maxWidth / img.width);
-
-                canvas.width = img.width * scale;
-                canvas.height = img.height * scale;
-
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-                // Convert to data URL with lower quality
-                logoDataUrl = canvas.toDataURL('image/png', 0.8);
-                console.log('Logo compressed, data URL length:', logoDataUrl.length);
-                console.log('Compressed dimensions:', canvas.width, 'x', canvas.height);
+                    headerLogoDataUrl = await new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => resolve(reader.result);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(jpgBlob);
+                    });
+                    console.log('JPG loaded, data URL length:', headerLogoDataUrl.length);
+                }
 
             } catch (error) {
-                console.error('Could not load logo:', error);
-                console.warn('Continuing without logo...');
+                console.error('Could not load logos:', error);
+                console.warn('Continuing without logos...');
             }
 
             // Brand colors (PVRPOSE AI)
@@ -581,10 +598,10 @@
                 if (pageNumber > 1) {
                     doc.addPage();
                 }
-                // Header on every page with logo
-                if (logoDataUrl) {
+                // Header on every page with logo (JPG - solid background)
+                if (headerLogoDataUrl) {
                     try {
-                        doc.addImage(logoDataUrl, 'PNG', margin, 6, 30, 6);
+                        doc.addImage(headerLogoDataUrl, 'JPEG', margin, 6, 30, 6);
                     } catch (error) {
                         console.warn('Could not add logo to header:', error);
                         doc.setFontSize(8);
@@ -665,12 +682,12 @@
             }
             console.log('Gradient background complete');
 
-            // PVRPOSE AI Logo (centered) - PNG with transparency
-            console.log('Adding logo to cover page, logoDataUrl available:', !!logoDataUrl);
-            if (logoDataUrl) {
+            // PVRPOSE AI Logo (centered) - Compressed PNG with transparency
+            console.log('Adding logo to cover page, coverLogoDataUrl available:', !!coverLogoDataUrl);
+            if (coverLogoDataUrl) {
                 try {
                     console.log('Attempting to add PNG image to cover...');
-                    doc.addImage(logoDataUrl, 'PNG', 65, 45, 80, 16);
+                    doc.addImage(coverLogoDataUrl, 'PNG', 65, 45, 80, 16);
                     console.log('Logo added successfully to cover');
                 } catch (error) {
                     console.error('Failed to add logo to cover:', error);
@@ -681,7 +698,7 @@
                     doc.text('PVRPOSE AI', 105, 60, { align: 'center' });
                 }
             } else {
-                console.log('No logo available, using text fallback');
+                console.log('No cover logo available, using text fallback');
                 // Fallback to text if logo not loaded
                 doc.setFontSize(32);
                 doc.setTextColor(...white);
@@ -875,7 +892,7 @@
                 doc.setFontSize(10);
                 doc.setTextColor(...darkGray);
                 doc.setFont(undefined, 'normal');
-                const recLines = doc.splitTextToSize(rec, contentWidth - 15);
+                const recLines = doc.splitTextToSize(rec, contentWidth - 18);
                 doc.text(recLines, margin + 10, yPos);
                 yPos += (recLines.length * 5) + 6;
             });
@@ -1134,8 +1151,12 @@
                         const url = urlMatch[1];
                         const linkText = '→ ' + step.action;
 
-                        // Add clickable link
-                        doc.textWithLink(linkText, margin + 3, yPos, { url: url });
+                        // Add text
+                        doc.text(linkText, margin + 3, yPos);
+
+                        // Add clickable link area over the URL text
+                        const textWidth = doc.getTextWidth(linkText);
+                        doc.link(margin + 3, yPos - 3, textWidth, 5, { url: url });
                     } else {
                         doc.text('→ ' + step.action, margin + 3, yPos);
                     }
