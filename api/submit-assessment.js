@@ -69,7 +69,7 @@ module.exports = async function handler(req, res) {
             document: document || '',
             pdf_base64: pdf_base64 || null,
             pdf_filename: pdf_filename || null,
-            html_checklist: html_checklist || null,
+            html_checklist: html_checklist !== undefined ? html_checklist : null,
             consent: consent || {
                 marketing: true,
                 timestamp: new Date().toISOString(),
