@@ -214,10 +214,10 @@
     </div>
 
     <!-- Version indicator for debugging -->
-    <div style="position:fixed;bottom:5px;right:5px;font-size:10px;color:#ccc;z-index:9999;">v2.1.7-20260303</div>
+    <div style="position:fixed;bottom:5px;right:5px;font-size:10px;color:#ccc;z-index:9999;">v2.1.8-20260303</div>
 
     <script>
-        console.log('=== ASSESSMENT VERSION: 2.1.7-20260303 - PDF DOWNLOAD+LINK FIX ===');
+        console.log('=== ASSESSMENT VERSION: 2.1.8-20260303 - PDF LINK+FILENAME FIX ===');
 
         // Assessment Questions
         const questions = [
@@ -1158,22 +1158,16 @@
                     const urlMatch = step.action.match(/(https?:\/\/[^\s]+)/);
                     if (urlMatch) {
                         const url = urlMatch[1];
-                        // Split into prefix and the URL part so we can embed the link on the whole line
-                        const prefixText = '→ Book now: ';
-                        const urlText = url;
 
-                        // Set font before measuring
                         doc.setFontSize(9);
-                        doc.setFont(undefined, 'italic');
+                        doc.setFont(undefined, 'bold');
+                        doc.setTextColor(...brandPink);
 
-                        // Render prefix (non-linked)
-                        doc.text(prefixText, margin + 3, yPos);
-                        const prefixWidth = doc.getTextWidth(prefixText);
-
-                        // Render URL as an embedded hyperlink using textWithLink
-                        doc.textWithLink(urlText, margin + 3 + prefixWidth, yPos, { url: url });
+                        // Use plain ASCII label — special chars (arrows) corrupt in jsPDF default font
+                        const linkLabel = 'Book Your Free Discovery Call';
+                        doc.textWithLink(linkLabel, margin + 3, yPos, { url: url });
                     } else {
-                        doc.text('→ ' + step.action, margin + 3, yPos);
+                        doc.text(step.action, margin + 3, yPos);
                     }
                     yPos += 8;
                 }
@@ -1255,7 +1249,7 @@
             addFooter(pageNum);
 
             // Trigger browser download with correct filename
-            const downloadFilename = filename || `PVRPOSE_AI_Readiness_Report_${firstName.replace(/\s+/g, '_')}.pdf`;
+            const downloadFilename = filename || `AI_Readiness_Report_${firstName.replace(/\s+/g, '_')}.pdf`;
             console.log('Saving PDF to browser:', downloadFilename);
             doc.save(downloadFilename);
 
@@ -1402,7 +1396,7 @@
                             answersCount: globalAnswers.length
                         });
 
-                        const pdfFilename = `PVRPOSE_AI_Readiness_Report_${firstName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+                        const pdfFilename = `AI_Readiness_Report_${firstName.replace(/\s+/g, '_')}.pdf`;
                         pdfBase64 = await generatePDFReport(firstName, score, scoreCategory, recommendations, globalAnswers, pdfFilename);
 
                         if (!pdfBase64) {
@@ -1435,7 +1429,7 @@
                     timestamp: new Date().toISOString(),
                     document: 'AI Readiness Report',
                     pdf_base64: pdfBase64,
-                    pdf_filename: pdfBase64 ? `PVRPOSE_AI_Readiness_Report_${firstName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf` : null,
+                    pdf_filename: pdfBase64 ? `AI_Readiness_Report_${firstName.replace(/\s+/g, '_')}.pdf` : null,
                     fingerprint: fingerprint,
                     source: 'pvrposeailandingpage',
                     consent: {
