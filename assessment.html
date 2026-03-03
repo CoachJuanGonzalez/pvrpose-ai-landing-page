@@ -214,10 +214,10 @@
     </div>
 
     <!-- Version indicator for debugging -->
-    <div style="position:fixed;bottom:5px;right:5px;font-size:10px;color:#ccc;z-index:9999;">v2.2.0-20260303</div>
+    <div style="position:fixed;bottom:5px;right:5px;font-size:10px;color:#ccc;z-index:9999;">v2.2.2-20260303</div>
 
     <script>
-        console.log('=== ASSESSMENT VERSION: 2.2.0-20260303 - SMART SCORING + HONEST PDF ===');
+        console.log('=== ASSESSMENT VERSION: 2.2.2-20260303 - QA FIXES + HONEST HOURS ===');
 
         // Assessment Questions
         const questions = [
@@ -294,7 +294,7 @@
                     { text: "I avoid tech whenever possible", value: 60, weight: 2 },
                     { text: "I can figure out most tools with some help", value: 80, weight: 3 },
                     { text: "I'm comfortable with technology", value: 90, weight: 3 },
-                    { text: "I'm very tech-savvy", value: 75, weight: 2 }
+                    { text: "I'm very tech-savvy", value: 85, weight: 3 }
                 ]
             },
             {
@@ -426,24 +426,33 @@
         function generateRecommendations(score, answers) {
             let category, description, recommendations;
 
-            // Revenue gate: extract Q1 (revenue) and Q2 (admin hours) answers
+            // Revenue gate: extract key signals
             const revenueAnswer = answers[0] ? answers[0].selectedOption.text : '';
             const hoursAnswer = answers[1] ? answers[1].selectedOption.text : '';
+            const urgencyAnswer = answers[7] ? answers[7].selectedOption.text : '';
             const earlyStageRevenue = revenueAnswer === 'Under $50K';
             const lowAdminHours = hoursAnswer === 'Less than 5 hours';
-            const urgencyAnswer = answers[7] ? answers[7].selectedOption.text : '';
             const justExploring = urgencyAnswer === 'Just exploring options';
 
-            // Cap category: if revenue <$50K AND (<5 admin hrs OR just exploring), max = Moderate
-            const cappedScore = (earlyStageRevenue && (lowAdminHours || justExploring))
-                ? Math.min(score, 59)
-                : score;
+            // Two-tier revenue gate:
+            // Tier 1: Under $50K + (low admin hours OR just exploring) → max Early Stage (cap 39)
+            //         Makes the Early Stage category reachable and prevents any roadmap mismatch
+            // Tier 2: Under $50K alone (high urgency/pain) → max Strong Potential (cap 79)
+            //         Prevents a $0 revenue business from receiving "Excellent Fit"
+            let cappedScore;
+            if (earlyStageRevenue && (lowAdminHours || justExploring)) {
+                cappedScore = Math.min(score, 39); // Early Stage or below
+            } else if (earlyStageRevenue) {
+                cappedScore = Math.min(score, 79); // Max Strong Potential, never Excellent Fit
+            } else {
+                cappedScore = score;
+            }
 
             if (cappedScore >= 80) {
                 category = "Excellent Fit - Ready for AI Transformation";
                 description = "You're an ideal candidate for AI automation. Your business is at the perfect stage to implement custom AI systems that will deliver significant ROI.";
                 recommendations = [
-                    "✓ You could save 10-20 hours per week with the right AI systems",
+                    "✓ You could save up to 15 hours per week with the right AI systems",
                     "✓ Expected ROI: 10-20× in the first year",
                     "✓ Recommended timeline: Start implementation within 30 days",
                     "✓ Priority focus: " + identifyTopPriority(answers),
@@ -453,7 +462,7 @@
                 category = "Strong Potential - Good Timing for AI";
                 description = "Your business shows strong indicators for AI automation success. With the right approach, you can see significant productivity gains.";
                 recommendations = [
-                    "✓ You could save 5-15 hours per week with targeted AI automation",
+                    "✓ You could save 5-12 hours per week with targeted AI automation",
                     "✓ Expected ROI: 5-10× in the first year (for businesses with established revenue and significant admin load)",
                     "✓ Recommended timeline: Start within 3 months",
                     "✓ Priority focus: " + identifyTopPriority(answers),
@@ -832,14 +841,23 @@
             const earlyStageRev = revenueText === 'Under $50K';
             const lowHours = hoursText === 'Less than 5 hours';
             const exploring = urgencyText === 'Just exploring options';
-            const cappedScoreInt = (earlyStageRev && (lowHours || exploring)) ? Math.min(scoreInt, 59) : scoreInt;
+
+            // Two-tier revenue gate (mirrors JS scoring logic exactly)
+            let cappedScoreInt;
+            if (earlyStageRev && (lowHours || exploring)) {
+                cappedScoreInt = Math.min(scoreInt, 39);
+            } else if (earlyStageRev) {
+                cappedScoreInt = Math.min(scoreInt, 79);
+            } else {
+                cappedScoreInt = scoreInt;
+            }
 
             let execSummary = '';
 
             if (cappedScoreInt >= 80) {
-                execSummary = `Congratulations, ${firstName}! Your assessment reveals that you are in an excellent position to implement AI automation. You reported ${revenueText} in annual revenue and ${hoursText.toLowerCase()} on repetitive admin tasks — exactly the profile where custom AI systems deliver their strongest results. The implementations we build typically deliver 10-20x ROI in the first year for businesses at your stage, with time savings of 10-20 hours per week.\n\nKey opportunities identified: Your revenue level, operational workload, and technology comfort create an ideal environment for a successful 6-8 week implementation. The combination of established volume and clear workflow pain points means automation ROI will be measurable within the first 30 days of going live.`;
+                execSummary = `Congratulations, ${firstName}! Your assessment reveals that you are in an excellent position to implement AI automation. You reported ${revenueText} in annual revenue and ${hoursText.toLowerCase()} on repetitive admin tasks — exactly the profile where custom AI systems deliver their strongest results. The implementations we build typically deliver 10-20x ROI in the first year for businesses at your stage, with realistic time savings of up to 15 hours per week.\n\nKey opportunities identified: Your revenue level, operational workload, and technology comfort create an ideal environment for a successful 6-8 week implementation. The combination of established volume and clear workflow pain points means automation ROI will be measurable within the first 30 days of going live.`;
             } else if (cappedScoreInt >= 60) {
-                execSummary = `Thank you for completing this assessment, ${firstName}. Your results show strong potential for AI automation with the right strategic approach. You reported ${revenueText} in annual revenue and ${hoursText.toLowerCase()} on admin tasks. These projections are based on clients with established revenue and meaningful manual workflow volume — businesses fitting that profile typically see 5-10x ROI in year one with 5-15 hours of weekly time savings.\n\nKey opportunities identified: Strategic timing and phased implementation will be critical to maximize your results. This report outlines a proven 6-8 week path that balances quick wins with sustainable, long-term transformation.`;
+                execSummary = `Thank you for completing this assessment, ${firstName}. Your results show strong potential for AI automation with the right strategic approach. You reported ${revenueText} in annual revenue and ${hoursText.toLowerCase()} on admin tasks. These projections are based on clients with established revenue and meaningful manual workflow volume — businesses fitting that profile typically see 5-10x ROI in year one with 5-12 hours of weekly time savings.\n\nKey opportunities identified: Strategic timing and phased implementation will be critical to maximize your results. This report outlines a proven 6-8 week path that balances quick wins with sustainable, long-term transformation.`;
             } else if (cappedScoreInt >= 40) {
                 execSummary = `Thank you for your interest in AI automation, ${firstName}. Based on your answers — ${revenueText} in revenue and ${hoursText.toLowerCase()} on admin tasks — your business is in a growth phase where the smartest investment right now is building sales volume and simple systems first. Custom AI automation delivers its highest ROI once workflows are established and repetitive enough to automate at scale.\n\nKey opportunities identified: Starting with low-cost tools and documenting your top workflows now will make your eventual automation implementation faster, cheaper, and significantly more impactful. We'd love to show you a clear roadmap for getting there.`;
             } else {
@@ -944,9 +962,14 @@
             doc.setFontSize(9);
             doc.setTextColor(...medGray);
             doc.setFont(undefined, 'italic');
-            const roadmapSubtitle = cappedScoreInt >= 60
-                ? 'Transparent timeline with guaranteed delivery. If we don\'t deliver in 8 weeks, we work for free until complete.'
-                : 'A practical sequence to build the foundation that makes AI automation fast, effective, and high-ROI when you\'re ready.';
+            let roadmapSubtitle;
+            if (cappedScoreInt >= 80) {
+                roadmapSubtitle = 'You are ready. Transparent timeline with guaranteed delivery — if we don\'t deliver in 8 weeks, we work for free until complete.';
+            } else if (cappedScoreInt >= 60) {
+                roadmapSubtitle = 'Strong indicators present. Transparent timeline with guaranteed delivery — if we don\'t deliver in 8 weeks, we work for free until complete.';
+            } else {
+                roadmapSubtitle = 'A practical sequence to build the foundation that makes AI automation fast, effective, and high-ROI when you\'re ready.';
+            }
             doc.text(roadmapSubtitle, margin, yPos);
 
             yPos += 10;
@@ -1093,14 +1116,17 @@
             let roiContent = '';
             let roiCaveat = '';
             if (cappedScoreInt >= 80) {
-                roiContent = 'Time Savings: 10-20 hours per week\nCost Reduction: 40-60% reduction in manual task costs\nRevenue Impact: 15-25% productivity increase enabling revenue growth\nImplementation Timeline: Early results visible within 30 days of go-live\nFirst-Year ROI: 10-20× return on investment';
+                roiContent = 'Time Savings: Up to 15 hours per week\nCost Reduction: 40-60% reduction in manual task costs\nRevenue Impact: 15-25% productivity increase enabling revenue growth\nImplementation Timeline: Early results visible within 30 days of go-live\nFirst-Year ROI: 10-20× return on investment';
                 roiCaveat = '';
             } else if (cappedScoreInt >= 60) {
-                roiContent = 'Time Savings: 5-15 hours per week\nCost Reduction: 25-40% reduction in manual task costs\nRevenue Impact: 10-20% productivity increase\nImplementation Timeline: Full ROI typically achieved within 6-9 months\nFirst-Year ROI: 5-10× return on investment';
-                roiCaveat = 'Note: These projections reflect clients with established revenue and significant manual workflow volume. Your actual results will be discussed and scoped during your discovery call.';
-            } else {
-                roiContent = 'Time Savings: 3-8 hours per week once workflows are established\nCost Reduction: 15-25% reduction in manual task costs\nRevenue Impact: 5-15% productivity increase\nImplementation Timeline: Best initiated once revenue exceeds $100K\nExpected ROI: Strongest when admin volume justifies automation investment';
+                roiContent = 'Time Savings: 5-12 hours per week\nCost Reduction: 25-40% reduction in manual task costs\nRevenue Impact: 10-20% productivity increase\nImplementation Timeline: Full ROI typically achieved within 6-9 months\nFirst-Year ROI: 5-10× return on investment';
+                roiCaveat = 'Note: These projections reflect clients with established revenue ($100K+) and significant manual workflow volume. Your actual results will be discussed and scoped precisely during your discovery call.';
+            } else if (cappedScoreInt >= 40) {
+                roiContent = 'Time Savings: 3-6 hours per week once workflows are established\nCost Reduction: 15-25% reduction in manual task costs\nRevenue Impact: 5-15% productivity increase\nImplementation Timeline: Best initiated once revenue exceeds $100K\nExpected ROI: Strongest when admin volume justifies automation investment';
                 roiCaveat = 'Note: These projections apply to clients with established revenue and repeatable workflows. At your current stage, prioritizing sales and simple systems will position you to capture these gains when the time is right.';
+            } else {
+                roiContent = 'Time Savings: Significant gains once core processes are documented and revenue is established\nCost Reduction: 15-25% reduction in manual task costs at the right stage\nRevenue Impact: Sales and lead generation investment now will compound into automation ROI later\nImplementation Timeline: Revisit automation once revenue exceeds $100K\nExpected ROI: Foundation built today determines how fast ROI arrives tomorrow';
+                roiCaveat = 'Note: Custom AI automation is a high-ROI investment for the right stage. Focus on building revenue and systematizing your workflows now — this is the path to making automation both affordable and impactful.';
             }
 
             // ROI box with brand colors
