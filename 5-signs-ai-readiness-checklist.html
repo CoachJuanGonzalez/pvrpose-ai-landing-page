@@ -480,6 +480,77 @@
             font-weight: 500;
         }
 
+        .checklist-form {
+            position: relative;
+            z-index: 1;
+            margin-top: 28px;
+            margin-bottom: 24px;
+        }
+
+        .checklist-form-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        .checklist-form input[type="text"],
+        .checklist-form input[type="email"] {
+            flex: 1;
+            min-width: 200px;
+            max-width: 280px;
+            padding: 14px 20px;
+            border-radius: 50px;
+            border: 2px solid rgba(255,255,255,0.4);
+            background: rgba(255,255,255,0.15);
+            color: white;
+            font-size: 15px;
+            font-weight: 500;
+            outline: none;
+            font-family: inherit;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .checklist-form input[type="text"]::placeholder,
+        .checklist-form input[type="email"]::placeholder {
+            color: rgba(255,255,255,0.65);
+        }
+
+        .checklist-form input[type="text"]:focus,
+        .checklist-form input[type="email"]:focus {
+            border-color: rgba(255,255,255,0.85);
+            background: rgba(255,255,255,0.22);
+        }
+
+        .checklist-submit-btn {
+            display: inline-block;
+            background: white;
+            color: #1E3A8A;
+            padding: 14px 36px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.2);
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .checklist-submit-btn:hover { transform: scale(1.04); }
+        .checklist-submit-btn:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
+
+        .checklist-form-msg {
+            font-size: 14px;
+            opacity: 0.9;
+            min-height: 20px;
+            font-weight: 500;
+        }
+
+        .checklist-form-msg.success { color: #bbf7d0; }
+        .checklist-form-msg.error { color: #fca5a5; }
+
         .footer {
             position: absolute;
             bottom: 40px;
@@ -904,12 +975,24 @@
         <div class="cta-section">
             <h2 class="cta-title">Ready to See Your Roadmap?</h2>
             <p class="cta-text">
-                Take our free 2-minute AI Readiness Assessment and get a personalized implementation plan for your business.
+                Enter your name and email to save this checklist — then take our free 2-minute AI Readiness Assessment.
             </p>
-            <a href="https://pvrpose.ai/assessment.html" class="cta-button">
+
+            <form class="checklist-form" id="checklistForm" onsubmit="submitChecklist(event)" novalidate>
+                <div class="checklist-form-row">
+                    <input type="text" id="cl_first_name" placeholder="First name" required autocomplete="given-name" />
+                    <input type="email" id="cl_email" placeholder="Work email" required autocomplete="email" />
+                </div>
+                <button type="submit" class="checklist-submit-btn" id="clSubmitBtn">
+                    Save My Checklist →
+                </button>
+                <p class="checklist-form-msg" id="clFormMsg"></p>
+            </form>
+
+            <a href="https://pvrpose.ai/assessment.html" class="cta-button" style="margin-top: 8px;">
                 Take Free Assessment →
             </a>
-            <p class="cta-subtext">
+            <p class="cta-subtext" style="margin-top: 18px;">
                 Or book a discovery call: <a href="https://calendly.com/coachjuan-pvrposeai/discovery-call" style="color: white; text-decoration: underline; font-weight: 700;">calendly.com/coachjuan-pvrposeai/discovery-call</a>
             </p>
         </div>
@@ -1493,6 +1576,76 @@
 
         btn.disabled = false;
         btn.textContent = '⬇ Download PDF';
+    }
+
+    async function submitChecklist(e) {
+        e.preventDefault();
+
+        const first_name = document.getElementById('cl_first_name').value.trim();
+        const email = document.getElementById('cl_email').value.trim();
+        const btn = document.getElementById('clSubmitBtn');
+        const msg = document.getElementById('clFormMsg');
+
+        msg.textContent = '';
+        msg.className = 'checklist-form-msg';
+
+        if (!first_name || !email) {
+            msg.textContent = 'Please enter your first name and email.';
+            msg.className = 'checklist-form-msg error';
+            return;
+        }
+
+        const emailRegex = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
+        if (!emailRegex.test(email)) {
+            msg.textContent = 'Please enter a valid email address.';
+            msg.className = 'checklist-form-msg error';
+            return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = 'Sending…';
+
+        const payload = {
+            first_name: first_name,
+            email: email,
+            score: 0,
+            answers: [],
+            source: 'pvrposeaiquickreference',
+            document: '5 Signs AI Readiness Checklist',
+            html_checklist: document.documentElement.outerHTML,
+            timestamp: new Date().toISOString(),
+            consent: {
+                marketing: true,
+                timestamp: new Date().toISOString(),
+                jurisdiction: 'CA'
+            }
+        };
+
+        try {
+            const res = await fetch('/api/submit-assessment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await res.json();
+
+            if (res.ok && data.success) {
+                msg.textContent = 'Saved! Check your email for next steps.';
+                msg.className = 'checklist-form-msg success';
+                btn.textContent = 'Saved ✓';
+                document.getElementById('cl_first_name').value = '';
+                document.getElementById('cl_email').value = '';
+            } else {
+                throw new Error(data.message || 'Submission failed');
+            }
+        } catch (err) {
+            msg.textContent = 'Something went wrong. Please try again or email juan@pvrpose.ai';
+            msg.className = 'checklist-form-msg error';
+            btn.disabled = false;
+            btn.textContent = 'Save My Checklist →';
+            console.error('Checklist submission error:', err);
+        }
     }
     </script>
 </body>

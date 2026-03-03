@@ -34,7 +34,7 @@ module.exports = async function handler(req, res) {
     });
 
     try {
-        const { first_name, email, score, answers, timestamp, fingerprint, source, consent, document, pdf_base64, pdf_filename } = req.body;
+        const { first_name, email, score, answers, timestamp, fingerprint, source, consent, document, pdf_base64, pdf_filename, html_checklist } = req.body;
 
         // Validation (note: score can be 0 for popup signups, so check for null/undefined only)
         if (!first_name || !email || score === null || score === undefined || answers === null || answers === undefined) {
@@ -69,6 +69,7 @@ module.exports = async function handler(req, res) {
             document: document || '',
             pdf_base64: pdf_base64 || null,
             pdf_filename: pdf_filename || null,
+            html_checklist: html_checklist || null,
             consent: consent || {
                 marketing: true,
                 timestamp: new Date().toISOString(),
@@ -158,6 +159,11 @@ async function submitToAirtable(payload, pdfUrl = null) {
     // Add document field if provided
     if (payload.document) {
         fields['document'] = payload.document;
+    }
+
+    // Add html_checklist field when source is pvrposeaiquickreference
+    if (payload.html_checklist && payload.source === 'pvrposeaiquickreference') {
+        fields['html_checklist'] = payload.html_checklist;
     }
 
     // Add PDF attachment if URL is provided from Vercel Blob Storage
