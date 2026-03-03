@@ -214,10 +214,10 @@
     </div>
 
     <!-- Version indicator for debugging -->
-    <div style="position:fixed;bottom:5px;right:5px;font-size:10px;color:#ccc;z-index:9999;">v2.2.5-20260303</div>
+    <div style="position:fixed;bottom:5px;right:5px;font-size:10px;color:#ccc;z-index:9999;">v2.2.6-20260303</div>
 
     <script>
-        console.log('=== ASSESSMENT VERSION: 2.2.5-20260303 - FIX iOS SAFARI: DEFER doc.save() AFTER fetch() ===');
+        console.log('=== ASSESSMENT VERSION: 2.2.6-20260303 - FIX ROADMAP WEEKS + ROI BOX OVERFLOW ===');
 
         // Assessment Questions
         const questions = [
@@ -1038,17 +1038,17 @@
                 }
             ] : [
                 {
-                    title: 'Now - Month 2: Build Your Revenue Foundation',
+                    title: 'Weeks 1-2: Build Your Revenue Foundation',
                     items: [
                         'Focus on sales, lead generation, and closing your next 3-5 clients',
                         'Identify your single most valuable offer and perfect it',
-                        'Set a revenue milestone: $100K+ annual is where automation ROI becomes compelling',
+                        'Set a revenue milestone: $50K-$100K+ is where automation ROI becomes compelling',
                         'Track where you personally spend time each week — this data is gold later',
                         'Book a free call with us — we\'ll map exactly what your AI roadmap looks like'
                     ]
                 },
                 {
-                    title: 'Month 2 - Month 4: Systematize Before You Automate',
+                    title: 'Weeks 3-4: Systematize Before You Automate',
                     items: [
                         'Document your top 3 repetitive workflows in plain language',
                         'Set up a simple CRM (free tools like HubSpot CRM work at this stage)',
@@ -1058,12 +1058,12 @@
                     ]
                 },
                 {
-                    title: 'Month 4 - Month 6: Prepare for Automation',
+                    title: 'Weeks 5-8: Prepare for AI Automation',
                     items: [
                         'Review your documented workflows — identify the highest-frequency, lowest-value tasks',
                         'Measure time spent on admin: 10+ hours/week signals you\'re ready to automate',
                         'Evaluate your tech stack: CRM, email, calendar, invoicing all need to be connected',
-                        'Revisit this assessment — your score will tell a different story at $100K+',
+                        'Revisit this assessment — your score will tell a different story at $50K-$100K+',
                         'When you\'re ready, our AI Readiness Audit will map your full custom automation plan'
                     ]
                 }
@@ -1154,30 +1154,51 @@
                 roiCaveat = 'Note: Custom AI automation is a high-ROI investment for the right stage. Focus on building revenue and systematizing your workflows now — this is the path to making automation both affordable and impactful.';
             }
 
-            // ROI box with brand colors
+            // ROI box — dynamic height to prevent text overflow
+            const labelColX = margin + 5;
+            const valueColX = margin + 60;
+            const valueColWidth = contentWidth - 60 - 8; // right margin inside box
+            const roiLineHeight = 5.5;
+
+            // Pre-calculate total box height by measuring each row
+            doc.setFontSize(10);
+            const roiLines = roiContent.split('\n');
+            let totalRowsHeight = 0;
+            roiLines.forEach(line => {
+                const colonIdx = line.indexOf(':');
+                const value = colonIdx >= 0 ? line.substring(colonIdx + 1).trim() : '';
+                const wrappedValue = doc.splitTextToSize(value, valueColWidth);
+                totalRowsHeight += Math.max(1, wrappedValue.length) * roiLineHeight + 1.5;
+            });
+            const roiBoxH = totalRowsHeight + 14; // top + bottom padding
+
             const roiBoxStartY = yPos;
             doc.setFillColor(253, 242, 248); // Light pink
             doc.setDrawColor(...brandPurple);
             doc.setLineWidth(1.5);
-            doc.roundedRect(margin, roiBoxStartY, contentWidth, 50, 3, 3, 'FD');
+            doc.roundedRect(margin, roiBoxStartY, contentWidth, roiBoxH, 3, 3, 'FD');
 
             yPos = roiBoxStartY + 8;
             doc.setFontSize(10);
-            doc.setTextColor(...darkGray);
-            doc.setFont(undefined, 'normal');
-            const roiLines = roiContent.split('\n');
             roiLines.forEach(line => {
-                const [label, value] = line.split(':');
+                const colonIdx = line.indexOf(':');
+                const label = colonIdx >= 0 ? line.substring(0, colonIdx) : line;
+                const value = colonIdx >= 0 ? line.substring(colonIdx + 1).trim() : '';
+                const wrappedValue = doc.splitTextToSize(value, valueColWidth);
+                const rowH = Math.max(1, wrappedValue.length) * roiLineHeight + 1.5;
+
                 doc.setFont(undefined, 'bold');
                 doc.setTextColor(...brandPurple);
-                doc.text(label + ':', margin + 5, yPos);
+                doc.text(label + ':', labelColX, yPos);
+
                 doc.setFont(undefined, 'normal');
                 doc.setTextColor(...darkGray);
-                doc.text(value.trim(), margin + 60, yPos);
-                yPos += 7;
+                doc.text(wrappedValue, valueColX, yPos);
+
+                yPos += rowH;
             });
 
-            yPos = roiBoxStartY + 50 + 10; // Box height + spacing
+            yPos = roiBoxStartY + roiBoxH + 10; // dynamic box height + spacing
 
             // Conditional ROI caveat for non-top-tier profiles
             if (roiCaveat) {
