@@ -516,11 +516,11 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
 
-            // Load logo image (PNG with transparency)
+            // Load logo image - try JPG first for smaller size
             let logoDataUrl = null;
             try {
                 console.log('Fetching logo image...');
-                const response = await fetch('logotypes-ai-rez-03.png');
+                const response = await fetch('logotypes-ai-rez-01.jpg');
                 console.log('Logo fetch response status:', response.status);
 
                 if (!response.ok) {
@@ -563,10 +563,10 @@
                 if (pageNumber > 1) {
                     doc.addPage();
                 }
-                // Header on every page with logo (PNG with transparency)
+                // Header on every page with logo
                 if (logoDataUrl) {
                     try {
-                        doc.addImage(logoDataUrl, 'PNG', margin, 6, 30, 6);
+                        doc.addImage(logoDataUrl, 'JPEG', margin, 6, 30, 6);
                     } catch (error) {
                         console.warn('Could not add logo to header:', error);
                         doc.setFontSize(8);
@@ -651,8 +651,8 @@
             console.log('Adding logo to cover page, logoDataUrl available:', !!logoDataUrl);
             if (logoDataUrl) {
                 try {
-                    console.log('Attempting to add PNG image to cover...');
-                    doc.addImage(logoDataUrl, 'PNG', 65, 45, 80, 16);
+                    console.log('Attempting to add JPEG image to cover...');
+                    doc.addImage(logoDataUrl, 'JPEG', 65, 45, 80, 16);
                     console.log('Logo added successfully to cover');
                 } catch (error) {
                     console.error('Failed to add logo to cover:', error);
