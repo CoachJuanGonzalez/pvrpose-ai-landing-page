@@ -994,104 +994,112 @@
         }
 
         function signCard(y, num, title, description, bullets, extra, extraType) {
-            // Card background
-            doc.setFillColor(255, 255, 255);
-            doc.setDrawColor(243, 232, 255);
-            doc.setLineWidth(0.6);
+            // Layout constants — all inner text uses textWidth (inside accent bar + padding)
+            const accentW   = 5;   // left gradient bar
+            const padL      = 9;   // left text padding after accent bar
+            const padR      = 6;   // right text padding
+            const textX     = margin + accentW + padL;
+            const textWidth = contentWidth - accentW - padL - padR;
+            const lineH     = { title: 5.5, body: 4.5, bullet: 4.5, extra: 4.2 };
 
-            // Pre-measure height
-            doc.setFontSize(9);
-            let h = 8 + 6 + 5; // title + desc start
-            const titleLines = doc.splitTextToSize(title, contentWidth - 20);
-            h += titleLines.length * 5;
-            const descLines = doc.splitTextToSize(description, contentWidth - 20);
-            h += descLines.length * 4.5 + 4;
+            // ── Pre-measure full card height ──────────────────────
+            const circleR   = 6;    // number circle radius
+            const circleRow = circleR * 2 + 4; // row reserved for circle + gap below
+
+            doc.setFontSize(10); doc.setFont(undefined, 'bold');
+            const titleLines = doc.splitTextToSize(title, textWidth);
+            let h = 6 + circleRow + titleLines.length * lineH.title + 4;
+
+            doc.setFontSize(8.5); doc.setFont(undefined, 'normal');
+            const descLines = doc.splitTextToSize(description, textWidth);
+            h += descLines.length * lineH.body + 5;
+
             bullets.forEach(b => {
-                const bl = doc.splitTextToSize(b, contentWidth - 30);
-                h += bl.length * 4 + 2;
+                const bl = doc.splitTextToSize(b, textWidth - 6);
+                h += bl.length * lineH.bullet + 2;
             });
+
             if (extra) {
-                const el = doc.splitTextToSize(extra, contentWidth - 30);
-                h += el.length * 4 + 14;
+                doc.setFontSize(7.5);
+                const el = doc.splitTextToSize(extra, textWidth - 8);
+                h += el.length * lineH.extra + 16; // label + padding + text
             }
             h += 8; // bottom padding
 
+            // ── Draw card background ──────────────────────────────
+            doc.setFillColor(255, 255, 255);
+            doc.setDrawColor(243, 232, 255);
+            doc.setLineWidth(0.6);
             doc.roundedRect(margin, y, contentWidth, h, 3, 3, 'FD');
 
-            // Left accent bar (pink→purple)
-            gradientRect(margin, y, 5, h, brandPink, brandPurple);
+            // Left accent bar
+            gradientRect(margin, y, accentW, h, brandPink, brandPurple);
 
-            // Number circle
+            // ── Number circle (top-left, its own row) ────────────
+            const circleX = textX + circleR;
+            const circleY = y + 6 + circleR; // centre Y
             doc.setFillColor(...brandPink);
-            doc.circle(margin + 14, y + 11, 7, 'F');
-            doc.setFontSize(11); doc.setTextColor(...white); doc.setFont(undefined, 'bold');
-            doc.text(String(num), margin + 14, y + 14, { align: 'center' });
+            doc.circle(circleX, circleY, circleR, 'F');
+            doc.setFontSize(10); doc.setTextColor(...white); doc.setFont(undefined, 'bold');
+            doc.text(String(num), circleX, circleY + 3.5, { align: 'center' });
 
-            // Title
-            let cy = y + 8;
-            doc.setFontSize(10.5); doc.setTextColor(...deepBlue); doc.setFont(undefined, 'bold');
-            doc.text(titleLines, margin + 24, cy);
-            cy += titleLines.length * 5 + 3;
+            // ── Title — starts after circle row ──────────────────
+            let cy = y + 6 + circleRow;
+            doc.setFontSize(10); doc.setTextColor(...deepBlue); doc.setFont(undefined, 'bold');
+            doc.text(titleLines, textX, cy);
+            cy += titleLines.length * lineH.title + 4;
 
-            // Description
+            // ── Description ───────────────────────────────────────
             doc.setFontSize(8.5); doc.setTextColor(...darkGray); doc.setFont(undefined, 'normal');
-            doc.text(descLines, margin + 8, cy);
-            cy += descLines.length * 4.5 + 4;
+            doc.text(descLines, textX, cy);
+            cy += descLines.length * lineH.body + 5;
 
-            // Bullets
+            // ── Bullets ───────────────────────────────────────────
+            const bulletX  = textX + 5;
+            const bulletTW = textWidth - 6;
             bullets.forEach(b => {
                 doc.setFillColor(...brandPink);
-                doc.circle(margin + 10, cy - 1, 1.2, 'F');
+                doc.circle(textX + 1.5, cy - 1.2, 1.2, 'F');
                 doc.setFontSize(8); doc.setTextColor(...darkGray); doc.setFont(undefined, 'normal');
-                const bl = doc.splitTextToSize(b, contentWidth - 30);
-                doc.text(bl, margin + 14, cy);
-                cy += bl.length * 4 + 2;
+                const bl = doc.splitTextToSize(b, bulletTW);
+                doc.text(bl, bulletX, cy);
+                cy += bl.length * lineH.bullet + 2;
             });
 
-            // Extra box (example = green, warning = amber)
+            // ── Extra box (example / warning) ─────────────────────
             if (extra) {
-                cy += 3;
+                cy += 4;
                 const isWarning = extraType === 'warning';
                 const bgCol  = isWarning ? [254, 243, 199] : [240, 253, 244];
                 const brdCol = isWarning ? amber : green;
-                const txtCol = isWarning ? [146, 64, 14] : [6, 95, 70];
+                const txtCol = isWarning ? [120, 53, 15] : [6, 95, 70];
                 const label  = isWarning ? 'WARNING:' : 'REAL EXAMPLE:';
-                const el = doc.splitTextToSize(extra, contentWidth - 30);
-                const bh = el.length * 4 + 14;
+                doc.setFontSize(7.5);
+                const el = doc.splitTextToSize(extra, textWidth - 8);
+                const bh = el.length * lineH.extra + 16;
                 doc.setFillColor(...bgCol);
                 doc.setDrawColor(...brdCol);
                 doc.setLineWidth(0.8);
-                doc.roundedRect(margin + 8, cy, contentWidth - 16, bh, 2, 2, 'FD');
+                doc.roundedRect(textX, cy, textWidth, bh, 2, 2, 'FD');
                 doc.setFontSize(7.5); doc.setTextColor(...brdCol); doc.setFont(undefined, 'bold');
-                doc.text(label, margin + 11, cy + 6);
-                doc.setFontSize(7.5); doc.setTextColor(...txtCol); doc.setFont(undefined, 'normal');
-                doc.text(el, margin + 11, cy + 11);
+                doc.text(label, textX + 4, cy + 6);
+                doc.setFont(undefined, 'normal'); doc.setTextColor(...txtCol);
+                doc.text(el, textX + 4, cy + 11);
             }
 
-            return y + h + 5; // next y
+            return y + h + 4; // next y
         }
 
-        // ── Load logos ────────────────────────────────────────────
-        let coverLogo = null, headerLogo = null;
+        // ── Load logo (JPG used for both cover and headers) ───────
+        let headerLogo = null;
         try {
-            const r1 = await fetch('logotypes-ai-rez-03.png');
-            if (r1.ok) {
-                const blob1 = await r1.blob();
-                coverLogo = await new Promise(res => {
-                    const reader = new FileReader();
-                    reader.onloadend = () => res(reader.result);
-                    reader.readAsDataURL(blob1);
-                });
-            }
-        } catch(e) {}
-        try {
-            const r2 = await fetch('logotypes-ai-rez-01.jpg');
-            if (r2.ok) {
-                const blob2 = await r2.blob();
+            const r = await fetch('logotypes-ai-rez-01.jpg');
+            if (r.ok) {
+                const blob = await r.blob();
                 headerLogo = await new Promise(res => {
                     const reader = new FileReader();
                     reader.onloadend = () => res(reader.result);
-                    reader.readAsDataURL(blob2);
+                    reader.readAsDataURL(blob);
                 });
             }
         } catch(e) {}
@@ -1103,13 +1111,13 @@
         gradientRect(0, 0, pageWidth, Math.floor(pageHeight * 0.5), deepBlue, brandPurple);
         gradientRect(0, Math.floor(pageHeight * 0.5), pageWidth, Math.ceil(pageHeight * 0.5), brandPurple, brandPink);
 
-        // Logo
-        let cy = 42;
-        if (coverLogo) {
-            try { doc.addImage(coverLogo, 'PNG', 75, cy, 60, 12); cy += 15; }
-            catch(e) { doc.setFontSize(20); doc.setTextColor(...white); doc.setFont(undefined,'bold'); doc.text('PVRPOSE AI', 105, cy + 8, { align:'center' }); cy += 16; }
+        // Logo (JPG, centred, larger on cover)
+        let cy = 38;
+        if (headerLogo) {
+            try { doc.addImage(headerLogo, 'JPEG', 67, cy, 76, 16); cy += 20; }
+            catch(e) { doc.setFontSize(22); doc.setTextColor(...white); doc.setFont(undefined,'bold'); doc.text('PVRPOSE AI', 105, cy + 10, { align:'center' }); cy += 18; }
         } else {
-            doc.setFontSize(20); doc.setTextColor(...white); doc.setFont(undefined,'bold'); doc.text('PVRPOSE AI', 105, cy + 8, { align:'center' }); cy += 16;
+            doc.setFontSize(22); doc.setTextColor(...white); doc.setFont(undefined,'bold'); doc.text('PVRPOSE AI', 105, cy + 10, { align:'center' }); cy += 18;
         }
 
         // Tagline
