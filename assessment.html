@@ -519,15 +519,29 @@
             // Load logo image (PNG with transparency)
             let logoDataUrl = null;
             try {
+                console.log('Fetching logo image...');
                 const response = await fetch('logotypes-ai-rez-03.png');
+                console.log('Logo fetch response status:', response.status);
+
+                if (!response.ok) {
+                    throw new Error(`Logo fetch failed with status: ${response.status}`);
+                }
+
                 const blob = await response.blob();
-                logoDataUrl = await new Promise((resolve) => {
+                console.log('Logo blob size:', blob.size);
+
+                logoDataUrl = await new Promise((resolve, reject) => {
                     const reader = new FileReader();
-                    reader.onloadend = () => resolve(reader.result);
+                    reader.onloadend = () => {
+                        console.log('Logo loaded, data URL length:', reader.result ? reader.result.length : 0);
+                        resolve(reader.result);
+                    };
+                    reader.onerror = reject;
                     reader.readAsDataURL(blob);
                 });
             } catch (error) {
-                console.warn('Could not load logo:', error);
+                console.error('Could not load logo:', error);
+                console.warn('Continuing without logo...');
             }
 
             // Brand colors (PVRPOSE AI)
@@ -602,8 +616,10 @@
             // =====================
             // COVER PAGE
             // =====================
+            console.log('Starting cover page generation...');
 
             // Gradient background effect (simplified for jsPDF compatibility)
+            console.log('Generating gradient background...');
             for (let i = 0; i < 297; i++) {
                 const alpha = i / 297;
                 // Gradient from deep blue to purple to pink
@@ -626,11 +642,14 @@
             }
 
             // PVRPOSE AI Logo (centered) - PNG with transparency
+            console.log('Adding logo to cover page, logoDataUrl available:', !!logoDataUrl);
             if (logoDataUrl) {
                 try {
+                    console.log('Attempting to add PNG image to cover...');
                     doc.addImage(logoDataUrl, 'PNG', 65, 45, 80, 16);
+                    console.log('Logo added successfully to cover');
                 } catch (error) {
-                    console.warn('Could not add logo to cover:', error);
+                    console.error('Failed to add logo to cover:', error);
                     // Fallback to text
                     doc.setFontSize(32);
                     doc.setTextColor(...white);
@@ -638,6 +657,7 @@
                     doc.text('PVRPOSE AI', 105, 60, { align: 'center' });
                 }
             } else {
+                console.log('No logo available, using text fallback');
                 // Fallback to text if logo not loaded
                 doc.setFontSize(32);
                 doc.setTextColor(...white);
@@ -1159,11 +1179,36 @@
 
             // Return PDF as base64 for upload to Airtable
             console.log('Generating PDF output...');
-            const pdfOutput = doc.output('datauristring');
-            console.log('PDF output generated, full length:', pdfOutput.length);
-            const base64Data = pdfOutput.split(',')[1];
-            console.log('Base64 data extracted, length:', base64Data.length);
-            return base64Data;
+            try {
+                const pdfOutput = doc.output('datauristring');
+                console.log('PDF output generated, full length:', pdfOutput.length);
+                console.log('PDF output first 100 chars:', pdfOutput.substring(0, 100));
+
+                if (!pdfOutput || pdfOutput.length < 100) {
+                    throw new Error('PDF output is too short or empty');
+                }
+
+                const splitResult = pdfOutput.split(',');
+                console.log('Split result length:', splitResult.length);
+                console.log('Split result[0] (header):', splitResult[0]);
+
+                if (splitResult.length < 2) {
+                    throw new Error('PDF output does not contain comma-separated base64 data');
+                }
+
+                const base64Data = splitResult[1];
+                console.log('Base64 data extracted, length:', base64Data ? base64Data.length : 0);
+
+                if (!base64Data || base64Data.length === 0) {
+                    throw new Error('Base64 data is empty after split');
+                }
+
+                return base64Data;
+            } catch (outputError) {
+                console.error('Error generating PDF output:', outputError);
+                console.error('Output error stack:', outputError.stack);
+                throw outputError;
+            }
         }
 
         // Rate limiting for assessment form
