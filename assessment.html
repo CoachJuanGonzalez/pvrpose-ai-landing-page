@@ -214,10 +214,10 @@
     </div>
 
     <!-- Version indicator for debugging -->
-    <div style="position:fixed;bottom:5px;right:5px;font-size:10px;color:#ccc;z-index:9999;">v2.2.2-20260303</div>
+    <div style="position:fixed;bottom:5px;right:5px;font-size:10px;color:#ccc;z-index:9999;">v2.2.3-20260303</div>
 
     <script>
-        console.log('=== ASSESSMENT VERSION: 2.2.2-20260303 - QA FIXES + HONEST HOURS ===');
+        console.log('=== ASSESSMENT VERSION: 2.2.3-20260303 - QA P1/P2/P3 FINAL FIXES + HOMEPAGE REVENUE RANGE ===');
 
         // Assessment Questions
         const questions = [
@@ -433,26 +433,34 @@
             const earlyStageRevenue = revenueAnswer === 'Under $50K';
             const lowAdminHours = hoursAnswer === 'Less than 5 hours';
             const justExploring = urgencyAnswer === 'Just exploring options';
+            const tier2Gated = earlyStageRevenue && !lowAdminHours && !justExploring;
 
             // Two-tier revenue gate:
             // Tier 1: Under $50K + (low admin hours OR just exploring) → max Early Stage (cap 39)
-            //         Makes the Early Stage category reachable and prevents any roadmap mismatch
             // Tier 2: Under $50K alone (high urgency/pain) → max Strong Potential (cap 79)
-            //         Prevents a $0 revenue business from receiving "Excellent Fit"
             let cappedScore;
             if (earlyStageRevenue && (lowAdminHours || justExploring)) {
-                cappedScore = Math.min(score, 39); // Early Stage or below
+                cappedScore = Math.min(score, 39);
             } else if (earlyStageRevenue) {
-                cappedScore = Math.min(score, 79); // Max Strong Potential, never Excellent Fit
+                cappedScore = Math.min(score, 79);
             } else {
                 cappedScore = score;
             }
 
-            if (cappedScore >= 80) {
+            // P1 fix: hours claim conditional on actual Q2 answer
+            // Cannot promise savings > what they currently spend on admin
+            const hoursSaving = lowAdminHours
+                ? '2-4 hours per week across scattered workflows'
+                : (hoursAnswer === '5-10 hours'
+                    ? '4-8 hours per week'
+                    : 'up to 15 hours per week');
+
+            // P3 fix: raise Excellent Fit threshold to 82
+            if (cappedScore >= 82) {
                 category = "Excellent Fit - Ready for AI Transformation";
                 description = "You're an ideal candidate for AI automation. Your business is at the perfect stage to implement custom AI systems that will deliver significant ROI.";
                 recommendations = [
-                    "✓ You could save up to 15 hours per week with the right AI systems",
+                    "✓ You could save " + hoursSaving + " with the right AI systems",
                     "✓ Expected ROI: 10-20× in the first year",
                     "✓ Recommended timeline: Start implementation within 30 days",
                     "✓ Priority focus: " + identifyTopPriority(answers),
@@ -461,9 +469,13 @@
             } else if (cappedScore >= 60) {
                 category = "Strong Potential - Good Timing for AI";
                 description = "Your business shows strong indicators for AI automation success. With the right approach, you can see significant productivity gains.";
+                // P2 fix: softer ROI framing for Tier-2 gated profiles (Under $50K high pain)
+                const roiClaim = tier2Gated
+                    ? '3-5× in the first year as you scale — growing significantly as revenue increases'
+                    : '5-10× in the first year (for businesses with $100K+ revenue and significant admin load)';
                 recommendations = [
-                    "✓ You could save 5-12 hours per week with targeted AI automation",
-                    "✓ Expected ROI: 5-10× in the first year (for businesses with established revenue and significant admin load)",
+                    "✓ You could save " + hoursSaving + " with targeted AI automation",
+                    "✓ Expected ROI: " + roiClaim,
                     "✓ Recommended timeline: Start within 3 months",
                     "✓ Priority focus: " + identifyTopPriority(answers),
                     "✓ Next step: Schedule a discovery call to explore your options"
@@ -841,6 +853,7 @@
             const earlyStageRev = revenueText === 'Under $50K';
             const lowHours = hoursText === 'Less than 5 hours';
             const exploring = urgencyText === 'Just exploring options';
+            const tier2GatedPDF = earlyStageRev && !lowHours && !exploring;
 
             // Two-tier revenue gate (mirrors JS scoring logic exactly)
             let cappedScoreInt;
@@ -851,6 +864,13 @@
             } else {
                 cappedScoreInt = scoreInt;
             }
+
+            // P1 fix: hours claim conditional on actual Q2 answer (PDF mirrors JS logic)
+            const pdfHoursSaving = lowHours
+                ? '2-4 hours per week across scattered workflows'
+                : (hoursText === '5-10 hours'
+                    ? '4-8 hours per week'
+                    : 'up to 15 hours per week');
 
             let execSummary = '';
 
@@ -1115,14 +1135,19 @@
 
             let roiContent = '';
             let roiCaveat = '';
-            if (cappedScoreInt >= 80) {
-                roiContent = 'Time Savings: Up to 15 hours per week\nCost Reduction: 40-60% reduction in manual task costs\nRevenue Impact: 15-25% productivity increase enabling revenue growth\nImplementation Timeline: Early results visible within 30 days of go-live\nFirst-Year ROI: 10-20× return on investment';
+            // P3 fix: Excellent Fit threshold raised to 82 (mirrors JS logic)
+            if (cappedScoreInt >= 82) {
+                roiContent = `Time Savings: ${pdfHoursSaving}\nCost Reduction: 40-60% reduction in manual task costs\nRevenue Impact: 15-25% productivity increase enabling revenue growth\nImplementation Timeline: Early results visible within 30 days of go-live\nFirst-Year ROI: 10-20x return on investment`;
                 roiCaveat = '';
             } else if (cappedScoreInt >= 60) {
-                roiContent = 'Time Savings: 5-12 hours per week\nCost Reduction: 25-40% reduction in manual task costs\nRevenue Impact: 10-20% productivity increase\nImplementation Timeline: Full ROI typically achieved within 6-9 months\nFirst-Year ROI: 5-10× return on investment';
-                roiCaveat = 'Note: These projections reflect clients with established revenue ($100K+) and significant manual workflow volume. Your actual results will be discussed and scoped precisely during your discovery call.';
+                // P2 fix: softer ROI for Tier-2 gated (Under $50K high-pain) profiles
+                const roiMultiple = tier2GatedPDF ? '3-5x as you scale' : '5-10x in the first year';
+                roiContent = `Time Savings: ${pdfHoursSaving}\nCost Reduction: 25-40% reduction in manual task costs\nRevenue Impact: 10-20% productivity increase\nImplementation Timeline: Full ROI typically achieved within 6-9 months\nFirst-Year ROI: ${roiMultiple}`;
+                roiCaveat = tier2GatedPDF
+                    ? 'Note: These projections reflect your growth trajectory. ROI accelerates significantly as your revenue scales past $100K. Your discovery call will map exactly what makes sense now vs. later.'
+                    : 'Note: These projections reflect clients with established revenue ($100K+) and significant manual workflow volume. Your actual results will be scoped precisely during your discovery call.';
             } else if (cappedScoreInt >= 40) {
-                roiContent = 'Time Savings: 3-6 hours per week once workflows are established\nCost Reduction: 15-25% reduction in manual task costs\nRevenue Impact: 5-15% productivity increase\nImplementation Timeline: Best initiated once revenue exceeds $100K\nExpected ROI: Strongest when admin volume justifies automation investment';
+                roiContent = `Time Savings: ${pdfHoursSaving} once workflows are established\nCost Reduction: 15-25% reduction in manual task costs\nRevenue Impact: 5-15% productivity increase\nImplementation Timeline: Best initiated once revenue exceeds $100K\nExpected ROI: Strongest when admin volume justifies automation investment`;
                 roiCaveat = 'Note: These projections apply to clients with established revenue and repeatable workflows. At your current stage, prioritizing sales and simple systems will position you to capture these gains when the time is right.';
             } else {
                 roiContent = 'Time Savings: Significant gains once core processes are documented and revenue is established\nCost Reduction: 15-25% reduction in manual task costs at the right stage\nRevenue Impact: Sales and lead generation investment now will compound into automation ROI later\nImplementation Timeline: Revisit automation once revenue exceeds $100K\nExpected ROI: Foundation built today determines how fast ROI arrives tomorrow';
