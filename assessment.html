@@ -214,10 +214,10 @@
     </div>
 
     <!-- Version indicator for debugging -->
-    <div style="position:fixed;bottom:5px;right:5px;font-size:10px;color:#ccc;z-index:9999;">v2.1.5-20260303</div>
+    <div style="position:fixed;bottom:5px;right:5px;font-size:10px;color:#ccc;z-index:9999;">v2.1.6-20260303</div>
 
     <script>
-        console.log('=== ASSESSMENT VERSION: 2.1.5-20260303 - PDF REC FIX ===');
+        console.log('=== ASSESSMENT VERSION: 2.1.6-20260303 - PDF LINK FIX ===');
 
         // Assessment Questions
         const questions = [
@@ -1160,12 +1160,17 @@
                         const url = urlMatch[1];
                         const linkText = '→ ' + step.action;
 
+                        // Set font before measuring so getTextWidth matches rendered width
+                        doc.setFontSize(9);
+                        doc.setFont(undefined, 'italic');
+
                         // Add text
                         doc.text(linkText, margin + 3, yPos);
 
-                        // Add clickable link area over the URL text
-                        const textWidth = doc.getTextWidth(linkText);
-                        doc.link(margin + 3, yPos - 3, textWidth, 5, { url: url });
+                        // Clickable hotspot covers the entire rendered line
+                        // Y anchor: text baseline is at yPos, hotspot starts 4pt above, 6pt tall
+                        const fullTextWidth = doc.getTextWidth(linkText);
+                        doc.link(margin + 3, yPos - 4, fullTextWidth, 6, { url: url });
                     } else {
                         doc.text('→ ' + step.action, margin + 3, yPos);
                     }
