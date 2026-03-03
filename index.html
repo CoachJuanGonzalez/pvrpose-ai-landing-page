@@ -739,7 +739,7 @@
                 <!-- Optimized YouTube Embed with Lazy Loading -->
                 <div class="relative" style="padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; border-radius: 16px;">
                     <!-- Thumbnail Preview (loads instantly, no iframe until clicked) -->
-                    <div id="videoThumb" class="absolute inset-0 cursor-pointer group" onclick="loadVideo(event)" ontouchend="loadVideo(event)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();loadVideo(event);}" role="button" tabindex="0" aria-label="Play video testimonial">
+                    <div id="videoThumb" class="absolute inset-0 cursor-pointer group" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();loadVideo(event);}" role="button" tabindex="0" aria-label="Play video testimonial">
                         <img
                             src="https://img.youtube.com/vi/jFOygpP7kes/maxresdefault.jpg"
                             alt="Client Testimonial - James Green, Dominion Equity Holdings"
@@ -880,7 +880,7 @@
                 <!-- Optimized YouTube Embed with Lazy Loading -->
                 <div class="relative" style="padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; border-radius: 16px;">
                     <!-- Thumbnail Preview (loads instantly, no iframe until clicked) -->
-                    <div id="videoThumb2" class="absolute inset-0 cursor-pointer group" onclick="loadVideo2(event)" ontouchend="loadVideo2(event)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();loadVideo2(event);}" role="button" tabindex="0" aria-label="Play video testimonial">
+                    <div id="videoThumb2" class="absolute inset-0 cursor-pointer group" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();loadVideo2(event);}" role="button" tabindex="0" aria-label="Play video testimonial">
                         <img
                             src="https://img.youtube.com/vi/_6A20lEqDtg/maxresdefault.jpg"
                             alt="Client Testimonial - James Evans, Vensa Coaching"
@@ -978,25 +978,53 @@
     </section>
 
     <script>
-        // Lazy load YouTube iframe on click — synchronous to preserve user gesture for autoplay on mobile
+        function setupVideo(thumbId, iframeId, embedUrl) {
+            const thumb = document.getElementById(thumbId);
+            if (!thumb) return;
+            var activated = false;
+
+            function activate(e) {
+                if (activated) return;
+                activated = true;
+                e.preventDefault();
+                e.stopPropagation();
+                const iframe = document.getElementById(iframeId);
+                iframe.src = embedUrl;
+                thumb.style.display = 'none';
+                iframe.style.display = 'block';
+            }
+
+            thumb.addEventListener('touchend', activate, { passive: false });
+            thumb.addEventListener('click', function(e) {
+                // On touch devices, touchend already fired; skip to avoid double-trigger
+                if (!activated) activate(e);
+            });
+        }
+
         function loadVideo(e) {
-            if (e) e.preventDefault();
+            if (e) { e.preventDefault(); e.stopPropagation(); }
             const thumb = document.getElementById('videoThumb');
             const iframe = document.getElementById('youtubeIframe');
+            if (thumb.style.display === 'none') return;
             iframe.src = 'https://www.youtube.com/embed/jFOygpP7kes?autoplay=1&rel=0&modestbranding=1&playsinline=1';
             thumb.style.display = 'none';
             iframe.style.display = 'block';
         }
 
-        // Lazy load second YouTube iframe on click — synchronous to preserve user gesture for autoplay on mobile
         function loadVideo2(e) {
-            if (e) e.preventDefault();
+            if (e) { e.preventDefault(); e.stopPropagation(); }
             const thumb = document.getElementById('videoThumb2');
             const iframe = document.getElementById('youtubeIframe2');
+            if (thumb.style.display === 'none') return;
             iframe.src = 'https://www.youtube.com/embed/_6A20lEqDtg?autoplay=1&rel=0&modestbranding=1&playsinline=1';
             thumb.style.display = 'none';
             iframe.style.display = 'block';
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setupVideo('videoThumb',  'youtubeIframe',  'https://www.youtube.com/embed/jFOygpP7kes?autoplay=1&rel=0&modestbranding=1&playsinline=1');
+            setupVideo('videoThumb2', 'youtubeIframe2', 'https://www.youtube.com/embed/_6A20lEqDtg?autoplay=1&rel=0&modestbranding=1&playsinline=1');
+        });
     </script>
 
     <!-- Change: Condensed transition and intro to reduce word count -->
@@ -1537,11 +1565,11 @@
                     <p class="text-gray-600 text-sm">Ubisoft IT • Ericsson • 19+ teams coached</p>
                 </div>
 
-                <div class="bg-gray-50 p-6 rounded-2xl shadow-lg text-center hover-lift border-2 border-gray-100">
+                <a href="https://www.linkedin.com/in/agilejuangonzalez/overlay/1738383056539/single-media-viewer/?profileId=ACoAAArkV_oBYdpmmqNLufO4RDoXW4zYVt5soX4" target="_blank" rel="noopener noreferrer" class="bg-gray-50 p-6 rounded-2xl shadow-lg text-center hover-lift border-2 border-gray-100 block no-underline">
                     <div class="text-4xl mb-4">🏆</div>
                     <h3 class="font-bold text-lg mb-2">Award-Winning AI</h3>
                     <p class="text-gray-600 text-sm">2024 Mindvalley AI Award Winner</p>
-                </div>
+                </a>
 
                 <div class="bg-gray-50 p-6 rounded-2xl shadow-lg text-center hover-lift border-2 border-gray-100">
                     <div class="text-4xl mb-4">🇨🇦</div>
@@ -1708,7 +1736,7 @@
                         </p>
 
                         <p class="text-lg md:text-xl text-gray-700 mb-8 leading-relaxed">
-                            Winner of the 2024 Mindvalley AI Award for Best Use of AI in Technology, Coach Juan brings a unique combination of enterprise tech leadership, startup leadership experience, and human-centered design to every project.
+                            <a href="https://www.linkedin.com/in/agilejuangonzalez/overlay/1738383056539/single-media-viewer/?profileId=ACoAAArkV_oBYdpmmqNLufO4RDoXW4zYVt5soX4" target="_blank" rel="noopener noreferrer" class="underline text-gray-700 hover:text-black">Winner of the 2024 Mindvalley AI Award for Best Use of AI in Technology</a>, Coach Juan brings a unique combination of enterprise tech leadership, startup leadership experience, and human-centered design to every project.
                         </p>
 
                         <div class="border-t-2 border-gray-300 pt-6">
