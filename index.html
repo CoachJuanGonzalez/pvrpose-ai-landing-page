@@ -60,24 +60,16 @@
     <link rel="canonical" href="https://pvrpose.ai">
 
     <!-- Google Analytics 4 (GA4) -->
-    <!-- Replace G-XXXXXXXXXX with your actual GA4 Measurement ID -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <!-- TODO: Replace G-XXXXXXXXXX with your actual GA4 Measurement ID before enabling -->
+    <!-- GA4 is currently disabled until a valid Measurement ID is configured -->
     <script>
+        // GA4 stub — replace G-XXXXXXXXXX with real ID and uncomment the loader script above
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
 
-        // Initialize GA4 with enhanced measurement
-        gtag('config', 'G-XXXXXXXXXX', {
-            'send_page_view': true,
-            'cookie_flags': 'SameSite=None;Secure',
-            'anonymize_ip': true // GDPR/PIPEDA compliance
-        });
-
-        // Custom event tracking helper function
+        // Custom event tracking helper — no-op until GA4 is configured
         window.trackEvent = function(eventName, eventParams) {
-            gtag('event', eventName, eventParams);
-            console.log('GA4 Event:', eventName, eventParams); // Debug logging
+            console.log('GA4 Event (not tracked — GA4 not configured):', eventName, eventParams);
         };
     </script>
 
@@ -488,7 +480,7 @@
                     <p class="text-xs text-gray-500">Clients commonly see 10–20× return in Year 1</p>
                 </div>
             </div>
-            <p class="text-center text-xs text-gray-400 mt-6">Internal client data, 2023–2025</p>
+            <p class="text-center text-xs text-gray-400 mt-6">Based on select client engagements, 2023–2025. Past results do not guarantee future performance. Individual results vary based on revenue level, admin volume, and implementation.</p>
         </div>
     </section>
 
@@ -1303,6 +1295,7 @@
             <div class="mt-12 p-8 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl text-white text-center">
                 <p class="text-2xl font-bold mb-2">⚡ On-Time Delivery Guarantee</p>
                 <p class="text-lg opacity-90">If we don't deliver in 8 weeks, we work for free until complete</p>
+                <p class="text-xs opacity-75 mt-3">Subject to client providing timely access, feedback, and cooperation as outlined in the Service Agreement.</p>
             </div>
         </div>
     </section>
@@ -1415,6 +1408,7 @@
                     <p class="text-lg font-semibold">
                         Outcome: Working AI systems that save 10–20 hours/week or generate $10K–$50K additional revenue annually.
                     </p>
+                    <p class="text-sm text-gray-500 mt-2">Results vary based on your business volume, workflows, and implementation. These figures are illustrative projections based on past client engagements.</p>
                 </div>
 
                 <!-- Service 3 -->
@@ -1818,7 +1812,7 @@
                         </p>
                         <p class="mb-4">
                             <strong>4. On-Time Delivery Guarantee</strong><br>
-                            If we don't deliver working systems in 8 weeks, we work for free until complete.
+                            If we don't deliver working systems in 8 weeks, we work for free until complete. Subject to client providing timely access, feedback, and cooperation as outlined in the Service Agreement.
                         </p>
                         <p class="font-semibold text-gray-900">
                             Plus, over 90% of our clients come from referrals. People don't refer mediocre work—they refer results.
@@ -1853,7 +1847,7 @@
                             <li><strong>Ongoing Support:</strong> 30 days of troubleshooting included</li>
                         </ul>
                         <p class="mb-4">
-                            <strong>The ROI math:</strong> If you're at $500K revenue and we save you 15 hours/week at $200/hour effective rate, that's $156,000/year in time saved. Even at $25K investment, you're at 6× ROI in Year 1.
+                            <strong>The ROI math (illustrative example):</strong> If you're at $500K revenue and we save you 15 hours/week at $200/hour effective rate, that's $156,000/year in time saved. Even at $25K investment, you're at 6× ROI in Year 1. Actual results vary based on your revenue, hourly rate, and admin volume.
                         </p>
                         <p class="font-semibold text-gray-900">
                             ChatGPT is a tool. We build business systems. Big difference.
@@ -1873,7 +1867,7 @@
                     </button>
                     <div id="faq-answer-6" class="faq-answer mt-4 text-gray-700 leading-relaxed hidden">
                         <p class="mb-4">
-                            <strong>On-Time Delivery Guarantee:</strong> If we don't deliver working automations in 8 weeks, we work for free until complete. No excuses.
+                            <strong>On-Time Delivery Guarantee:</strong> If we don't deliver working automations in 8 weeks, we work for free until complete. Subject to client providing timely access, feedback, and cooperation as outlined in the Service Agreement.
                         </p>
                         <p class="mb-4">
                             <strong>No Traditional "Money-Back" Policy—Here's Why:</strong>
@@ -1888,7 +1882,7 @@
                             <li><strong>Collaborative Process:</strong> You approve each automation before we move forward</li>
                         </ul>
                         <p class="mb-4">
-                            <strong>Our Real Guarantee:</strong> You'll own working AI automations that save 10–20 hours/week or generate $10K–$50K additional revenue. If we can't deliver that in 8 weeks, we keep working for free.
+                            <strong>Our Real Guarantee:</strong> You'll own working AI automations designed to save 10–20 hours/week or generate meaningful additional revenue. If we can't deliver working systems in 8 weeks, we keep working for free. Specific time savings and revenue outcomes are projections based on past results and are not guaranteed — individual results vary.
                         </p>
                         <p class="font-semibold text-gray-900">
                             We stand behind our work. Over 90% referral and warm-introduction rate proves it.
@@ -2018,10 +2012,16 @@
                 </p>
                 <p>&copy; 2026 PVRPOSE AI. All rights reserved.</p>
                 <p class="text-sm text-gray-500 mt-2">
-                    This website is designed to align with CASL, PIPEDA, GDPR, and CCPA requirements.
+                    This website is designed to align with CASL, PIPEDA, Law 25, GDPR, and CCPA requirements.
+                </p>
+                <p class="text-sm text-gray-500 mt-2">
+                    124 Louis Riel, Dollard-des-Ormeaux, H9B 3B5, Quebec, Canada
                 </p>
                 <p class="text-sm text-gray-500 mt-2">
                     Need help or support? Contact <a href="mailto:juan@pvrpose.ai" class="text-gray-400 hover:text-white transition underline">juan@pvrpose.ai</a>
+                </p>
+                <p class="text-sm text-gray-500 mt-2">
+                    Version française disponible sur demande / French version available upon request
                 </p>
             </div>
         </div>
@@ -2071,8 +2071,8 @@
             </form>
             <p class="text-xs text-gray-500 mt-4 text-center">🔒 No spam, ever. Unsubscribe anytime.</p>
             <p class="text-xs text-gray-500 mt-2 text-center">
-                By submitting, you consent to receive marketing emails from PVRPOSE AI in compliance with CASL.
-                You can unsubscribe at any time. <a href="/privacy-policy.html" class="underline">Privacy Policy</a>
+                By submitting, you provide express consent under CASL to receive commercial electronic messages from PVRPOSE AI (Juan Gonzalez, 124 Louis Riel, Dollard-des-Ormeaux, H9B 3B5, QC, Canada, pvrpose.ai).
+                You may unsubscribe at any time via the link in any email. <a href="/privacy-policy.html" class="underline">Privacy Policy</a>
             </p>
         </div>
     </div>
