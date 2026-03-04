@@ -1791,6 +1791,7 @@
 
                 if (response.ok && responseData.success) {
                     submitBtn.textContent = '✓ Report Sent!';
+                    submitBtn.disabled = false;
 
                     // Trigger browser PDF download AFTER API succeeds.
                     // Must be after fetch() — on iOS Safari, doc.save() fires a blob URL
