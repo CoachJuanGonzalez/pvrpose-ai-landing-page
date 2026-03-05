@@ -146,7 +146,7 @@
         <!-- Progress Bar -->
         <div id="progressSection" class="hidden mb-8">
             <div class="flex justify-between text-sm text-gray-600 mb-2">
-                <span>Question <span id="currentQuestion">1</span> of 8</span>
+                <span>Question <span id="currentQuestion">1</span> of 9</span>
                 <span><span id="progressPercent">0</span>% Complete</span>
             </div>
             <div class="w-full bg-gray-200 rounded-full h-3">
@@ -273,7 +273,7 @@
                     { text: "No, I'm completely new to AI", value: 50, weight: 2 },
                     { text: "I've used ChatGPT or similar", value: 70, weight: 3 },
                     { text: "I use a few AI tools, but they're disconnected", value: 85, weight: 3 },
-                    { text: "I've tried to implement AI but it didn't stick", value: 95, weight: 4 }
+                    { text: "I've used AI tools but haven't found the right fit yet", value: 95, weight: 4 }
                 ]
             },
             {
@@ -305,6 +305,16 @@
                     { text: "Ready to start in the next 3 months", value: 70, weight: 3 },
                     { text: "Ready to start in the next 30 days", value: 90, weight: 4 },
                     { text: "I need this yesterday", value: 100, weight: 4 }
+                ]
+            },
+            {
+                id: 9,
+                question: "How do you primarily manage your business day-to-day?",
+                options: [
+                    { text: "📱 Mostly from my phone — I'm always on the move", value: 100, weight: 4, mobile: true },
+                    { text: "💻 From my laptop or desktop — I'm office-based", value: 80, weight: 3, mobile: false },
+                    { text: "🔀 Mix of both — depends on the day", value: 90, weight: 3, mobile: true },
+                    { text: "👥 Through my team — I delegate most tasks", value: 75, weight: 2, mobile: false }
                 ]
             }
         ];
@@ -507,26 +517,47 @@
 
             // PVRPOSE AI OS block shown only for Tier 1 & 2 (ready or strong potential)
             const showOsBlock = cappedScore >= 60;
+            const mobileAnswer = answers[8] ? answers[8].selectedOption : null;
+            const isMobileUser = mobileAnswer && mobileAnswer.mobile === true;
+
             const osBlock = showOsBlock ? `
                 <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 mb-6">
                     <p class="text-sm font-bold uppercase tracking-wide text-pink-600 mb-2">What Gets Built For You</p>
-                    <p class="font-bold text-lg text-gray-900 mb-1">The PVRPOSE AI OS — Voice. Vision. Vibe.</p>
-                    <p class="text-gray-600 text-sm mb-3">Every automation is custom-built on your brand voice, your workflow gaps, and your client experience — not generic templates.</p>
-                    <div class="grid grid-cols-3 gap-3 text-center text-sm">
+                    <p class="font-bold text-lg text-gray-900 mb-1">The PVRPOSE AI OS — Phone-Controlled, Built on Claude Code</p>
+                    <p class="text-gray-600 text-sm mb-3">Every AI OS is custom-built on your brand voice, your workflow gaps, and your business context — not generic templates. Accessible from your phone via Telegram, running on infrastructure you control.</p>
+                    <div class="grid grid-cols-2 gap-3 text-center text-sm mb-3">
                         <div class="bg-white rounded-xl p-3 border border-gray-100">
-                            <p class="font-bold text-gray-800">🎙 Voice</p>
-                            <p class="text-gray-500 text-xs">Sounds like you</p>
+                            <p class="font-bold text-gray-800">⚡ Claude Code</p>
+                            <p class="text-gray-500 text-xs">The AI engine powering your OS</p>
                         </div>
                         <div class="bg-white rounded-xl p-3 border border-gray-100">
-                            <p class="font-bold text-gray-800">🗺 Vision</p>
-                            <p class="text-gray-500 text-xs">Built to your blueprint</p>
+                            <p class="font-bold text-gray-800">📱 Phone-First</p>
+                            <p class="text-gray-500 text-xs">Run your OS from Telegram</p>
                         </div>
                         <div class="bg-white rounded-xl p-3 border border-gray-100">
-                            <p class="font-bold text-gray-800">✨ Vibe</p>
-                            <p class="text-gray-500 text-xs">Feels like your brand</p>
+                            <p class="font-bold text-gray-800">🔒 Your Data</p>
+                            <p class="text-gray-500 text-xs">Infrastructure you control</p>
+                        </div>
+                        <div class="bg-white rounded-xl p-3 border border-gray-100">
+                            <p class="font-bold text-gray-800">✅ Compliant</p>
+                            <p class="text-gray-500 text-xs">CASL/PIPEDA by design</p>
                         </div>
                     </div>
-                    <p class="text-xs text-gray-400 mt-3 text-center">Powered by n8n · Claude AI · Airtable · GoHighLevel / HubSpot</p>
+                    <p class="text-xs text-gray-400 mt-1 text-center">Powered by Claude Code · n8n · Airtable · GoHighLevel / HubSpot · Telegram</p>
+                </div>
+            ` : '';
+
+            // Pioneer callout for scores ≥60
+            const pioneerCallout = showOsBlock ? `
+                <div class="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-400 rounded-2xl p-5 mb-6">
+                    <p class="text-sm font-bold uppercase tracking-wide text-amber-700 mb-1">🚀 Pioneer Opportunity — 3 Spots Total</p>
+                    <p class="font-bold text-gray-900 mb-2">Based on your score, you may qualify for a pioneer spot:</p>
+                    <ul class="text-sm text-gray-700 space-y-1 mb-3">
+                        <li>✅ <strong>1 Free Build Spot</strong> — tooling costs only (~$100–$350/month) · video testimonial required</li>
+                        <li>💼 <strong>2 Audit Spots at $2,500 CAD</strong> — full AI OS blueprint (regularly $5K–$7.5K)</li>
+                    </ul>
+                    <p class="text-xs text-gray-500">In exchange: one video testimonial with at least one measurable outcome after delivery.</p>
+                    <a href="/#pioneer" class="inline-block mt-3 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm rounded-xl transition">Apply for a Pioneer Spot →</a>
                 </div>
             ` : '';
 
@@ -534,8 +565,8 @@
             const auditCta = showOsBlock ? `
                 <div class="bg-white border-2 border-pink-200 rounded-2xl p-5 mb-6 text-center">
                     <p class="text-sm font-bold uppercase tracking-wide text-gray-500 mb-1">Recommended First Step</p>
-                    <p class="font-bold text-gray-900 mb-1">Start with the AI Readiness Audit ($5,000–$7,500 CAD · 2 weeks)</p>
-                    <p class="text-sm text-gray-600">We map your workflows, identify your top 3 automation opportunities, and deliver exact ROI projections — before you commit to full implementation.</p>
+                    <p class="font-bold text-gray-900 mb-1">AI OS Readiness Audit — $2,500 CAD Pioneer Rate (regularly $5K–$7.5K)</p>
+                    <p class="text-sm text-gray-600">We map your workflows, identify your top automation opportunities, and deliver your custom PVRPOSE AI OS blueprint — including your Telegram mobile access plan and private infrastructure setup.</p>
                 </div>
             ` : '';
 
@@ -556,6 +587,7 @@
                             </li>
                         `).join('')}
                     </ul>
+                    ${pioneerCallout}
                     ${auditCta}
                     ${osBlock}
                     ${referralBadge}
@@ -925,9 +957,9 @@
             let execSummary = '';
 
             if (cappedScoreInt >= 80) {
-                execSummary = `Congratulations, ${firstName}! Your assessment reveals that you are in an excellent position to implement AI automation. You reported ${revenueText} in annual revenue and ${hoursText.toLowerCase()} on repetitive admin tasks — exactly the profile where custom AI systems deliver their strongest results. The implementations we build typically deliver 10-20x ROI in the first year for businesses at your stage, with realistic time savings of up to 15 hours per week.\n\nKey opportunities identified: Your revenue level, operational workload, and technology comfort create an ideal environment for a successful 6-8 week implementation. The combination of established volume and clear workflow pain points means automation ROI will be measurable within the first 30 days of going live.`;
+                execSummary = `Congratulations, ${firstName}! Your assessment reveals that you are in an excellent position to implement AI automation. You reported ${revenueText} in annual revenue and ${hoursText.toLowerCase()} on repetitive admin tasks — exactly the profile where custom AI systems deliver their strongest results. The implementations we build typically deliver 10-20x ROI in the first year for businesses at your stage, with realistic time savings of up to 20 hours per week.\n\nKey opportunities identified: Your revenue level, operational workload, and technology comfort create an ideal environment for a successful 6-week PVRPOSE AI OS build. Phone-controlled via Telegram, running on infrastructure you control — measurable results within the first 30 days of going live.`;
             } else if (cappedScoreInt >= 60) {
-                execSummary = `Thank you for completing this assessment, ${firstName}. Your results show strong potential for AI automation with the right strategic approach. You reported ${revenueText} in annual revenue and ${hoursText.toLowerCase()} on admin tasks. These projections are based on clients with established revenue and meaningful manual workflow volume — businesses fitting that profile typically see 5-10x ROI in year one with 5-12 hours of weekly time savings.\n\nKey opportunities identified: Strategic timing and phased implementation will be critical to maximize your results. This report outlines a proven 6-8 week path that balances quick wins with sustainable, long-term transformation.`;
+                execSummary = `Thank you for completing this assessment, ${firstName}. Your results show strong potential for AI automation with the right strategic approach. You reported ${revenueText} in annual revenue and ${hoursText.toLowerCase()} on admin tasks. These projections are based on clients with established revenue and meaningful manual workflow volume — businesses fitting that profile typically see 5-10x ROI in year one with 5-12 hours of weekly time savings.\n\nKey opportunities identified: Strategic timing and phased implementation will be critical to maximize your results. This report outlines your 6-week path to a phone-controlled PVRPOSE AI OS — balancing quick wins with sustainable, long-term transformation.`;
             } else if (cappedScoreInt >= 40) {
                 execSummary = `Thank you for your interest in AI automation, ${firstName}. Based on your answers — ${revenueText} in revenue and ${hoursText.toLowerCase()} on admin tasks — your business is in a growth phase where the smartest investment right now is building sales volume and simple systems first. Custom AI automation delivers its highest ROI once workflows are established and repetitive enough to automate at scale.\n\nKey opportunities identified: Starting with low-cost tools and documenting your top workflows now will make your eventual automation implementation faster, cheaper, and significantly more impactful. We'd love to show you a clear roadmap for getting there.`;
             } else {
@@ -1091,7 +1123,7 @@
                 doc.setFontSize(8);
                 doc.setTextColor(...medGray);
                 doc.setFont(undefined, 'italic');
-                doc.text('Powered by: n8n Workflows  ·  Claude AI  ·  Airtable Dashboards  ·  GoHighLevel / HubSpot CRM', 105, yPos, { align: 'center' });
+                doc.text('Powered by: Claude Code  ·  n8n Workflows  ·  Airtable Dashboards  ·  GoHighLevel / HubSpot  ·  Telegram', 105, yPos, { align: 'center' });
 
                 yPos += 12;
 
@@ -1103,11 +1135,13 @@
                 yPos += 8;
 
                 const ownershipItems = [
+                    'Claude Code-powered AI OS — built around your business context, your language, your workflows',
+                    'Telegram mobile interface — control your AI OS from your phone from day one of go-live',
+                    'Private server infrastructure you control — CASL/PIPEDA compliant, your data stays with you',
                     'All source code and workflow automations — no vendor lock-in',
-                    'AI-Generated SOPs with complete documentation and video training library',
                     'Live Airtable dashboard surfacing your KPIs, client status, and revenue pipeline',
                     'CRM configured as your growth engine (GoHighLevel or HubSpot)',
-                    '30-day email/Slack support after go-live + optional monthly retainer'
+                    '2-week post-delivery support + optional AI Optimization Retainer'
                 ];
 
                 ownershipItems.forEach(item => {
@@ -1127,7 +1161,7 @@
                 doc.setFillColor(240, 253, 244); // light green
                 doc.setDrawColor(16, 185, 129);   // green border
                 doc.setLineWidth(1.5);
-                const guaranteeText = 'On-Time Delivery Guarantee: If we don\'t deliver your working AI systems in 8 weeks, we keep working for free until complete. Over 90% of our clients come from referrals — we earn trust before we earn business.';
+                const guaranteeText = 'On-Time Delivery Guarantee: If we don\'t deliver your PVRPOSE AI OS in 6 weeks, we keep working for free until complete. Over 90% of our clients come from referrals — we earn trust before we earn business.';
                 const guaranteeLines = doc.splitTextToSize(guaranteeText, contentWidth - 10);
                 const guaranteeBoxH = (guaranteeLines.length * 4.5) + 14;
                 doc.roundedRect(margin, yPos, contentWidth, guaranteeBoxH, 3, 3, 'FD');
@@ -1149,7 +1183,7 @@
             doc.setFontSize(18);
             doc.setTextColor(...brandPink);
             doc.setFont(undefined, 'bold');
-            doc.text(cappedScoreInt >= 60 ? 'Your 6-8 Week Implementation Roadmap' : 'Your Path to AI-Ready', margin, yPos);
+            doc.text(cappedScoreInt >= 60 ? 'Your 6-Week Path to PVRPOSE AI OS' : 'Your Path to AI-Ready', margin, yPos);
 
             yPos += 7;
             doc.setFontSize(9);
@@ -1157,9 +1191,9 @@
             doc.setFont(undefined, 'italic');
             let roadmapSubtitle;
             if (cappedScoreInt >= 80) {
-                roadmapSubtitle = 'You are ready. Transparent timeline with guaranteed delivery — if we don\'t deliver in 8 weeks, we work for free until complete.';
+                roadmapSubtitle = 'You are ready. Guaranteed delivery in 6 weeks — if we don\'t deliver, we work for free until complete.';
             } else if (cappedScoreInt >= 60) {
-                roadmapSubtitle = 'Strong indicators present. Transparent timeline with guaranteed delivery — if we don\'t deliver in 8 weeks, we work for free until complete.';
+                roadmapSubtitle = 'Strong indicators present. Guaranteed delivery in 6 weeks — if we don\'t deliver, we work for free until complete.';
             } else {
                 roadmapSubtitle = 'A practical sequence to build the foundation that makes AI automation fast, effective, and high-ROI when you\'re ready.';
             }
@@ -1170,43 +1204,33 @@
             // Phases adapt to readiness tier
             const phases = cappedScoreInt >= 60 ? [
                 {
-                    title: 'Week 1-2: AI Readiness Audit',
+                    title: 'Week 1-2: AI OS Readiness Audit',
                     items: [
-                        'Map your workflows using AI-driven pattern recognition to surface hidden bottlenecks',
-                        'Audit your current SOPs, tools, and business systems for automation fit',
-                        'Identify your top 2-3 highest-impact automation opportunities',
-                        'Deliver a priority matrix and 15-page detailed audit report',
-                        'Define success metrics, KPIs, and go-live criteria'
+                        'Map your workflows and identify your highest-ROI automation opportunities',
+                        'Audit your current SOPs, tools, and business systems for AI OS fit',
+                        'Deliver your custom PVRPOSE AI OS blueprint — built around your business context',
+                        'Define your Telegram mobile access plan and private infrastructure setup',
+                        'Define success metrics, KPIs, and 6-week go-live criteria'
                     ]
                 },
                 {
-                    title: 'Week 3-4: Sprint 1 - First Automation Live',
+                    title: 'Week 3-4: Build — Core Automations Live',
                     items: [
-                        'Build and deploy your highest-impact automation workflow',
-                        'Live build sessions so you see progress in real-time',
-                        'Weekly demos with real-time feedback and adjustments',
+                        'Configure Claude Code engine around your business context, workflows, and language',
+                        'Build and deploy your highest-impact automations on private infrastructure',
+                        'Live build sessions — you see progress in real-time with weekly demos',
                         'Integrate with your existing CRM, calendar, and communication tools',
-                        'Validate against your success metrics before moving to Sprint 2'
+                        'Private server configured and tested — your data stays on infrastructure you control'
                     ]
                 },
                 {
-                    title: 'Week 5-6: Sprint 2 - Second Automation Live',
-                    items: [
-                        'Build and deploy your second priority automation',
-                        'Continuous integration testing across all connected systems',
-                        'Performance optimization and edge-case handling',
-                        'User acceptance testing with you and your team',
-                        'Refinements based on Sprint 1 real-world performance data'
-                    ]
-                },
-                {
-                    title: 'Week 7-8: Testing, Training & Handoff',
+                    title: 'Week 5-6: Go-Live — Phone-Controlled from Day 1',
                     items: [
                         'Full end-to-end quality assurance across all automations',
-                        'Team training sessions so you\'re confident to run it independently',
-                        'Video training library and documentation delivered',
+                        'Telegram mobile interface live and tested — accessible from your phone',
+                        'Team training so you\'re confident to run your AI OS independently',
                         'Compliance review (CASL, PIPEDA, GDPR as applicable)',
-                        '30-day post-launch support included — you\'re never left alone'
+                        '2-week post-delivery support included — you\'re never left alone'
                     ]
                 }
             ] : [
@@ -1442,18 +1466,18 @@
                     action: 'Book now: https://calendly.com/coachjuan-pvrposeai/discovery-call'
                 },
                 {
-                    step: '2. AI Readiness Audit ($5,000-$7,500 CAD · 2 Weeks)',
-                    desc: 'We map your actual workflows, identify your top 3 automation opportunities, and deliver a 15-page report with exact ROI projections and a 6-8 week implementation roadmap. If we don\'t find 10x ROI potential, we tell you honestly.',
+                    step: '2. AI OS Readiness Audit ($2,500 CAD Pioneer Rate · 2 Weeks)',
+                    desc: 'We map your actual workflows, identify your top automation opportunities, and deliver your custom PVRPOSE AI OS blueprint — including your Telegram mobile access plan, private infrastructure setup, and 6-week implementation roadmap.',
                     action: ''
                 },
                 {
-                    step: '3. AI Implementation Sprint ($15,000-$25,000 CAD · 6-8 Weeks)',
-                    desc: 'We build your PVRPOSE AI OS — custom workflows, CRM configuration, Airtable dashboard, and AI-generated SOPs. Weekly sprint cycles. You approve every automation before it goes live. You own all code.',
+                    step: '3. PVRPOSE AI OS — Full Build ($15,000-$25,000 CAD · 6 Weeks)',
+                    desc: 'We build your PVRPOSE AI OS on Claude Code — phone-controlled via Telegram, running on private infrastructure you control. Custom automations, CRM configuration, live data dashboard. Weekly demos. You approve every build before it goes live. You own everything.',
                     action: ''
                 },
                 {
-                    step: '4. Go Live + 30-Day Support',
-                    desc: 'Your AI systems launch. We monitor performance, fix edge cases, and optimize based on real-world data. Most clients start seeing time savings in Week 1. Optional: AI Optimization Retainer from $3,000 CAD/month.',
+                    step: '4. Go Live — Phone-Controlled from Day 1',
+                    desc: 'Your PVRPOSE AI OS launches. Telegram mobile interface live and tested. We monitor performance and optimize. Most clients start seeing time savings in Week 1. Optional: AI Optimization Retainer from $3,000 CAD/month.',
                     action: ''
                 }
             ];
