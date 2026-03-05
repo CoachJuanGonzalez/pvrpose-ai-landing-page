@@ -114,7 +114,7 @@
         }
 
         .gradient-accent {
-            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+            background: linear-gradient(135deg, #ec4899 0%, #1E3A8A 100%);
         }
 
         /* Glassmorphism effects */
@@ -195,7 +195,7 @@
         /* Stat counter animation */
         .stat-number {
             font-weight: 800;
-            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+            background: linear-gradient(135deg, #ec4899 0%, #1E3A8A 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -239,13 +239,13 @@
             left: 0;
             right: 0;
             z-index: 999;
-            background: linear-gradient(135deg, #ec4899 0%, #9333ea 100%);
+            background: linear-gradient(135deg, #ec4899 0%, #1E3A8A 100%);
             padding: 12px 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
-            box-shadow: 0 -4px 24px rgba(147, 51, 234, 0.35);
+            box-shadow: 0 -4px 24px rgba(236, 72, 153, 0.35);
             /* Slide up on load */
             animation: slideUp 0.4s ease-out;
         }
@@ -347,14 +347,21 @@
 
         /* Pioneer urgency top bar */
         .pioneer-bar {
-            background: linear-gradient(135deg, #1E3A8A 0%, #8b5cf6 60%, #ec4899 100%);
+            background: linear-gradient(135deg, #1E3A8A 0%, #ec4899 100%);
             color: white;
             text-align: center;
             padding: 10px 16px;
             font-size: 14px;
             font-weight: 600;
-            position: relative;
-            z-index: 1001;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1002;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .pioneer-bar a {
             color: #fde68a;
@@ -367,19 +374,19 @@
 
         /* Pioneer section boxes */
         .pioneer-free-box {
-            border: 3px solid #f59e0b;
-            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border: 3px solid #1E3A8A;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
             position: relative;
         }
         .pioneer-paid-box {
-            border: 2px solid #e5e7eb;
+            border: 2px solid #fbcfe8;
             background: #ffffff;
         }
 
         /* Navigation */
         .main-nav {
             position: fixed;
-            top: 0;
+            top: 42px;
             left: 0;
             right: 0;
             z-index: 1000;
@@ -403,14 +410,22 @@
             color: #ec4899;
         }
 
-        /* Add padding to body to account for fixed nav */
+        /* Add padding to body to account for fixed pioneer bar + fixed nav */
         body {
-            padding-top: 80px;
+            padding-top: 122px; /* 42px bar + 80px nav */
         }
 
         @media (max-width: 768px) {
             body {
-                padding-top: 70px;
+                padding-top: 108px; /* 38px bar + 70px nav */
+            }
+            .pioneer-bar {
+                font-size: 12px;
+                padding: 8px 12px;
+                height: 38px;
+            }
+            .main-nav {
+                top: 38px;
             }
             .nav-logo {
                 height: 40px;
@@ -483,25 +498,14 @@
             </h1>
 
             <!-- Supporting Tagline -->
-            <p class="text-lg md:text-xl text-gray-600 mb-8 max-w-3xl mx-auto font-medium">
+            <p class="text-lg md:text-xl text-gray-600 mb-12 max-w-3xl mx-auto font-medium">
                 Built with Claude Code. Your data stays on infrastructure you control. CASL/PIPEDA compliant. You own everything.
-            </p>
-
-            <!-- Subheadline (Solution + Unique Value) -->
-            <p class="text-xl md:text-2xl text-gray-700 mb-10 max-w-4xl mx-auto font-light leading-relaxed">
-                We design and build <strong class="font-semibold">custom PVRPOSE AI OS systems</strong> for professional service & construction firms (coaches, consultants, agencies, and advisors) that automate client follow-ups, proposal creation, scheduling, and CRM updates — <strong class="font-semibold">so you can grow your firm without hiring, burning out, or losing your personal touch.</strong>
-                Your PVRPOSE AI OS connects to your real business data, automates your admin, and gives you full control from your phone via Telegram — on infrastructure only you control.
-            </p>
-
-            <!-- Value Proposition -->
-            <p class="text-lg md:text-xl text-gray-600 mb-12 max-w-3xl mx-auto">
-                Live in <span class="font-semibold text-gray-800">6 weeks</span>. Scale without adding headcount.
             </p>
 
             <!-- Primary CTA — Two Paths -->
             <div class="mb-8 flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <a href="#pioneer"
-                   class="inline-block bg-gradient-to-r from-amber-500 to-orange-500 text-white px-12 py-6 rounded-xl text-xl md:text-2xl font-semibold hover:shadow-xl transition"
+                   class="inline-block bg-pink-600 hover:bg-pink-700 text-white px-12 py-6 rounded-xl text-xl md:text-2xl font-semibold hover:shadow-xl transition"
                    aria-label="Apply for Pioneer Spot"
                    onclick="trackEvent('cta_click', {
                        'cta_type': 'pioneer',
@@ -651,7 +655,6 @@
                             Calculate ROI
                         </a>
                     </div>
-                    <p class="text-sm text-gray-500 mt-4">Get personalized recommendations in under 2 minutes</p>
                 </div>
             </div>
         </div>
@@ -662,7 +665,7 @@
         <div class="max-w-6xl mx-auto">
             <!-- Headline -->
             <div class="text-center mb-4">
-                <div class="inline-block bg-amber-400 text-amber-900 text-sm font-bold px-4 py-2 rounded-full mb-4 uppercase tracking-wide">
+                <div class="inline-block bg-white/20 text-white text-sm font-bold px-4 py-2 rounded-full mb-4 uppercase tracking-wide border border-white/40">
                     Pioneer Launch — 3 Spots Total. Filling Now.
                 </div>
                 <h2 class="text-3xl md:text-5xl font-bold mb-6">Personally Handpicked. First 3 Founders Only.</h2>
@@ -670,98 +673,71 @@
 
             <!-- Why Pioneer Spots Explanation -->
             <div class="bg-white/10 backdrop-blur rounded-2xl p-8 mb-10 max-w-3xl mx-auto text-center">
-                <h3 class="text-xl font-bold mb-4 text-amber-300">Why Pioneer Spots?</h3>
+                <h3 class="text-xl font-bold mb-4 text-pink-300">Why Pioneer Spots?</h3>
                 <p class="text-white/90 leading-relaxed mb-4">
-                    PVRPOSE AI OS is the next generation of what we build at PVRPOSE AI. After 6 months going deep into Claude Code — Anthropic's most advanced AI development engine — I am now able to deliver a fundamentally more powerful system than traditional automation: a full AI operating system, phone-controlled, built around how your business actually runs.
+                    After 6 months going deep into Claude Code — Anthropic's most advanced AI development engine — PVRPOSE AI OS is a fundamentally more powerful system than traditional automation. To document it with real-world results, I am personally handpicking 3 founders to build alongside at pioneer pricing.
                 </p>
-                <p class="text-white/90 leading-relaxed mb-4">
-                    To document this properly with real-world results, I am personally handpicking 3 pioneer founders to build alongside in this launch phase. You get our most advanced system at pioneer pricing. In exchange, I ask for one video testimonial with at least one measurable outcome once we deliver.
-                </p>
-                <p class="text-amber-300 font-semibold">
+                <p class="text-pink-300 font-semibold">
                     This is not a discount. This is an early seat at something that will cost significantly more once the case studies are documented.
-                </p>
-                <p class="text-white/70 text-sm mt-4 italic">
-                    Most business owners will discover AI OS in 12 months. You are here now. That gap is your competitive advantage.
                 </p>
             </div>
 
-            <!-- Three Boxes -->
-            <div class="grid md:grid-cols-3 gap-6 mb-8">
+            <!-- Two Boxes -->
+            <div class="grid md:grid-cols-2 gap-6 mb-8">
 
                 <!-- Box 1 — Free Spot -->
                 <div class="pioneer-free-box rounded-2xl p-8 relative">
-                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-amber-400 text-amber-900 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wide whitespace-nowrap">
-                        ⭐ Most Exclusive — 1 Spot
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-deep-blue text-white text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wide whitespace-nowrap">
+                        ⭐ Most Exclusive — 1 Spot Only
                     </div>
                     <h3 class="text-gray-900 text-xl font-bold mb-2 mt-4">Free Pioneer Build</h3>
-                    <p class="text-3xl font-bold text-amber-600 mb-1">$0 Build Cost</p>
+                    <p class="text-3xl font-bold text-deep-blue mb-1">$0 Build Cost</p>
                     <p class="text-gray-600 text-sm mb-4">You pay tooling only (~$100–$350/month)</p>
                     <p class="text-gray-700 text-sm mb-4 font-semibold">Full build value: $15,000–$25,000 CAD</p>
                     <ul class="space-y-2 text-gray-700 text-sm mb-6">
-                        <li class="flex items-start"><span class="text-green-500 mr-2 font-bold">✓</span> Full PVRPOSE AI OS — done for you</li>
-                        <li class="flex items-start"><span class="text-green-500 mr-2 font-bold">✓</span> 1–2 custom automations built around your business</li>
-                        <li class="flex items-start"><span class="text-green-500 mr-2 font-bold">✓</span> Telegram mobile interface configured</li>
-                        <li class="flex items-start"><span class="text-green-500 mr-2 font-bold">✓</span> Private server setup — your data, your control</li>
-                        <li class="flex items-start"><span class="text-green-500 mr-2 font-bold">✓</span> CASL/PIPEDA compliant from day one</li>
-                        <li class="flex items-start"><span class="text-green-500 mr-2 font-bold">✓</span> 2 weeks post-delivery support</li>
+                        <li class="flex items-start"><span class="text-pink-500 mr-2 font-bold">✓</span> Full PVRPOSE AI OS — done for you</li>
+                        <li class="flex items-start"><span class="text-pink-500 mr-2 font-bold">✓</span> 1–2 custom automations built around your business</li>
+                        <li class="flex items-start"><span class="text-pink-500 mr-2 font-bold">✓</span> Telegram mobile interface configured</li>
+                        <li class="flex items-start"><span class="text-pink-500 mr-2 font-bold">✓</span> Private server setup — your data, your control</li>
+                        <li class="flex items-start"><span class="text-pink-500 mr-2 font-bold">✓</span> CASL/PIPEDA compliant from day one</li>
+                        <li class="flex items-start"><span class="text-pink-500 mr-2 font-bold">✓</span> 2 weeks post-delivery support</li>
                     </ul>
-                    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 text-sm text-amber-800">
+                    <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6 text-sm text-blue-800">
                         <strong>In exchange:</strong> One video testimonial with at least one measurable outcome (e.g., hours saved, revenue recovered, admin eliminated) — required within 2 weeks of delivery.
                     </div>
                     <a href="https://calendly.com/coachjuan-pvrposeai/discovery-call"
-                       class="block w-full text-center bg-amber-500 hover:bg-amber-600 text-white font-bold py-4 rounded-xl transition">
+                       class="block w-full text-center bg-deep-blue hover:opacity-90 text-white font-bold py-4 rounded-xl transition">
                         Apply for Free Pioneer Spot →
                     </a>
                 </div>
 
-                <!-- Box 2 — Paid Audit Spot -->
+                <!-- Box 2 — 2 Paid Audit Spots -->
                 <div class="pioneer-paid-box rounded-2xl p-8 relative">
-                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-purple-600 text-white text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wide whitespace-nowrap">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-pink-600 text-white text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wide whitespace-nowrap">
                         2 Spots Available
                     </div>
                     <h3 class="text-gray-900 text-xl font-bold mb-2 mt-4">AI OS Audit</h3>
-                    <p class="text-3xl font-bold text-purple-600 mb-1">$2,500 CAD</p>
+                    <p class="text-3xl font-bold text-pink-600 mb-1">$2,500 CAD</p>
                     <p class="text-gray-500 text-sm mb-4">Pioneer Rate · 2 weeks · Rolls into full build</p>
                     <p class="text-gray-500 text-sm mb-4 line-through">Standard rate: $5,000–$7,500 CAD</p>
+                    <!-- Spot counter visual -->
+                    <div class="flex gap-2 mb-4">
+                        <div class="flex-1 bg-pink-100 border-2 border-pink-400 rounded-lg py-2 text-center text-xs font-bold text-pink-700">Spot 1 — Available</div>
+                        <div class="flex-1 bg-pink-100 border-2 border-pink-400 rounded-lg py-2 text-center text-xs font-bold text-pink-700">Spot 2 — Available</div>
+                    </div>
                     <ul class="space-y-2 text-gray-700 text-sm mb-6">
-                        <li class="flex items-start"><span class="text-purple-500 mr-2 font-bold">✓</span> 2-week deep dive into your workflows</li>
-                        <li class="flex items-start"><span class="text-purple-500 mr-2 font-bold">✓</span> Top 3 admin bottlenecks identified</li>
-                        <li class="flex items-start"><span class="text-purple-500 mr-2 font-bold">✓</span> Custom PVRPOSE AI OS blueprint</li>
-                        <li class="flex items-start"><span class="text-purple-500 mr-2 font-bold">✓</span> Telegram mobile access plan included</li>
-                        <li class="flex items-start"><span class="text-purple-500 mr-2 font-bold">✓</span> Private infrastructure setup plan</li>
-                        <li class="flex items-start"><span class="text-purple-500 mr-2 font-bold">✓</span> ROI projection with real numbers</li>
+                        <li class="flex items-start"><span class="text-pink-500 mr-2 font-bold">✓</span> 2-week deep dive into your workflows</li>
+                        <li class="flex items-start"><span class="text-pink-500 mr-2 font-bold">✓</span> Top 3 admin bottlenecks identified</li>
+                        <li class="flex items-start"><span class="text-pink-500 mr-2 font-bold">✓</span> Custom PVRPOSE AI OS blueprint</li>
+                        <li class="flex items-start"><span class="text-pink-500 mr-2 font-bold">✓</span> Telegram mobile access plan included</li>
+                        <li class="flex items-start"><span class="text-pink-500 mr-2 font-bold">✓</span> Private infrastructure setup plan</li>
+                        <li class="flex items-start"><span class="text-pink-500 mr-2 font-bold">✓</span> ROI projection with real numbers</li>
                     </ul>
-                    <div class="bg-purple-50 border border-purple-200 rounded-xl p-4 mb-6 text-sm text-purple-800">
+                    <div class="bg-pink-50 border border-pink-200 rounded-xl p-4 mb-6 text-sm text-pink-800">
                         <strong>In exchange:</strong> If audit rolls into full build — one video testimonial with measurable outcome required upon completion.
                     </div>
                     <a href="https://calendly.com/coachjuan-pvrposeai/discovery-call"
-                       class="block w-full text-center bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 rounded-xl transition">
-                        Book AI OS Audit — $2,500 CAD →
-                    </a>
-                </div>
-
-                <!-- Box 3 — Second Paid Audit Spot (identical) -->
-                <div class="pioneer-paid-box rounded-2xl p-8 relative">
-                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-purple-600 text-white text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wide whitespace-nowrap">
-                        2 Spots Available
-                    </div>
-                    <h3 class="text-gray-900 text-xl font-bold mb-2 mt-4">AI OS Audit</h3>
-                    <p class="text-3xl font-bold text-purple-600 mb-1">$2,500 CAD</p>
-                    <p class="text-gray-500 text-sm mb-4">Pioneer Rate · 2 weeks · Rolls into full build</p>
-                    <p class="text-gray-500 text-sm mb-4 line-through">Standard rate: $5,000–$7,500 CAD</p>
-                    <ul class="space-y-2 text-gray-700 text-sm mb-6">
-                        <li class="flex items-start"><span class="text-purple-500 mr-2 font-bold">✓</span> 2-week deep dive into your workflows</li>
-                        <li class="flex items-start"><span class="text-purple-500 mr-2 font-bold">✓</span> Top 3 admin bottlenecks identified</li>
-                        <li class="flex items-start"><span class="text-purple-500 mr-2 font-bold">✓</span> Custom PVRPOSE AI OS blueprint</li>
-                        <li class="flex items-start"><span class="text-purple-500 mr-2 font-bold">✓</span> Telegram mobile access plan included</li>
-                        <li class="flex items-start"><span class="text-purple-500 mr-2 font-bold">✓</span> Private infrastructure setup plan</li>
-                        <li class="flex items-start"><span class="text-purple-500 mr-2 font-bold">✓</span> ROI projection with real numbers</li>
-                    </ul>
-                    <div class="bg-purple-50 border border-purple-200 rounded-xl p-4 mb-6 text-sm text-purple-800">
-                        <strong>In exchange:</strong> If audit rolls into full build — one video testimonial with measurable outcome required upon completion.
-                    </div>
-                    <a href="https://calendly.com/coachjuan-pvrposeai/discovery-call"
-                       class="block w-full text-center bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 rounded-xl transition">
+                       class="block w-full text-center bg-pink-600 hover:bg-pink-700 text-white font-bold py-4 rounded-xl transition">
                         Book AI OS Audit — $2,500 CAD →
                     </a>
                 </div>
@@ -772,7 +748,7 @@
                 <p class="text-white/80 text-sm mb-2">
                     <strong class="text-white">Why the exchange?</strong> These are pioneer engagements — your real-world results help us prove what PVRPOSE AI OS delivers. You get a fully custom system at a fraction of future pricing. We get documented proof. Fair deal.
                 </p>
-                <p class="text-amber-300 text-sm font-semibold">
+                <p class="text-pink-300 text-sm font-semibold">
                     Once these 3 spots are filled, standard pricing applies: $5,000–$7,500 CAD audit · $15,000–$25,000 CAD full build.
                 </p>
             </div>
@@ -787,7 +763,6 @@
                 "We're creating revenue for almost free. Juan understood the vision and built the system in a way that's ready to scale. He was a great strategic partner. I would definitely recommend a conversation with Juan."
             </blockquote>
             <p class="text-gray-600 font-semibold">— James Green, Managing Partner, Dominion Equity Holdings</p>
-            <p class="text-gray-400 text-sm mt-1">Over 90% of PVRPOSE AI clients come from referrals. We earn trust before we earn business.</p>
         </div>
     </section>
 
@@ -1471,7 +1446,7 @@
             <div class="space-y-6">
                 <!-- Week 1–2 -->
                 <div class="flex gap-6 items-start">
-                    <div class="flex-shrink-0 w-24 h-24 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                    <div class="flex-shrink-0 w-24 h-24 bg-deep-blue rounded-full flex items-center justify-center text-white font-bold text-lg">
                         Week 1–2
                     </div>
                     <div class="flex-1 glass p-6 rounded-2xl">
@@ -1483,7 +1458,7 @@
 
                 <!-- Week 3–4 -->
                 <div class="flex gap-6 items-start">
-                    <div class="flex-shrink-0 w-24 h-24 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                    <div class="flex-shrink-0 w-24 h-24 bg-deep-blue rounded-full flex items-center justify-center text-white font-bold text-lg">
                         Week 3–4
                     </div>
                     <div class="flex-1 glass p-6 rounded-2xl">
@@ -1495,7 +1470,7 @@
 
                 <!-- Week 5–6 -->
                 <div class="flex gap-6 items-start">
-                    <div class="flex-shrink-0 w-24 h-24 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                    <div class="flex-shrink-0 w-24 h-24 bg-deep-blue rounded-full flex items-center justify-center text-white font-bold text-lg">
                         Week 5–6
                     </div>
                     <div class="flex-1 glass p-6 rounded-2xl">
@@ -1507,7 +1482,7 @@
             </div>
 
             <!-- Guarantee -->
-            <div class="mt-12 p-8 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl text-white text-center">
+            <div class="mt-12 p-8 bg-gradient-to-br from-deep-blue to-blue-700 rounded-2xl text-white text-center">
                 <p class="text-2xl font-bold mb-2">⚡ On-Time Delivery Guarantee</p>
                 <p class="text-lg opacity-90">If we don't deliver in 6 weeks, we work for free until complete</p>
                 <p class="text-xs opacity-75 mt-3">Subject to client providing timely access, feedback, and cooperation as outlined in the Service Agreement.</p>
@@ -1516,10 +1491,10 @@
     </section>
 
     <!-- URGENCY TRIGGER (before Services) -->
-    <section class="py-8 px-6 bg-gradient-to-r from-pink-600 to-purple-600">
+    <section class="py-8 px-6 bg-gradient-to-r from-pink-600 to-deep-blue">
         <div class="max-w-5xl mx-auto text-center text-white">
-            <p class="text-2xl md:text-3xl font-bold mb-2">⚡ Limited Availability: We Only Take 3 New Clients Per Month</p>
-            <p class="text-lg md:text-xl opacity-90">Our hands-on approach means we can't scale infinitely. If you're ready to automate, let's talk.</p>
+            <p class="text-2xl md:text-3xl font-bold mb-2">⚡ Pioneer Launch: 3 Spots Total — 1 Free Build + 2 Audits at $2,500 CAD. Filling Now.</p>
+            <p class="text-lg md:text-xl opacity-90">Once filled, standard pricing applies: $5,000–$7,500 CAD audit · $15,000–$25,000 CAD full build.</p>
         </div>
     </section>
 
@@ -1540,7 +1515,7 @@
                     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
                         <div>
                             <h3 class="text-3xl md:text-4xl font-bold mb-1">AI OS Readiness Audit</h3>
-                            <span class="inline-block bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Pioneer Rate — 2 spots remaining</span>
+                            <span class="inline-block bg-pink-100 text-pink-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Pioneer Rate — 2 spots remaining</span>
                         </div>
                         <div class="text-right mt-2 md:mt-0">
                             <p class="text-2xl md:text-3xl font-bold gradient-accent bg-clip-text text-transparent">$2,500 CAD</p>
@@ -1595,7 +1570,7 @@
                 </div>
 
                 <!-- Service 2 -->
-                <div class="bg-white p-8 md:p-12 rounded-2xl shadow-lg hover-lift border-l-4 border-purple-500">
+                <div class="bg-white p-8 md:p-12 rounded-2xl shadow-lg hover-lift border-l-4 border-pink-500">
                     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
                         <h3 class="text-3xl md:text-4xl font-bold mb-2 md:mb-0">PVRPOSE AI OS — Full Build</h3>
                         <div class="text-right">
@@ -1766,7 +1741,7 @@
                 </div>
 
                 <!-- Strategic Addition 1: AI-Powered SOPs for legal/accounting/construction segment appeal -->
-                <div id="sop-feature-card" class="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-2xl shadow-lg text-center hover-lift border-2 border-blue-200"
+                <div id="sop-feature-card" class="bg-gray-50 p-6 rounded-2xl shadow-lg text-center hover-lift border-2 border-gray-200"
                      onclick="trackEvent('feature_card_click', {
                          'card_name': 'AI-Powered SOPs',
                          'section': 'why_different',
@@ -1778,7 +1753,7 @@
                 </div>
 
                 <!-- Phone-First Privacy-First differentiator -->
-                <div class="bg-gradient-to-br from-amber-50 to-orange-50 p-6 rounded-2xl shadow-lg text-center hover-lift border-2 border-amber-200">
+                <div class="bg-blue-50 p-6 rounded-2xl shadow-lg text-center hover-lift border-2 border-blue-200">
                     <div class="text-4xl mb-4">📱</div>
                     <h3 class="font-bold text-lg mb-2">Phone-First, Privacy-First AI OS</h3>
                     <p class="text-gray-700 text-sm">Run your entire business AI from your phone via Telegram. Your data lives on infrastructure you control — CASL/PIPEDA compliant by design.</p>
