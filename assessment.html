@@ -195,10 +195,14 @@
                             <button type="submit" class="w-full bg-white text-pink-600 px-6 py-4 rounded-xl font-semibold text-lg hover:bg-gray-100 transition">
                                 Send Me My Report →
                             </button>
-                            <p class="text-xs text-white/80 text-center">
-                                By submitting, you consent to receive marketing emails from PVRPOSE AI in compliance with CASL.
-                                You can unsubscribe at any time.
-                            </p>
+                            <label class="flex items-start gap-3 text-xs text-white/80 cursor-pointer mt-2">
+                                <input type="checkbox" id="caslConsent" name="casl_consent" required
+                                       class="mt-0.5 flex-shrink-0 w-4 h-4 accent-white">
+                                <span>I agree to receive educational content and service updates from PVRPOSE AI
+                                (Juan Gonzalez, 124 Louis Riel, Dollard-des-Ormeaux, H9B 3B5, QC, Canada | pvrpose.ai)
+                                in accordance with CASL. <a href="/privacy-policy.html" class="underline">Privacy Policy</a>.
+                                Unsubscribe anytime.</span>
+                            </label>
                         </div>
                     </form>
                 </div>
@@ -1896,6 +1900,19 @@
         }
         sanitizeURLParams();
     </script>
+
+    <div style="background:#1E3A8A;color:#fff;text-align:center;padding:8px 16px;font-size:12px;line-height:1.5;">
+        🇫🇷 La version française de ce site est en cours de préparation.
+        Pour communiquer en français : <a href="mailto:juan@pvrpose.ai" style="color:#fbcfe8;text-decoration:underline;">juan@pvrpose.ai</a>
+    </div>
+    <footer style="text-align:center;font-size:11px;color:#9ca3af;padding:24px 16px;border-top:1px solid #f3f4f6;margin-top:40px;">
+        <p>© 2026 PVRPOSE AI · Juan Gonzalez · 124 Louis Riel, Dollard-des-Ormeaux, H9B 3B5, QC, Canada</p>
+        <p style="margin-top:6px;">
+            <a href="/privacy-policy.html" style="color:#9ca3af;text-decoration:underline;">Privacy Policy</a> ·
+            <a href="/terms-of-service.html" style="color:#9ca3af;text-decoration:underline;">Terms of Service</a> ·
+            <a href="/casl-compliance.html" style="color:#9ca3af;text-decoration:underline;">CASL Compliance</a>
+        </p>
+    </footer>
 
 </body>
 </html>
